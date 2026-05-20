@@ -1,0 +1,44 @@
+.divInput{
+    position: relative;
+}
+
+.divInputIcon{
+    color: #d6a559;
+    position: absolute;
+    top: 40%;
+    left: 1%;
+}
+
+.input{
+    color: white;
+    width: 100%;
+    height: 100%;
+    font-size: 1rem;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    background:
+    linear-gradient(#000000, #000000) padding-box,
+    linear-gradient(
+      135deg,
+      #675529,
+      #d6a559,
+      #8f6b29
+    ) border-box;
+
+    &::placeholder{
+        color: rgb(73, 73, 73);
+    }
+
+    &:focus{
+        outline: none;
+        border: 2px solid transparent;
+        background:
+            linear-gradient(#000000, #000000) padding-box,
+            linear-gradient(
+            135deg,
+            #b49548,
+            #d6a559,
+            #c49337
+            ) border-box;
+    }
+}
