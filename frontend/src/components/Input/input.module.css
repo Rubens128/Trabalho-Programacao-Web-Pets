@@ -5,11 +5,12 @@
 .divInputIcon{
     color: #d6a559;
     position: absolute;
-    top: 40%;
-    left: 1%;
+    top: 25%;
+    left: 2.5%;
 }
 
 .input{
+    box-sizing: border-box;
     color: white;
     width: 100%;
     height: 100%;

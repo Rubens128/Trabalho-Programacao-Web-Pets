@@ -1,0 +1,107 @@
+.divPrincipal{
+    display: flex;
+    flex-direction: row;
+    gap: 100px;
+    width: 100dvw;
+    height: 87dvh;
+    justify-content: center;
+    align-items: center;
+}
+
+.divPrincipalLogo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    width: 30%;
+    height: 50%;
+}
+
+.divPrincipalLogo img{
+    width: 50%;
+    aspect-ratio: 1/1;
+    object-fit: fill;
+}
+
+.divPrincipalLogo h1{
+    font-size: 4rem;
+    font-family:'Times New Roman', Times, serif;
+}
+
+.divPrincipalLogo p{
+    font-size: 1rem;
+    opacity: 0.5;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.divPrincipalDivLogin{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 30%;
+    border: 2px solid transparent;
+    padding: 30px 40px;
+    border-radius: 20px;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+
+    background:
+    linear-gradient(#000000, #000000) padding-box,
+    linear-gradient(
+      135deg,
+      #fff3d4,
+      #d6a559,
+      #8f6b29
+    ) border-box;
+}
+
+.divPrincipalDivLoginTitulo{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+    align-items: center;
+}
+
+.divPrincipalDivLoginTitulo h1{
+    color: #d6a559;
+    opacity: 0.9;
+    font-size: 2rem;
+}
+
+.divPrincipalDivLoginTitulo p{
+    color: white;
+    opacity: 0.8;
+}
+
+.divPrincipalDivLoginInput{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.divPrincipalDivLoginInput label{
+    color: white;
+    opacity: 0.8;
+}
+
+.divPrincipalDivLoginInput a{
+    text-decoration: none;
+    color: #d6a559;
+    opacity: 0.9;
+    align-self: flex-end;
+}
+
+.divPrincipalDivBotoes{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.divPrincipalDivBotoes p{
+    font-size: 1.25rem;
+    color: white;
+    opacity: 0.8;
+}
