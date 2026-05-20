@@ -1,11 +1,13 @@
-import './App.css';
-import Header from './components/Header/header.js';
+import {BrowserRouter, Routes, Route} from "react-router-dom";
+import PaginaPrincipal from "./pages/PaginaPrincipal/paginaPrincipal.js";
 
-function App() {
-  return(
-    <div>
-      <Header/>
-    </div>
+function App(){
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={ <PaginaPrincipal />}/>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
