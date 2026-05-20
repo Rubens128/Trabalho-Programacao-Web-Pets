@@ -12,6 +12,7 @@ import ChapeuImg from '../../assets/chapeu.png';
 import MichaelImg from '../../assets/michael.png';
 import SuporteImg from '../../assets/suporte.png'; 
 import HealWorldImg from '../../assets/imagemHealWorld.png';
+import ButtonComponent from '../../components/Button/button.js';
 import { IoPaw } from "react-icons/io5";
 import { FaRedhat } from "react-icons/fa";
 import { FiShield } from "react-icons/fi";
@@ -35,8 +36,8 @@ function PaginaPrincipal() {
           <p>com amor e consciência</p>
         </div>
         <div className='divInfoSiteBotoes'>
-          <button className='divInfoSiteBotoesAdotar'> <IoPaw size={18} style={{marginRight: "5px"}}/> Quero Adotar</button>
-          <button className='divInfoSiteBotoesAdicionar'> <FaRedhat size={20} style={{marginRight: "5px"}}/> Quero Adicionar</button>
+          <ButtonComponent variante={1} icone={IoPaw} iconeSize={18} width={"45%"} textoBotao="Quero Adotar"/>
+          <ButtonComponent variante={2} icone={FaRedhat} iconeSize={20} width={"45%"} textoBotao="Quero Adicionar"/>
         </div>
         <div className='divInfoSiteGarantias'>
           <p> <FiShield color='#9f6d18' size={30}/> Ambiente Seguro</p>
@@ -144,7 +145,7 @@ function PaginaPrincipal() {
         <h1>Heal the world, <br/>Adote o amor!</h1>
         <p>Seu novo companheiro <br/>pode estar te esperando! <br/> <span>Adoção consciente pode transformar vidas.</span></p>
         <div className="divVerTodosPetsDivBotao">
-          <button>Ver todos os pets <IoPaw/></button>
+          <ButtonComponent variante={2} icone={IoPaw} iconeSize={18} iconeNaFrente={true} textoBotao="Ver todos os pets"/>
         </div>
       </div>
     </div>
