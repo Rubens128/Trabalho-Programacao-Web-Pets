@@ -50,17 +50,23 @@
   padding: 0px 10px 10px 10px;
   display: flex;
   flex-direction: column;
-  justify-content: end;
+  justify-content: center;
   gap: 10px;
 }
 
 .cardPetInfo h1{
   font-size: 2rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .cardPetInfo p{
   font-size: 1rem;
   opacity: 0.8;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .cardPetInfo a{

@@ -1,0 +1,128 @@
+.divTituloInput{
+    width: 99dvw;
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+    padding: 20px 30px;
+    align-items: center;
+}
+
+.divTituloInput button{
+    padding: 11px 15px;
+    border-radius: 10px;
+    background-color: #d6a559;
+    cursor: pointer;
+}
+
+.divTituloInputTexto{
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    margin-right: auto;
+}   
+
+.divTituloInputTexto h1{
+    font-size: 2rem;
+}
+
+.divTituloInputTexto p{
+    opacity: 0.8;
+    font-size: 1rem;
+}
+
+.divPets{
+    display: flex;
+    flex-direction: row;
+    padding: 20px 30px;
+    gap: 50px;
+}
+
+.divPetsFiltros{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: rgb(12, 12, 12);
+    padding: 20px;
+    width: 20%;
+    height: fit-content;
+    border-radius: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.divPetsFiltros h1{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    color: #d6a559;
+    align-items: center;
+    border-bottom: 2px solid gray;
+    padding-bottom: 20px;
+}
+
+.divPetsFiltrosFiltro{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    border-bottom: 2px solid gray;
+    padding-bottom: 20px;
+}
+
+.divPetsFiltrosFiltro p{
+    color: white;
+    opacity: 0.8;
+    margin-bottom: 10px;
+}
+
+.divPetsFiltrosFiltro div{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.divPetsOpcoes{
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    gap: 20px;
+}
+
+.divPetsTexto{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    align-items: center;
+}
+
+.divPetsOpcoesCards{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow-y: scroll;
+    width: 100%;
+    max-width: 100%;
+    height: 90dvh;
+    gap: 20px;
+}
+
+.divPetsOpcoesCards::-webkit-scrollbar {
+  width: 8px;
+}
+
+.divPetsOpcoesCards::-webkit-scrollbar-track {
+  background: #151515;
+  border-radius: 10px;
+}
+
+.divPetsOpcoesCards::-webkit-scrollbar-thumb {
+  background: #d6a559;
+  border-radius: 10px;
+}
+
+.divPetsOpcoesCards::-webkit-scrollbar-thumb:hover {
+  background: #8f6b29;
+}

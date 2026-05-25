@@ -1,0 +1,33 @@
+.label{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.9rem;
+}
+
+.label input{
+    display: none;
+}
+
+.checkBoxStyleOff{
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    background-color: black;
+    border: 2px solid gray;
+    border-radius: 5px;
+}
+
+.checkBoxStyleOn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 15px;
+    height: 15px;
+    background-color: #d6a559;
+    border-radius: 5px;
+    color: black;
+}

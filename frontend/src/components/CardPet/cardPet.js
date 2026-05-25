@@ -14,7 +14,7 @@ function CardPet({width = "15%", height = "42%", nomeAnimal, nomeEspecie, local}
             </div>
             <div className={styles.cardPetInfo}>
                 <h1>{nomeAnimal}</h1>
-                <p>{nomeEspecie}</p>
+                <p>{nomeEspecie} teste</p>
                 <p> <FaMapMarkerAlt /> {local}</p>
                 <a href='/'>Ver mais +</a>
             </div>
