@@ -1,0 +1,16 @@
+.textarea{
+    color: white;
+    outline:none;
+    font-size:1.0rem;
+    padding: 10px;
+    resize:none;
+    border-radius: 10px;
+    background:
+    linear-gradient(#000000, #000000) padding-box,
+    linear-gradient(
+      135deg,
+      #675529,
+      #d6a559,
+      #8f6b29
+    ) border-box;
+}

@@ -10,6 +10,7 @@
 }
 
 .input{
+    display: flex;
     box-sizing: border-box;
     color: white;
     width: 100%;
@@ -17,6 +18,7 @@
     font-size: 1rem;
     border: 2px solid transparent;
     border-radius: 10px;
+    align-items: start;
     background:
     linear-gradient(#000000, #000000) padding-box,
     linear-gradient(

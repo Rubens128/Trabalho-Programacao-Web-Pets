@@ -1,0 +1,22 @@
+.select{
+    color: #d6a559;
+    font-size: 1rem;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    background:
+    linear-gradient(#000000, #000000) padding-box,
+    linear-gradient(
+      135deg,
+      #675529,
+      #d6a559,
+      #8f6b29
+    ) border-box;
+}
+
+.select option{
+    color: #d6a559;
+    font-size: 1rem;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    background-color: black;
+}
