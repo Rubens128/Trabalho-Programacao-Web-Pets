@@ -202,7 +202,7 @@ function FormularioAdocao({ gender = "macho" }) {
                                 </div>
                             </div>
                             <div className={styles.divComponentesAmbiente}>
-                                <h1>2. Sobre o ambiente</h1>
+                                <h1>2.Sobre o ambiente</h1>
                                 <div className={styles.divComponentesAmbienteConjunto}>
                                     <div>
                                         <label for="residencia">Você mora em casa ou apartamento? *</label>
@@ -230,7 +230,7 @@ function FormularioAdocao({ gender = "macho" }) {
                             </div>
                             <div className={styles.divComponentesExperiencia}>
 
-                                <h1>3. Sobre sua experiência</h1>
+                                <h1>3.Sobre sua experiência</h1>
 
                                 <div className={styles.divComponentesExperienciaConjunto}>
                                     <label>Você já teve pets exóticos antes? *</label>
@@ -246,7 +246,7 @@ function FormularioAdocao({ gender = "macho" }) {
                             </div>
 
                             <div className={styles.divComponentesComentario}>
-                                <h1>4. Comentários</h1>
+                                <h1>4.Comentários</h1>
                                 <label>Conte-nos um pouco mais sobre o seu interesse nesse pet (opcional):</label>
                                 <TextInputComponent variavel={experenciaUsuario} funcaoSetVariavel={setExperienciaUsuario}
                                     placeholder="..." id="experienciaUsuario" width="100%" height="20dvh" />

@@ -1,0 +1,168 @@
+.divPrincipal{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    justify-content: center;
+    width: 98dvw;
+}
+
+.divComponentes{
+    display:flex;
+    padding: 30px;
+    border-radius: 20px;
+    gap: 30px;
+    color:#d6a559;
+    flex-direction: row;
+    justify-content: space-between;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: small;
+    border: 2px solid transparent;
+    width: 100%;
+
+    background:
+    linear-gradient(#000000, #000000) padding-box,
+    linear-gradient(
+      135deg,
+      #fff3d4,
+      #d6a559,
+      #8f6b29
+    ) border-box;
+}
+
+.divComponentesConjuntoInscricao{
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+    padding: 20px 40px;
+    width: 65%;
+    border-radius: 20px;
+    border: 2px solid transparent;
+    background:
+    linear-gradient(#000000, #000000) padding-box,
+    linear-gradient(
+      135deg,
+      #fff3d4,
+      #d6a559,
+      #8f6b29
+    ) border-box;
+}
+
+.divComponentesCaracteristica{
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.divComponentesCaracteristicaConjunto{
+
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    width: 100%;
+}
+
+.divComponentesCaracteristicaConjunto div{
+    display: flex;
+    flex-direction: column;
+    gap:10px;
+    width: 100%;
+}
+
+.divComponentesConjuntoInscricaoFormularioCampos{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 40px;
+}
+
+.divComponentesConjuntoInscricaoFormularioCampos div{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 50%;
+}
+
+.divComponentesFoto{
+
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+}
+
+.divComponentesOrigem{
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.divComponentesComentario{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.divCardsLaterais{
+
+    display: flex;
+    max-width: 30%;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.divCardsLateraisBox{
+
+    display: flex;
+    flex-direction: column;
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    gap: 15px;
+    padding: 25px;
+    font-size: 0.65rem;
+    opacity: 0.8;
+    border-radius: 20px;
+    border: 2px solid transparent;
+    width: 100%;
+    height: fit-content;
+    background:
+    linear-gradient(#000000, #000000) padding-box,
+    linear-gradient(
+      135deg,
+      #fff3d4,
+      #d6a559,
+      #8f6b29
+    ) border-box;
+}
+
+.divCardsLateraisParagrafos{
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.divCardsLateraisParagrafos h1{
+
+    font-size: 1.25rem;
+}
+
+.divCardsLateraisParagrafos p{
+
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    font-size: 0.8rem;
+    opacity: 0.8;
+    align-items: center;
+}
+
+.divCardsLateraisIconeTexto{
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
