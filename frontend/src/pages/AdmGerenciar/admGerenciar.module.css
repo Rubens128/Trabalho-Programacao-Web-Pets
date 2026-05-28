@@ -1,0 +1,63 @@
+.divGeral{
+    display: flex;
+    flex-direction: column;
+    width: 95dvw;
+    margin: 40px auto 50px auto;
+    gap: 20px;
+}
+
+.divGeralInfos{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.divGeralUserPets{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 20px;
+    width: 100%;
+}
+
+.divGeralUserPetsGeral{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+
+    background:
+    linear-gradient(#000000, #000000) padding-box,
+    linear-gradient(
+      135deg,
+      #fff3d4,
+      #d6a559,
+      #8f6b29
+    ) border-box;
+}
+
+.divGeralUserPetsGeralTitulo{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.divGeralUserPetsGeralTituloTexts{
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, Helvetica, sans-serif;
+    gap: 10px;
+}
+
+.divGeralUserPetsGeralTituloTexts h1{
+    font-weight: 400;
+    font-size: 1.75rem;
+    color: white;
+}
+
+.divGeralUserPetsGeralTituloTexts p{
+    color: rgb(174, 174, 174);
+    font-size: 0.9rem;
+}

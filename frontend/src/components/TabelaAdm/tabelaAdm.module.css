@@ -1,0 +1,62 @@
+.divScroll{
+    height: 70dvh;
+    max-height: 70dvh;
+    overflow-y: scroll;
+    padding-right: 15px;
+}
+
+.divScroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.divScroll::-webkit-scrollbar-track {
+  background: #151515;
+  border-radius: 10px;
+}
+
+.divScroll::-webkit-scrollbar-thumb {
+  background: #997237;
+  border-radius: 10px;
+}
+
+.divScroll::-webkit-scrollbar-thumb:hover {
+  background: #5a4319;
+}
+
+.table{
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.table th,
+.table td{
+    border-top: 1px solid rgb(140, 140, 140);
+    padding: 15px 8px;
+    text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: white;
+}
+
+.colAcoes{
+    width: 25%;
+}
+
+.colAcoes div{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.colAcoes button{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    padding: 8px;
+    border: none;
+    color: rgb(204, 203, 203);
+    border-radius: 5px;
+}

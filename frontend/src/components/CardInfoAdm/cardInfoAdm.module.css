@@ -1,0 +1,54 @@
+.divGeral{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #101010;
+    padding: 20px;
+    color: #d6a559;
+    border: 2px solid transparent;
+    border-radius: 10px;
+
+    background:
+    linear-gradient(#000000, #000000) padding-box,
+    linear-gradient(
+      135deg,
+      #fff3d4,
+      #d6a559,
+      #8f6b29
+    ) border-box;
+}
+
+.divGeralText{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.divGeralText p{
+    color: rgb(174, 174, 174);
+    font-size: 1rem;
+}
+
+.divGeralText h1{
+    color: white;
+    font-weight: 400;
+}
+
+.divGeralIcone{
+    background-color: black;
+    border-radius: 360px;
+    padding: 20px;
+    border: 2px solid transparent;
+
+    background:
+    linear-gradient(#000000, #000000) padding-box,
+    linear-gradient(
+      135deg,
+      #fff3d4,
+      #d6a559,
+      #8f6b29
+    ) border-box;
+}
