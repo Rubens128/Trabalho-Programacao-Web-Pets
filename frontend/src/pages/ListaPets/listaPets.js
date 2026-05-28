@@ -39,7 +39,7 @@ function ListaPets(){
                     "nome": "Tigre",
                     "especie": "Panthera tigris",
                     "local": "Florestas da Ásia"
-                },
+                }
     ]);
 
     return (

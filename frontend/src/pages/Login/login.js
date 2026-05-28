@@ -30,15 +30,15 @@ function Login(){
                     </div>
 
                     <div className={styles.divPrincipalDivLoginInput}>
-                        <label>E-mail</label>
+                        <label for="email">E-mail</label>
                         <InputComponent variavel={emailInputValue} funcaoSetVariavel={setEmailInputValue}
-                        icone={FaUser} width="100%" type="email" placeholder="seu@email.com"/>
+                        icone={FaUser} width="100%" type="email" placeholder="seu@email.com" id="email"/>
                     </div>
                     
                     <div className={styles.divPrincipalDivLoginInput}>
-                        <label for="email">Senha</label>
+                        <label for="senha">Senha</label>
                         <InputComponent variavel={senhaInputValue} funcaoSetVariavel={setSenhaInputValue}
-                        icone={FaLock} width="100%" type="password" placeholder="Digite sua senha" id="email"/>
+                        icone={FaLock} width="100%" type="password" placeholder="Digite sua senha" id="senha"/>
                         <a href="/">Esqueceu sua senha?</a>
                     </div>
 
