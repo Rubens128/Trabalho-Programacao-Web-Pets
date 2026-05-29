@@ -5,6 +5,7 @@ import ButtonComponent from "../../components/Button/button";
 import SelectComponent from "../../components/Select/select";
 import TextInputComponent from "../../components/TextInput/textInput";
 import AveImg from "../../assets/aves.png";
+import michaelLuaImg from "../../assets/michaelLua.png";
 import { useState } from "react";
 import { FaRegUser } from "react-icons/fa";
 import { FaPaw } from "react-icons/fa";
@@ -22,6 +23,11 @@ import { GiPawHeart } from "react-icons/gi";
 import { FaCheckSquare } from "react-icons/fa";
 import { FaRegClock } from "react-icons/fa";
 import { PiHeadsetBold } from "react-icons/pi";
+import { Bs1Circle } from "react-icons/bs";
+import { Bs2Circle } from "react-icons/bs";
+import { Bs3Circle } from "react-icons/bs";
+import { Bs4Circle } from "react-icons/bs";
+
 
 function FormularioAdocao({ gender = "macho" }) {
 
@@ -90,7 +96,7 @@ function FormularioAdocao({ gender = "macho" }) {
                     </div>
                     <div className={styles.divGeralDeBaixo}>
                         <div className={styles.divCardsDeBaixo}>
-                            <div className={styles.divComponentesPetAdicionalAviso}>
+                            <div className={styles.divCardsLateraisBox}>
                                 <div className={styles.divComponentesPetAdicionalParagrafos}>
                                     <GiPawHeart color="#d6a559" size={30} />
                                     <h1 style={{ color: "#d6a559" }}>Adoção Responsável</h1>
@@ -114,15 +120,37 @@ function FormularioAdocao({ gender = "macho" }) {
                                 </div>
                             </div>
 
-                            <div className={styles.divComponentesPetAdicionalAjuda}>
+                            <div className={styles.divCardsLateraisBox}>
                                 <div className={styles.divComponentesPetAdicionalParagrafos}>
-                                    <FaRegClock color="#d6a559" size={30}/>
+                                    <FaRegClock color="#d6a559" size={30} />
                                     <h1 style={{ color: "#d6a559" }}>Precisa de Ajuda?</h1>
                                 </div>
                                 <div className={styles.divComponentesPetAdicionalParagrafos}>
                                     <h1>Fale com nossa equipes especializada e tire todas as suas duvidas antes de finalizar a sua adoção</h1>
                                 </div>
-                                <ButtonComponent textoBotao="Falar com especialista" variante={1} icone={PiHeadsetBold}/>
+                                <ButtonComponent textoBotao="Falar com especialista" variante={1} icone={PiHeadsetBold} />
+                            </div>
+
+                            <div className={styles.divCardsLateraisBoxEtapas}>
+                                <div className={styles.divCardsLateraisParagrafos}>
+                                    <div className={styles.divCardsLateraisIconeTexto}>
+                                        <Bs1Circle color="#d6a559" size={30} />
+                                        <h3 style={{ fontSize: "18px" }}>Preencha o formulario com todas as informações</h3>
+                                    </div>
+                                    <div className={styles.divCardsLateraisIconeTexto}>
+                                        <Bs2Circle color="#d6a559" size={25} />
+                                        <h3 style={{ fontSize: "18px" }}>Nossa equipe analisará sua solicitação</h3>
+                                    </div>
+                                    <div className={styles.divCardsLateraisIconeTexto}>
+                                        <Bs3Circle color="#d6a559" size={28} />
+                                        <h3 style={{ fontSize: "18px" }}>Entraremos em contato para mais informações</h3>
+                                    </div>
+                                    <div className={styles.divCardsLateraisIconeTexto}>
+                                        <Bs4Circle color="#d6a559" size={34} />
+                                        <h3 style={{ fontSize: "18px" }}>Se aprovado, você poderá conhecer seu novo amigo!</h3>
+                                    </div>
+                                </div>
+                                <img src={michaelLuaImg}></img>
                             </div>
 
                         </div>

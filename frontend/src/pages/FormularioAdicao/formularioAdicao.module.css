@@ -166,3 +166,24 @@
     align-items: center;
     gap: 10px;
 }
+.divCardsLateraisBoxEtapas {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 25px;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    border: 2px solid transparent;
+    background:
+        linear-gradient(#000000, #000000) padding-box,
+        linear-gradient(135deg, #fff3d4, #d6a559, #8f6b29) border-box;
+}
+
+.divCardsLateraisBoxEtapas .divCardsLateraisParagrafos {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}

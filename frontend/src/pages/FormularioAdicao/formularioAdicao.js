@@ -177,11 +177,11 @@ function FormularioAdicao() {
                             <ButtonComponent textoBotao="Falar com especialista" variante={1} icone={PiHeadsetBold} />
                         </div>
 
-                        <div className={styles.divCardsLateraisBox}>
+                        <div className={styles.divCardsLateraisBoxEtapas}>
                             <div className={styles.divCardsLateraisParagrafos}>
                                 <div className={styles.divCardsLateraisIconeTexto}>
                                     <Bs1Circle color="#d6a559" size={30} />
-                                    <h3 style={{fontSize: "18px"}}>Preencha o formulario com todas as informacoes</h3>
+                                    <h3 style={{fontSize: "18px"}}>Preencha o formulario com todas as informações</h3>
                                 </div>
                                 <div className={styles.divCardsLateraisIconeTexto}>
                                     <Bs2Circle color="#d6a559" size={25} />
@@ -193,7 +193,7 @@ function FormularioAdicao() {
                                 </div>
                                 <div className={styles.divCardsLateraisIconeTexto}>
                                     <Bs4Circle color="#d6a559" size={34} />
-                                    <h3 style={{fontSize: "18px"}}>Seu pet poderá encontrar um novo lar responsavel!</h3>
+                                    <h3 style={{fontSize: "18px"}}>Seu pet poderá encontrar um novo lar responsável!</h3>
                                 </div>
                             </div>
                             <img src={imgMichaelPet}></img>
