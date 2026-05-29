@@ -1,0 +1,5 @@
+.divComponentes{
+
+    display: flex;
+    flex-direction: row;
+}

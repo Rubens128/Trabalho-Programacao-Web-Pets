@@ -1,0 +1,87 @@
+.divGeral{
+    display: flex;
+    flex-direction: column;
+    color: white;
+    gap: 35px;
+    padding: 25px;
+    width: 20dvw;
+    min-height: 100vh;
+    border: 2px solid rgb(56, 55, 55);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: medium;
+}
+
+.divIconeTexto{
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+    gap: 10px;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.divIconeTexto:hover{
+
+    transform: scale(1.05);
+    color: #d6a559;
+    background-color: #291d0a;
+}
+
+.divSaida{
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+    gap: 10px;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.divSaida:hover{
+
+    transform: scale(1.05);
+    color: #9f1212;
+    background-color: #93090961; 
+}
+
+.divIconeTextoCard{
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.divCardsAdocao{
+
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+    padding: 20px 20px;
+    margin-top: auto;
+    width: 100%;
+    border-radius: 20px;
+    border: 2px solid transparent;
+    background:
+    linear-gradient(#000000, #000000) padding-box,
+    linear-gradient(
+      135deg,
+      #fff3d4,
+      #d6a559,
+      #8f6b29
+    ) border-box;
+}
+
+.divAdocaoParagrafos{
+    
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: #ffffff;
+    opacity: 0.5;
+    font-family: Arial, Helvetica, sans-serif;
+}
