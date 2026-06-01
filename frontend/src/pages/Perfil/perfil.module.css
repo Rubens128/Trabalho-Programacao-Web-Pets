@@ -1,5 +1,204 @@
-.divComponentes{
-
+.divGeral{
     display: flex;
     flex-direction: row;
+    width: 98dvw;
+}
+
+.divGeralComponentes{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 80%;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 20px 30px;
+}
+
+.divGeralComponentesUsuario{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    background-color: rgb(18, 18, 18);
+    width: 100%;
+    border: 1px solid transparent;
+    border-radius: 20px;
+    padding: 20px;
+
+    background:
+    linear-gradient(#000000, #000000) padding-box,
+    linear-gradient(
+      135deg,
+      #fff3d4,
+      #d6a559,
+      #8f6b29
+    ) border-box;
+}
+
+.divGeralComponentesUsuarioInfo{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.divGeralComponentesUsuarioInfoImage{
+    background-color: #291d0a;
+    padding: 30px;
+    border-radius: 360px;
+    border: 1px solid #604417;
+}
+
+.divGeralComponentesUsuarioInfoTexto{
+    display: flex;
+    flex-direction: column;
+    color: white;
+    justify-content: space-between;
+    padding: 10px 0px;
+}
+
+.divGeralComponentesUsuarioInfoTextoNome{
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+
+.divGeralComponentesUsuarioInfoTextoTipo{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    color: #72511c;
+    border: 1px solid #604417;
+    font-weight: bold;
+    font-size: 0.85rem;
+    background-color: #181005;
+    padding: 10px 15px;
+    border-radius: 10px;
+    width: fit-content;
+}
+
+.divGeralComponentesUsuarioInfoTextoEmail{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    color: rgba(255, 255, 255, 0.474);
+}
+
+.divGeralComponentesUsuarioInfoBotao{
+    margin-left: auto;
+}
+
+.divGeralComponentesUsuarioEnderecoH1{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    font-size: 1.25rem;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.divGeralComponentesUsuarioEnderecoDiv{
+    display: flex;
+    flex-direction: column;
+}
+
+.divGeralComponentesUsuarioEnderecoDivInfo{
+    display: flex;
+    flex-direction: row;
+    border-top: 1px solid rgba(255, 255, 255, 0.448);
+    padding: 15px 0px;
+}
+
+.divGeralComponentesUsuarioEnderecoDivInfo div{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 25%;
+}
+
+.divGeralComponentesUsuarioEnderecoDivInfo p{
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.71);
+}
+
+.divGeralComponentesUsuarioEnderecoDivInfo h1{
+    font-size: 1rem;
+    color: white;
+    font-weight: 400;
+}
+
+.divGeralComponentesPets{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.divGeralComponentesPetsLista{
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: 48%;
+    border: 2px solid transparent;
+    border-radius: 20px;
+    padding: 20px;
+
+    background:
+    linear-gradient(#000000, #000000) padding-box,
+    linear-gradient(
+      135deg,
+      #fff3d4,
+      #d6a559,
+      #8f6b29
+    ) border-box;
+}
+
+.divGeralComponentesPetsListaCards{
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+    gap: 30px;
+    padding-bottom: 10px;
+}
+
+.divGeralComponentesPetsListaCards::-webkit-scrollbar {
+  height: 5px;
+}
+
+.divGeralComponentesPetsListaCards::-webkit-scrollbar-track {
+  background: #151515;
+  border-radius: 10px;
+}
+
+.divGeralComponentesPetsListaCards::-webkit-scrollbar-thumb {
+  background: #d6a559;
+  border-radius: 10px;
+}
+
+.divGeralComponentesPetsListaCards::-webkit-scrollbar-thumb:hover {
+  background: #8f6b29;
+}
+
+.divGeralComponentesPetsListaInfo{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: white;
+}
+
+.divGeralComponentesPetsListaInfoTexto{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.divGeralComponentesPetsListaInfoTexto h1{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.5rem;
+}
+
+.divGeralComponentesPetsListaInfoTexto p{
+    opacity: 0.8;
+    font-size: 1rem;
 }
