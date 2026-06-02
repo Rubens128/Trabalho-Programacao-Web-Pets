@@ -20,7 +20,7 @@ import { FiShield } from "react-icons/fi";
 import { FaRegHeart } from "react-icons/fa";
 import { TfiHeadphoneAlt } from "react-icons/tfi";
 import { useEffect } from 'react';
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
 function PaginaPrincipal() {
 
@@ -41,7 +41,7 @@ function PaginaPrincipal() {
     
     verificarUsuario();
 
-  }, [navigate])
+  }, [navigate]);
 
   return(
     <div>

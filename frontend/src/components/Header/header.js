@@ -4,13 +4,14 @@ import { PiUserCircleLight } from "react-icons/pi";
 import { CiSearch } from "react-icons/ci";
 
 function Header(){
+
     return (
         <div className={styles.header}>
             <LogoPets/>
             <div className={styles.headerLinks}>
                 <a href='/'>Início</a>
-                <a href='/'>Adotar Pet</a>
-                <a href='/'>Adicionar Pet</a>
+                <a href='/listaPets'>Adotar Pet</a>
+                <a href='/formularioAdicao'>Adicionar Pet</a>
                 <a href='/'>FAQ</a>
             </div>
             <div className={styles.headerIcons}>
