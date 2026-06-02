@@ -11,6 +11,8 @@ import { FaMapMarkerAlt } from "react-icons/fa";
 import { FaPaw } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
 import { useState } from "react";
+import { useEffect } from 'react';
+import { verificarUsuarioLogado } from '../../services/authService.js';
 
 function Perfil(){
 
@@ -26,11 +28,25 @@ function Perfil(){
     const [numeroValue, setNumeroValue] = useState("");
     const [complementoValue, setComplementoValue] = useState("");
     const [referenciaValue, setReferenciaValue] = useState("");
+    const [ usuario, setUsuario ] = useState(null);
+
+    useEffect(() => {
+        
+        async function verificarUsuario() {
+        
+        const retornoUsuario = await verificarUsuarioLogado();
+        
+        setUsuario(retornoUsuario);
+        }
+        
+        verificarUsuario();
+
+    }, []);
 
     return(
 
         <div>
-            <Header/>
+            <Header usuario={usuario}/>
             <div className={styles.divGeral}>
                 <SideMenu/>
                 <div className={styles.divGeralComponentes}>

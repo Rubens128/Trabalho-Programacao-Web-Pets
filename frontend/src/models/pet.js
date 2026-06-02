@@ -1,4 +1,4 @@
-class pet{
+class Pet{
     constructor(id, adicionadoEm, dataNasc, descricao, donoId, especie, fotoPetUrl, local, nome, status){
 
         this.id = id;
@@ -13,3 +13,5 @@ class pet{
         this.status = status;
     }
 }
+
+export default Pet;

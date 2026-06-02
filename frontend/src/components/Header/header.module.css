@@ -51,4 +51,62 @@
     justify-content: end;
     gap: 30px;
     width: 15%;
+    padding-right: 30px;
+}
+
+.headerIconsPerfil{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.headerIconsPerfilImage{
+    height: 6dvh;
+    aspect-ratio: 1 / 1;
+    border-radius: 360px;
+    border: 2px solid transparent;
+    background:
+    linear-gradient(#000000, #000000) padding-box,
+    linear-gradient(
+      135deg,
+      #fff3d4,
+      #d6a559,
+      #8f6b29
+    ) border-box;
+
+}
+
+.headerIconsPerfilImage img{
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: contain;
+    border-radius: 360px;
+}
+
+.headerIconsPerfilMenu{
+    position: absolute;
+    top: 120%;
+    right: -25%;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    border: 1px solid #d6a559;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px 0px;
+    z-index: 1000;
+}
+
+.headerIconsPerfilMenu a{
+    padding: 0px 15px 0px 15px;
+    cursor: pointer;
+    transition: 0.2s ease;
+    text-decoration: none;
+    color: white;
+
+    &:hover{
+
+        transform: scale(1.1);
+    }
 }

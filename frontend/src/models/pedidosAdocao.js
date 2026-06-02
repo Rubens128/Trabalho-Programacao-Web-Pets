@@ -1,4 +1,4 @@
-class pedidosAdocao{
+class PedidosAdocao{
     constructor(id, antigoDonoId, mensagem, novoDonoId, petId, status){
 
         this.id = id;
@@ -9,3 +9,5 @@ class pedidosAdocao{
         this.status = status;
     }
 }
+
+export default PedidosAdocao;

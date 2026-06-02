@@ -27,6 +27,9 @@ import { Bs1Circle } from "react-icons/bs";
 import { Bs2Circle } from "react-icons/bs";
 import { Bs3Circle } from "react-icons/bs";
 import { Bs4Circle } from "react-icons/bs";
+import { useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+import { verificarUsuarioLogado } from '../../services/authService.js';
 
 
 function FormularioAdocao({ gender = "macho" }) {
@@ -48,11 +51,31 @@ function FormularioAdocao({ gender = "macho" }) {
     const [outrosAnimais, setOutrosAnimais] = useState(null);
     const [tevePetExo, setTevePetExo] = useState(null);
     const [experenciaUsuario, setExperienciaUsuario] = useState("");
+    const [ usuario, setUsuario ] = useState(null);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        
+        async function verificarUsuario() {
+        
+        const retornoUsuario = await verificarUsuarioLogado();
+        
+        if (retornoUsuario.tipo !== "adm"){
+          navigate("/");
+        }
+
+        setUsuario(retornoUsuario);
+        }
+        
+        verificarUsuario();
+
+    }, [navigate]);
 
     return (
 
         <div>
-            <Header />
+            <Header usuario={usuario}/>
             <div className={styles.divPrincipal}>
 
                 <div className={styles.divComponentes}>

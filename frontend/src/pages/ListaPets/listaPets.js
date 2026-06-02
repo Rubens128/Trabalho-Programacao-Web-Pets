@@ -8,6 +8,8 @@ import { useState } from 'react';
 import { CiSearch } from "react-icons/ci";
 import { IoSend } from "react-icons/io5";
 import { IoFilterOutline } from "react-icons/io5";
+import { useEffect } from 'react';
+import { verificarUsuarioLogado } from '../../services/authService.js';
 
 function ListaPets(){
 
@@ -42,9 +44,24 @@ function ListaPets(){
                 }
     ]);
 
+    const [ usuario, setUsuario ] = useState(null);
+
+    useEffect(() => {
+        
+        async function verificarUsuario() {
+        
+        const retornoUsuario = await verificarUsuarioLogado();
+        
+        setUsuario(retornoUsuario);
+        }
+        
+        verificarUsuario();
+
+    }, []);
+
     return (
         <div>
-            <Header />
+            <Header usuario={usuario}/>
             <div className={styles.divTituloInput}>
                 <div className={styles.divTituloInputTexto}>
                     <h1>Animais Disponíveis</h1>

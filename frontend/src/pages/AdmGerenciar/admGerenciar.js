@@ -163,10 +163,31 @@ function AdmGerenciar(){
     acoes: "Editar",
   }
     ]);
+    
+    const [ usuario, setUsuario ] = useState(null);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        
+        async function verificarUsuario() {
+        
+        const retornoUsuario = await verificarUsuarioLogado();
+        
+        if (retornoUsuario.tipo !== "adm"){
+          navigate("/");
+        }
+
+        setUsuario(retornoUsuario);
+        }
+        
+        verificarUsuario();
+
+    }, [navigate]);
 
     return (
         <div>
-            <Header />
+            <Header usuario={usuario}/>
             <div className={styles.divGeral}>
                 <div className={styles.divGeralInfos}>
                     

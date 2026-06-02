@@ -8,6 +8,9 @@ import { useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { FaLock } from "react-icons/fa";
 import { FaPaw } from "react-icons/fa";
+import { useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+import { verificarUsuarioLogado } from '../../services/authService.js';
 
 function Login(){
 
@@ -16,6 +19,24 @@ function Login(){
     const [emailInputError, setEmailInputError] = useState(false);
     const [senhaInputError, setSenhaInputError] = useState(false);
     const [error, setError] = useState("");
+    const [ usuario, setUsuario ] = useState(null);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        
+        async function verificarUsuario() {
+        
+        const retornoUsuario = await verificarUsuarioLogado();
+        
+        if (retornoUsuario) navigate("/");
+
+        setUsuario(retornoUsuario);
+        }
+        
+        verificarUsuario();
+
+    }, [navigate]);
 
     const handleLogin = () => {
 

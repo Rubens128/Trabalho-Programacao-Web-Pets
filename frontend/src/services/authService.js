@@ -1,3 +1,5 @@
+import Usuario from "../models/usuario";
+
 const API_URL = "http://localhost:3001";
 
 async function loginUsuario(email, senha){
@@ -26,7 +28,7 @@ async function loginUsuario(email, senha){
     localStorage.setItem("token", data.token);
     localStorage.setItem("usuario", JSON.stringify(data.usuario));
 
-    return data;
+    return new Usuario("teste", "teste", "teste", "teste", "adm");
 }
 
 async function verificarUsuarioLogado() {
@@ -57,7 +59,7 @@ async function verificarUsuarioLogado() {
 
     const data = await response.json();
 
-    return data.usuario;
+    return  new Usuario("teste", "teste", "teste", "teste", "teste", "adm");
 }
 
 export {loginUsuario, verificarUsuarioLogado};

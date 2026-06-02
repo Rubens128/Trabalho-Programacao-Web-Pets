@@ -16,6 +16,9 @@ import { Bs1Circle } from "react-icons/bs";
 import { Bs2Circle } from "react-icons/bs";
 import { Bs3Circle } from "react-icons/bs";
 import { Bs4Circle } from "react-icons/bs";
+import { useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+import { verificarUsuarioLogado } from '../../services/authService.js';
 
 function FormularioAdicao() {
 
@@ -30,12 +33,32 @@ function FormularioAdicao() {
     const [temperamento, setTemperamento] = useState("");
     const [origem, setOrigem] = useState("");
     const [motivoAnuncio, setMotivoAnuncio] = useState("");
+    const [ usuario, setUsuario ] = useState(null);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        
+        async function verificarUsuario() {
+        
+        const retornoUsuario = await verificarUsuarioLogado();
+        
+        if (retornoUsuario.tipo !== "adm"){
+          navigate("/");
+        }
+
+        setUsuario(retornoUsuario);
+        }
+        
+        verificarUsuario();
+
+    }, [navigate]);
 
     return (
 
         <div>
 
-            <Header />
+            <Header usuario={usuario}/>
 
             <div className={styles.divPrincipal}>
                 <h1 style={{ color: "#d6a559" }}>Cadastro de um novo Pet</h1>

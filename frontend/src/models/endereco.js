@@ -11,3 +11,5 @@ class Endereco{
         this.rua = rua;
     }
 }
+
+export default Endereco;

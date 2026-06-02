@@ -8,6 +8,9 @@ import { FaUser } from "react-icons/fa";
 import { FaLock } from "react-icons/fa";
 import { FaPaw } from "react-icons/fa";
 import { MdDriveFileRenameOutline } from "react-icons/md";
+import { useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+import { verificarUsuarioLogado } from '../../services/authService.js';
 
 function Registrar(){
 
@@ -15,10 +18,28 @@ function Registrar(){
     const [nomeInputValue, setNomeInputValue] = useState("");
     const [senhaInputValue, setSenhaInputValue] = useState("");
     const [confirmarSenhaInputValue, setConfirmarSenhaInputValue] = useState("");
+    const [ usuario, setUsuario ] = useState(null);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        
+        async function verificarUsuario() {
+        
+        const retornoUsuario = await verificarUsuarioLogado();
+        
+        if (retornoUsuario) navigate("/");
+
+        setUsuario(retornoUsuario);
+        }
+        
+        verificarUsuario();
+
+    }, [navigate]);
 
     return (
         <div>
-            <Header/>
+            <Header />
             <div className={styles.divPrincipal}>
                 <div className={styles.divPrincipalLogo}>
                     <img src={LogoImage} alt="Imagem da Logo do site"/>

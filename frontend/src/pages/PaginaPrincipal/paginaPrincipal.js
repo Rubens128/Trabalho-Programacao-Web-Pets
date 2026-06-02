@@ -1,5 +1,4 @@
 import './paginaPrincipal.css';
-import { verificarUsuarioLogado } from '../../services/authService.js';
 import Header from '../../components/Header/header.js';
 import CardPet from '../../components/CardPet/cardPet.js'
 import ReptilImg from '../../assets/reptil.png';
@@ -19,34 +18,33 @@ import { FaRedhat } from "react-icons/fa";
 import { FiShield } from "react-icons/fi";
 import { FaRegHeart } from "react-icons/fa";
 import { TfiHeadphoneAlt } from "react-icons/tfi";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import { verificarUsuarioLogado } from '../../services/authService.js';
 
 function PaginaPrincipal() {
 
   const navigate = useNavigate();
 
+  const [ usuario, setUsuario ] = useState(null);
+
   useEffect(() => {
     
     async function verificarUsuario() {
       
-      const retorno = await verificarUsuarioLogado();
-
-      console.log(retorno)
-
-      if(retorno === null){
-        navigate("/login", {replace: true});
-      }
+      const retornoUsuario = await verificarUsuarioLogado();
+      
+      setUsuario(retornoUsuario);
     }
     
     verificarUsuario();
 
-  }, [navigate]);
+  }, []);
 
   return(
     <div>
 
-      <Header/>
+      <Header usuario={usuario}/>
       
       <div className="divInfoSite">
         <div className="divInfoSiteTextos">
@@ -58,8 +56,10 @@ function PaginaPrincipal() {
           <p>com amor e consciência</p>
         </div>
         <div className='divInfoSiteBotoes'>
-          <ButtonComponent variante={1} icone={IoPaw} iconeSize={18} width={"45%"} textoBotao="Quero Adotar"/>
-          <ButtonComponent variante={2} icone={FaRedhat} iconeSize={20} width={"45%"} textoBotao="Quero Adicionar"/>
+          <ButtonComponent variante={1} icone={IoPaw} iconeSize={18} width={"45%"} 
+          textoBotao="Quero Adotar" funcaoBotao={() => navigate("/listaPets")}/>
+          <ButtonComponent variante={2} icone={FaRedhat} iconeSize={20} width={"45%"} 
+          textoBotao="Quero Adicionar" funcaoBotao={() => navigate("/formularioAdicao")}/>
         </div>
         <div className='divInfoSiteGarantias'>
           <p> <FiShield color='#9f6d18' size={30}/> Ambiente Seguro</p>
@@ -76,37 +76,37 @@ function PaginaPrincipal() {
             <div className='divSelecaoAnimaisInfoOpcoesItem'>
               <img src={ReptilImg} alt='imagem de réptil'></img>
               <p>Répteis</p>
-              <a href='/'>Ver mais +</a>
+              <a href='/listaPets?filtro=repteis'>Ver mais +</a>
             </div>
 
             <div className='divSelecaoAnimaisInfoOpcoesItem'>
               <img src={MamiferoImg} alt='imagem de mamífero'></img>
               <p>Mamíferos</p>
-              <a href='/'>Ver mais +</a>
+              <a href='/listaPets?filtro=mamiferos'>Ver mais +</a>
             </div>
 
             <div className='divSelecaoAnimaisInfoOpcoesItem'>
               <img src={AvesImg} alt='imagem de ave'></img>
               <p>Aves</p>
-              <a href='/'>Ver mais +</a>
+              <a href='/listaPets?filtro=aves'>Ver mais +</a>
             </div>
 
             <div className='divSelecaoAnimaisInfoOpcoesItem'>
               <img src={AnfibioImg} alt='imagem de anfíbio'></img>
               <p>Anfíbios</p>
-              <a href='/'>Ver mais +</a>
+              <a href='/listaPets?filtro=anfíbios'>Ver mais +</a>
             </div>
 
             <div className='divSelecaoAnimaisInfoOpcoesItem'>
               <img src={PeixesImg} alt='imagem de peixe'></img>
               <p>Peixes</p>
-              <a href='/'>Ver mais +</a>
+              <a href='/listaPets?filtro=peixe'>Ver mais +</a>
             </div>
 
             <div className='divSelecaoAnimaisInfoOpcoesItem'>
               <img src={InvertebradosImg} alt='imagem de invertebrados'></img>
               <p>Invertebrados</p>
-              <a href='/'>Ver mais +</a>
+              <a href='/listaPets?filtro=invertebrados'>Ver mais +</a>
             </div>
 
           </div>
