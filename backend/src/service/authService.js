@@ -2,8 +2,6 @@ async function login(email, senha){
 
     const apiKey = process.env.FIREBASE_API_KEY;
 
-    console.log(apiKey)
-
     if (!apiKey){
 
         throw new Error("A Firebase Key não foi encotrada no sistema!!");

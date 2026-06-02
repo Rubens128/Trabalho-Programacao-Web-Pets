@@ -1,12 +1,12 @@
 const API_URL = "http://localhost:3001";
 
-export async function loginUsuario(email, senha){
+async function loginUsuario(email, senha){
 
     const response = await fetch(`${API_URL}/auth/login`, {
 
         method: "POST",
         headers:  {
-            "Content-Type": "applpication/json",
+            "Content-Type": "application/json",
         },
 
         body: JSON.stringify({
@@ -19,7 +19,8 @@ export async function loginUsuario(email, senha){
 
     if(!response.ok) {
         
-        throw new Error(data.message || "Erro ao fazer login");
+        console.log()
+        return null;
     }
 
     localStorage.setItem("token", data.token);
@@ -27,3 +28,36 @@ export async function loginUsuario(email, senha){
 
     return data;
 }
+
+async function verificarUsuarioLogado() {
+    
+    const token = localStorage.getItem("token");
+
+    if(!token) {
+
+        return null;
+    }
+
+    const response = await fetch("http://localhost:3001/auth/retornoUsuario", {
+
+        method: "GET",
+        headers: {
+
+            token: token
+        }
+    })
+
+    if(!response.ok){
+
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
+
+        return null;
+    }
+
+    const data = await response.json();
+
+    return data.usuario;
+}
+
+export {loginUsuario, verificarUsuarioLogado};

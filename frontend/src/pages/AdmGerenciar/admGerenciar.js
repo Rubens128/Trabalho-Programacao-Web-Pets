@@ -8,6 +8,9 @@ import { useState } from "react";
 import { IoPaw } from "react-icons/io5";
 import { FaHeart } from "react-icons/fa";
 import { IoDocumentText } from "react-icons/io5";
+import { useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+import { verificarUsuarioLogado } from '../../services/authService.js';
 
 /*class Usuario {
     constructor(){

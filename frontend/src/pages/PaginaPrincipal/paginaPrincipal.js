@@ -1,4 +1,5 @@
 import './paginaPrincipal.css';
+import { verificarUsuarioLogado } from '../../services/authService.js';
 import Header from '../../components/Header/header.js';
 import CardPet from '../../components/CardPet/cardPet.js'
 import ReptilImg from '../../assets/reptil.png';
@@ -18,9 +19,30 @@ import { FaRedhat } from "react-icons/fa";
 import { FiShield } from "react-icons/fi";
 import { FaRegHeart } from "react-icons/fa";
 import { TfiHeadphoneAlt } from "react-icons/tfi";
-
+import { useEffect } from 'react';
+import { useNavigate } from "react-router-dom"
 
 function PaginaPrincipal() {
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    
+    async function verificarUsuario() {
+      
+      const retorno = await verificarUsuarioLogado();
+
+      console.log(retorno)
+
+      if(retorno === null){
+        navigate("/login", {replace: true});
+      }
+    }
+    
+    verificarUsuario();
+
+  }, [navigate])
+
   return(
     <div>
 

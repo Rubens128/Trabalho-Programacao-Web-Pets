@@ -35,6 +35,20 @@ async function login(req, res){
     }
 }
 
+async function retornoUsuario(req, res) {
+    
+    return res.status(200).json({
+
+        message: "Usuário autenticado.",
+        usuario: {
+
+            uid: req.usuario.uid,
+            email: req.usuario.email
+        }
+    });
+}
+
 module.exports = {
-    login
+    login,
+    retornoUsuario
 };
