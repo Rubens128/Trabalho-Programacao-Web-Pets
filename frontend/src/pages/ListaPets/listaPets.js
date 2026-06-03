@@ -10,39 +10,29 @@ import { IoSend } from "react-icons/io5";
 import { IoFilterOutline } from "react-icons/io5";
 import { useEffect } from 'react';
 import { verificarUsuarioLogado } from '../../services/authService.js';
+import { listarPets } from '../../services/petsService.js';
 
 function ListaPets(){
 
     const [ inputValue, setInputValue ] = useState("");
     const [ filtroEspecie, setFiltroEspecie ] = useState({
-        "Todos": true,
-        "Repteis": false,
-        "mamiferos": false,
-        "aves": false,
-        "anfibios": false,
-        "peixes": false,
-        "invertebrados": false
+        Todos: true,
+        Repteis: false,
+        mamiferos: false,
+        aves: false,
+        anfibios: false,
+        peixes: false,
+        invertebrados: false
     });
     const [ filtroPorte, setfiltroPorte ] = useState({
-        "Todos": true,
-        "Pequeno": false,
-        "Medio": false,
-        "Grande": false
+        Todos: true,
+        Pequeno: false,
+        Medio: false,
+        Grande: false
     });
-    const [ idadeMin, setIdadeMin ] = useState(null);
-    const [ idadeMax, setIdadeMax ] = useState(null);
-    const [ animaisInfo, setAnimaisInfo ] = useState([
-                {
-                    "nome": "Leão",
-                    "especie": "Panthera leo",
-                    "local": "Savana africana"
-                },
-                {
-                    "nome": "Tigre",
-                    "especie": "Panthera tigris",
-                    "local": "Florestas da Ásia"
-                }
-    ]);
+    const [ idadeMin, setIdadeMin ] = useState(undefined);
+    const [ idadeMax, setIdadeMax ] = useState(undefined);
+    const [ animaisInfo, setAnimaisInfo ] = useState();
 
     const [ usuario, setUsuario ] = useState(null);
 
@@ -50,12 +40,20 @@ function ListaPets(){
         
         async function verificarUsuario() {
         
-        const retornoUsuario = await verificarUsuarioLogado();
+            const retornoUsuario = await verificarUsuarioLogado();
         
-        setUsuario(retornoUsuario);
+            setUsuario(retornoUsuario);
+        }
+
+        async function coletarPets() {
+                
+            const petsLista = await listarPets();
+            
+            setAnimaisInfo(petsLista);
         }
         
         verificarUsuario();
+        coletarPets();
 
     }, []);
 
@@ -121,14 +119,13 @@ function ListaPets(){
 
                 <div className={styles.divPetsOpcoes}>
                         <div className={styles.divPetsTexto}>
-                            <h1>100 Animais Encontrados</h1>
+                            <h1>{animaisInfo?.length} Animais Encontrados</h1>
                             <p>Ordernar por</p>
                         </div>
                         <div className={styles.divPetsOpcoesCards}>
-                            { animaisInfo.map((animal) => {
+                            { animaisInfo?.map((animal) => {
                                 return (
-                                    <CardPet nomeAnimal={animal.nome} 
-                                    nomeEspecie={animal.especie} local={animal.local} width='23%' height='50dvh'/>
+                                    <CardPet pet={animal} width='23%' height='50dvh'/>
                                 );
                             })}
                         </div>

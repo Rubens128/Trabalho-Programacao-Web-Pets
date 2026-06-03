@@ -13,6 +13,8 @@ import { FaHeart } from "react-icons/fa6";
 import { useState } from "react";
 import { useEffect } from 'react';
 import { verificarUsuarioLogado } from '../../services/authService.js';
+import { useNavigate } from "react-router-dom";
+import { listarPets } from "../../services/petsService.js";
 
 function Perfil(){
 
@@ -28,20 +30,47 @@ function Perfil(){
     const [numeroValue, setNumeroValue] = useState("");
     const [complementoValue, setComplementoValue] = useState("");
     const [referenciaValue, setReferenciaValue] = useState("");
-    const [ usuario, setUsuario ] = useState(null);
+    const [usuario, setUsuario] = useState(null);
+    const [petsAdicionados, setPetAdicionados] = useState(null);
+    const [petsAdotados, setPetAdotados] = useState(null);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         
         async function verificarUsuario() {
         
-        const retornoUsuario = await verificarUsuarioLogado();
-        
-        setUsuario(retornoUsuario);
+            const retornoUsuario = await verificarUsuarioLogado();
+            
+            if(retornoUsuario === null) navigate("/login");
+
+            setUsuario(retornoUsuario);
+        }
+
+        async function coletarPets() {
+            
+            verificarUsuario();
+
+            const petsListaAdicionados = await listarPets({
+                usuario:{
+                    userId: usuario?.uid,
+                    verficarAdicionados: true
+                }
+            });
+            const petsListaAdotados = await listarPets({
+                usuario:{
+                    userId: usuario?.uid,
+                    verficarAdotados: true
+                }
+            });
+            
+            setPetAdicionados(petsListaAdicionados);
+            setPetAdotados(petsListaAdotados);
         }
         
-        verificarUsuario();
+        coletarPets();
 
-    }, []);
+    }, [navigate]);
 
     return(
 
@@ -57,9 +86,9 @@ function Perfil(){
                                 <FaUser size={70} color="#604417"/>
                             </div>
                             <div className={styles.divGeralComponentesUsuarioInfoTexto}>
-                                <h1 className={styles.divGeralComponentesUsuarioInfoTextoNome}>Usuario Teste</h1>
-                                <p className={styles.divGeralComponentesUsuarioInfoTextoTipo}> <FaUser /> Usuário</p>
-                                <p className={styles.divGeralComponentesUsuarioInfoTextoEmail}> <MdOutlineMail />usuario@gmail.com</p>
+                                <h1 className={styles.divGeralComponentesUsuarioInfoTextoNome}>{usuario?.nome}</h1>
+                                <p className={styles.divGeralComponentesUsuarioInfoTextoTipo}> <FaUser /> {usuario?.tipo}</p>
+                                <p className={styles.divGeralComponentesUsuarioInfoTextoEmail}> <MdOutlineMail />{usuario?.email}</p>
                             </div>
                             <div className={styles.divGeralComponentesUsuarioInfoBotao}>
                                 {
@@ -175,11 +204,11 @@ function Perfil(){
                                 
                             </div>
                             <div className={styles.divGeralComponentesPetsListaCards}>
-                                <CardPet width="40%" height={"40dvh"} nomeAnimal={"teste"} nomeEspecie={"teste"} local={"teste"}/>
-                                <CardPet width="40%" height={"40dvh"} nomeAnimal={"teste"} nomeEspecie={"teste"} local={"teste"}/>
-                                <CardPet width="40%" height={"40dvh"} nomeAnimal={"teste"} nomeEspecie={"teste"} local={"teste"}/>
-                                <CardPet width="40%" height={"40dvh"} nomeAnimal={"teste"} nomeEspecie={"teste"} local={"teste"}/>
-                                <CardPet width="40%" height={"40dvh"} nomeAnimal={"teste"} nomeEspecie={"teste"} local={"teste"}/>
+                                {petsAdicionados?.map((animal) => {
+                                    return (
+                                        <CardPet pet={animal} width='40%' height='40dvh' editar={true}/>
+                                    );
+                                })}
                             </div>
                         </div>
 
@@ -202,11 +231,11 @@ function Perfil(){
 
                             </div>
                             <div className={styles.divGeralComponentesPetsListaCards}>
-                                <CardPet width="40%" height={"40dvh"} nomeAnimal={"teste"} nomeEspecie={"teste"} local={"teste"}/>
-                                <CardPet width="40%" height={"40dvh"} nomeAnimal={"teste"} nomeEspecie={"teste"} local={"teste"}/>
-                                <CardPet width="40%" height={"40dvh"} nomeAnimal={"teste"} nomeEspecie={"teste"} local={"teste"}/>
-                                <CardPet width="40%" height={"40dvh"} nomeAnimal={"teste"} nomeEspecie={"teste"} local={"teste"}/>
-                                <CardPet width="40%" height={"40dvh"} nomeAnimal={"teste"} nomeEspecie={"teste"} local={"teste"}/>
+                                {petsAdicionados?.map((animal) => {
+                                    return (
+                                        <CardPet pet={animal} width='40%' height='40dvh' editar={true}/>
+                                    );
+                                })}
                             </div>
                         </div>
                     </div>

@@ -17,7 +17,7 @@ function TabelaAdmComponent({ tabelaExpandida, numTabelaExpandida, listaDados = 
                         </th>
 
                         <th style={{ width: tabelaExpandida === numTabelaExpandida ? "10%" : "10%" }}>
-                            {tabelaParaUsuario ? "Tipo": "Idade"}
+                            {tabelaParaUsuario ? "Tipo": "Data Nascimento"}
                         </th>
 
                         {
@@ -41,7 +41,7 @@ function TabelaAdmComponent({ tabelaExpandida, numTabelaExpandida, listaDados = 
 
                 <tbody>
 
-                    {listaDados.map((dado) => {
+                    {listaDados?.map((dado) => {
                         return (
                             <tr>
                                 <td style={{ width: tabelaExpandida === numTabelaExpandida ? "15%" : "17.5%" }}>
@@ -53,12 +53,12 @@ function TabelaAdmComponent({ tabelaExpandida, numTabelaExpandida, listaDados = 
                                 </td>
 
                                 <td style={{ width: tabelaExpandida === numTabelaExpandida ? "10%" : "10%" }}>
-                                    {tabelaParaUsuario ? dado.tipo : dado.idade}
+                                    {tabelaParaUsuario ? dado.tipo : dado.dataNasc}
                                 </td>
 
                                 {
                                     tabelaExpandida === numTabelaExpandida ?
-                                        <td className={styles.colTipo} style={{ width: "12.5%" }}>{dado.data}</td>
+                                        <td className={styles.colTipo} style={{ width: "12.5%" }}>{dado.adicionadoEm}</td>
                                         : ""
                                 }
 
@@ -75,7 +75,7 @@ function TabelaAdmComponent({ tabelaExpandida, numTabelaExpandida, listaDados = 
                                     {
                                         tabelaExpandida === numTabelaExpandida ?
                                             <div>
-                                                <button style={{ backgroundColor: "#2c46ac" }}><MdAdminPanelSettings size={18} />Permissões</button>
+                                                <button style={{ backgroundColor: "#2c46ac"}}><MdAdminPanelSettings size={18} />Permissões</button>
                                                 <button style={{ backgroundColor: "#aaac2c" }}><MdEdit size={16} />Editar</button>
                                                 <button style={{ backgroundColor: "#ac302c" }}><FaTrash size={15} />Deletar</button>
                                             </div>

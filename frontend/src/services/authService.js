@@ -31,6 +31,7 @@ async function loginUsuario(email, senha){
     return new Usuario("teste", "teste", "teste", "teste", "adm");
 }
 
+
 async function verificarUsuarioLogado() {
     
     const token = localStorage.getItem("token");

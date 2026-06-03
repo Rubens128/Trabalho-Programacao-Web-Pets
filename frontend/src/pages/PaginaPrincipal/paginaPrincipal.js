@@ -21,12 +21,14 @@ import { TfiHeadphoneAlt } from "react-icons/tfi";
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { verificarUsuarioLogado } from '../../services/authService.js';
+import { listarPets } from '../../services/petsService.js';
 
 function PaginaPrincipal() {
 
   const navigate = useNavigate();
 
   const [ usuario, setUsuario ] = useState(null);
+  const [animaisInfoDestaque, setAnimaisInfoDestaque] = useState(null);
 
   useEffect(() => {
     
@@ -36,8 +38,19 @@ function PaginaPrincipal() {
       
       setUsuario(retornoUsuario);
     }
-    
+
+    async function coletarPets() {
+
+      const petsLista = await listarPets({
+        limit: 5,
+        recentes: true,
+      });
+
+      setAnimaisInfoDestaque(petsLista);
+    }
+
     verificarUsuario();
+    coletarPets();
 
   }, []);
 
@@ -154,11 +167,12 @@ function PaginaPrincipal() {
         {/*<CardPet nomeAnimal={"Tito"} nomeEspecie={"Ouriço Africano"} local={"São Paulo, SP"}/>*/}
         <h1 className='divPetsDestaqueTitulo'>Pets em destaque</h1>
         <div className='divPetsDestaqueCard'>
-          <CardPet width="18%" height="100%" nomeAnimal={"Tito"} nomeEspecie={"Ouriço Africano"} local={"São Paulo, SP"}/>
-          <CardPet width="18%" height="100%" nomeAnimal={"Tito"} nomeEspecie={"Ouriço Africano"} local={"São Paulo, SP"}/>
-          <CardPet width="18%" height="100%" nomeAnimal={"Tito"} nomeEspecie={"Ouriço Africano"} local={"São Paulo, SP"}/>
-          <CardPet width="18%" height="100%" nomeAnimal={"Tito"} nomeEspecie={"Ouriço Africano"} local={"São Paulo, SP"}/>
-          <CardPet width="18%" height="100%" nomeAnimal={"Tito"} nomeEspecie={"Ouriço Africano"} local={"São Paulo, SP"}/>
+          {animaisInfoDestaque?.map((animal, index) => {
+            if(index >= 5) return "";
+            return (
+              <CardPet pet={animal} width='18%' height='100%' />
+            );
+          })}
         </div>
       </div>
 
@@ -167,7 +181,8 @@ function PaginaPrincipal() {
         <h1>Heal the world, <br/>Adote o amor!</h1>
         <p>Seu novo companheiro <br/>pode estar te esperando! <br/> <span>Adoção consciente pode transformar vidas.</span></p>
         <div className="divVerTodosPetsDivBotao">
-          <ButtonComponent variante={2} icone={IoPaw} iconeSize={18} iconeNaFrente={true} textoBotao="Ver todos os pets"/>
+          <ButtonComponent variante={2} icone={IoPaw} iconeSize={18} iconeNaFrente={true} 
+          textoBotao="Ver todos os pets" funcaoBotao={() => navigate("/listaPets")}/>
         </div>
       </div>
     </div>
