@@ -1,0 +1,35 @@
+.div{
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #000000;
+    z-index: 1100;
+    top: 35%;
+    left: 35%;
+    padding: 20px;
+    font-size: 2rem;
+    font-family: Arial, Helvetica, sans-serif;
+    border: 2px solid transparent;
+    border-radius: 20px;
+    
+    background:
+    linear-gradient(#000000, #000000) padding-box,
+    linear-gradient(
+      135deg,
+      #675529,
+      #d6a559,
+      #8f6b29
+    ) border-box;
+}
+
+.divBotoes{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: center;
+  width: 100%;
+}

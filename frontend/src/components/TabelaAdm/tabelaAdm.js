@@ -3,7 +3,7 @@ import { FaTrash } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import { MdAdminPanelSettings } from "react-icons/md";
 
-function TabelaAdmComponent({ tabelaExpandida, numTabelaExpandida, listaDados = [], tabelaParaUsuario = true}) {
+function TabelaAdmComponent({ tabelaExpandida, numTabelaExpandida, listaDados = [], tabelaParaUsuario = true, funcaoDeletar}) {
 
     return (
         <div className={styles.divScroll}>
@@ -34,16 +34,39 @@ function TabelaAdmComponent({ tabelaExpandida, numTabelaExpandida, listaDados = 
                             {tabelaParaUsuario ? "Pets Adotados" : "Local"}
                         </th>
 
-                        <th className={styles.colAcoes}
-                            style={{ width: tabelaExpandida === numTabelaExpandida ? "25%" : "25%" }}>Ações</th>
-                    </tr>
+                        {
+                            tabelaParaUsuario ? "" :
+                            
+                            <th style={{ width: tabelaExpandida === numTabelaExpandida ? "15%" : "15%" }}>
+                                {"Descrição"}
+                            </th>
+                        }
+
+                        {
+                            tabelaParaUsuario ? 
+                            
+                            <th className={styles.colAcoes}
+                                style={{ width: tabelaExpandida === numTabelaExpandida ? "25%" : "25%" }}>
+                                    {"Ações"}
+                            </th>
+                            
+                            :
+                            
+                            <th className={styles.colAcoes}
+                                style={{ width: tabelaExpandida === numTabelaExpandida ? "10%" : "10%" }}>
+                                    {"Ações"}
+                            </th>
+                        }
+                        
+                        
+                        </tr>
                 </thead>
 
                 <tbody>
 
                     {listaDados?.map((dado) => {
                         return (
-                            <tr>
+                            <tr key={dado.id}>
                                 <td style={{ width: tabelaExpandida === numTabelaExpandida ? "15%" : "17.5%" }}>
                                     {dado.nome}
                                 </td>
@@ -70,23 +93,52 @@ function TabelaAdmComponent({ tabelaExpandida, numTabelaExpandida, listaDados = 
                                     {tabelaParaUsuario ? dado.petsAdotados : dado.local}
                                 </td>
 
-                                <td className={styles.colAcoes}
-                                    style={{ width: tabelaExpandida === numTabelaExpandida ? "25%" : "25%" }}>
-                                    {
-                                        tabelaExpandida === numTabelaExpandida ?
-                                            <div>
-                                                <button style={{ backgroundColor: "#2c46ac"}}><MdAdminPanelSettings size={18} />Permissões</button>
-                                                <button style={{ backgroundColor: "#aaac2c" }}><MdEdit size={16} />Editar</button>
-                                                <button style={{ backgroundColor: "#ac302c" }}><FaTrash size={15} />Deletar</button>
-                                            </div>
-                                            :
-                                            <div className={styles.colAcoes}>
-                                                <button style={{ backgroundColor: "#2c46ac" }}><MdAdminPanelSettings size={18} /></button>
-                                                <button style={{ backgroundColor: "#aaac2c" }}><MdEdit size={16} /></button>
-                                                <button style={{ backgroundColor: "#ac302c" }}><FaTrash size={15} /></button>
-                                            </div>
-                                    }
-                                </td>
+                                {
+                                    tabelaParaUsuario ? "" :
+                                    <td style={{ width: tabelaExpandida === numTabelaExpandida ? "15%" : "15%" }}>
+                                        {dado.descricao}
+                                    </td>
+                                }
+
+                                {
+                                    tabelaParaUsuario ?
+                                        <td className={styles.colAcoes}
+                                            style={{ width: tabelaExpandida === numTabelaExpandida ? "25%" : "25%" }}>
+                                            {
+                                                tabelaExpandida === numTabelaExpandida ?
+                                                    <div>
+                                                        <button style={{ backgroundColor: "#2c46ac"}}><MdAdminPanelSettings size={18} />Permissões</button>
+                                                        <button style={{ backgroundColor: "#aaac2c" }}><MdEdit size={16} />Editar</button>
+                                                        <button style={{ backgroundColor: "#ac302c" }}><FaTrash size={15} />Deletar</button>
+                                                    </div>
+                                                    :
+                                                    <div className={styles.colAcoes}>
+                                                        <button style={{ backgroundColor: "#2c46ac" }}><MdAdminPanelSettings size={18} /></button>
+                                                        <button style={{ backgroundColor: "#aaac2c" }}><MdEdit size={16} /></button>
+                                                        <button style={{ backgroundColor: "#ac302c" }}><FaTrash size={15} /></button>
+                                                    </div>
+                                            }
+                                        </td>
+                                    :  
+                                        <td className={styles.colAcoes}
+                                            style={{ width: tabelaExpandida === numTabelaExpandida ? "10%" : "10%" }}>
+                                            {
+                                                tabelaExpandida === numTabelaExpandida ?
+                                                    <div>
+                                                        <button style={{ backgroundColor: "#ac302c" }} onClick={() => funcaoDeletar(dado.id)}>
+                                                            <FaTrash size={15} />Deletar
+                                                        </button>
+                                                    </div>
+                                                    :
+                                                    <div className={styles.colAcoes}>
+                                                        <button style={{ backgroundColor: "#ac302c" }} onClick={() => funcaoDeletar(dado.id)}>
+                                                            <FaTrash size={15} />
+                                                        </button>
+                                                    </div>
+                                            }
+                                        </td>
+                                }
+                                
                             </tr>
                         );
                     })}

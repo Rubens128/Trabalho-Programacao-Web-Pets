@@ -59,4 +59,5 @@
     border: none;
     color: rgb(204, 203, 203);
     border-radius: 5px;
+    cursor: pointer;
 }

@@ -3,7 +3,8 @@ import Header from "../../components/Header/header.js";
 import SideMenu from "../../components/SideMenu/sideMenu.js";
 import InputComponent from "../../components/Input/input.js";
 import ButtonComponent from "../../components/Button/button.js";
-import CardPet from "../../components/CardPet/cardPet.js"
+import CardPet from "../../components/CardPet/cardPet.js";
+import PopUpComponent from "../../components/popUp/popUp.js";
 import { FaUser } from "react-icons/fa";
 import { MdOutlineMail } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
@@ -15,6 +16,7 @@ import { useEffect } from 'react';
 import { verificarUsuarioLogado } from '../../services/authService.js';
 import { useNavigate } from "react-router-dom";
 import { listarPets } from "../../services/petsService.js";
+import { deletarPet } from "../../services/petsService.js";
 
 function Perfil(){
 
@@ -31,8 +33,12 @@ function Perfil(){
     const [complementoValue, setComplementoValue] = useState("");
     const [referenciaValue, setReferenciaValue] = useState("");
     const [usuario, setUsuario] = useState(null);
-    const [petsAdicionados, setPetAdicionados] = useState(null);
-    const [petsAdotados, setPetAdotados] = useState(null);
+    const [petsAdicionados, setPetAdicionados] = useState([]);
+    const [petsAdotados, setPetAdotados] = useState([]);
+    const [petIdDeletar, setPetIdDeletar] = useState(null);
+    const [popUpConfimacaoAtivo, setPopUpConfimacaoAtivo] = useState(false);
+    const [mensagemPopUpAviso, setMensagemPopUpAviso] = useState("");
+    const [mensagemPopUpAvisoSucesso, setMensagemPopUpAvisoSucesso] = useState(false);
 
     const navigate = useNavigate();
 
@@ -71,6 +77,38 @@ function Perfil(){
         coletarPets();
 
     }, [navigate]);
+
+    async function deletarPetHandle() {
+        
+        setPopUpConfimacaoAtivo(false);
+
+        const resposta = await deletarPet(petIdDeletar);
+
+        if(!resposta){
+
+            setMensagemPopUpAvisoSucesso(false);
+            setMensagemPopUpAviso("Erro ao deletar o pet.")
+
+            setTimeout(() =>{
+                setMensagemPopUpAviso("");
+            }, 3000);
+
+            setPetIdDeletar(null);
+
+            return;
+        }
+
+        setMensagemPopUpAvisoSucesso(true);
+        setMensagemPopUpAviso("Sucesso ao deletar o pet.");
+
+        setTimeout(() =>{
+            setMensagemPopUpAviso("");
+        }, 3000);
+
+        setPetAdicionados((petsAntigos) => petsAntigos.filter((pet) => pet.id !== petIdDeletar))
+
+        setPetIdDeletar(null);
+    }
 
     return(
 
@@ -206,7 +244,11 @@ function Perfil(){
                             <div className={styles.divGeralComponentesPetsListaCards}>
                                 {petsAdicionados?.map((animal) => {
                                     return (
-                                        <CardPet pet={animal} width='40%' height='40dvh' editar={true}/>
+                                        <CardPet pet={animal} width='40%' height='40dvh' podeEditarDeletar={true}
+                                        deletarFuncao={(petId) => {
+                                            setPopUpConfimacaoAtivo(true);
+                                            setPetIdDeletar(petId);
+                                        }} key={animal.id}/>
                                     );
                                 })}
                             </div>
@@ -231,9 +273,9 @@ function Perfil(){
 
                             </div>
                             <div className={styles.divGeralComponentesPetsListaCards}>
-                                {petsAdicionados?.map((animal) => {
+                                {petsAdotados?.map((animal) => {
                                     return (
-                                        <CardPet pet={animal} width='40%' height='40dvh' editar={true}/>
+                                        <CardPet pet={animal} width='40%' height='40dvh' jaAdotado={true} key={animal.id}/>
                                     );
                                 })}
                             </div>
@@ -241,6 +283,26 @@ function Perfil(){
                     </div>
                 </div>
             </div>
+
+            {
+                popUpConfimacaoAtivo ?
+
+                <PopUpComponent mensagem={"Deseja mesmo remover o pet?"} mensagemSucesso={false} 
+                popUpConfirmacao={true} funcaoCancelar= {() => {
+                    setPetIdDeletar(null);
+                    setPopUpConfimacaoAtivo(false);
+                }} funcaoConfirmar={deletarPetHandle}/>
+
+                : ""
+            }
+
+            {
+                mensagemPopUpAviso ?
+
+                <PopUpComponent mensagem={mensagemPopUpAviso} mensagemSucesso={mensagemPopUpAvisoSucesso}/>
+
+                : ""
+            }
         </div>
     );
 }

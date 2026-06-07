@@ -1,27 +1,87 @@
 import styles from './cardPet.module.css';
 import TesteImg from '../../assets/ourico.png';
-import ButtonComponent from "../Button/button"
+import ButtonComponent from "../Button/button";
+import InputComponent from "../Input/input";
+import TextInputComponent from "../TextInput/textInput";
+import PopUpComponent from '../popUp/popUp';
 import { CiHeart } from "react-icons/ci";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { useState } from 'react';
-import { useNavigation } from "react-router-dom"
+import { useNavigation } from "react-router-dom";
+import { editarPet } from '../../services/petsService';
 
-function CardPet({width = "15%", height = "42%", pet, editar=false, logado=false}){
+function CardPet({width = "15%", height = "42%", pet, podeEditarDeletar=false, 
+                    logado=false, jaAdotado=false, deletarFuncao= () => ""}){
 
     const [ verMais, setVerMais ] = useState(false);
     const [ editando, setEditando ] = useState(false);
+    const [ nomeValue, setNomeValue ] = useState(pet.nome);
+    const [ idadeValue, setIdadeValue ] = useState(pet.dataNasc);
+    const [ especieValue, setEspecieValue ] = useState(pet.especie);
+    const [ localValue, setLocalValue ] = useState(pet.local);
+    const [ adicionadoEmValue, setAdicionadoEmValue] = useState(pet.adicionadoEm);
+    const [ statusValue, setStatusValue ] = useState(pet.status);
+    const [ descricaoValue, setDescricaoValue ] = useState(pet.descricao);
+    const [ mensagemPopUp, setMensagemPopUp ] = useState("");
+    const [ mensagemPopUpSucesso, setMensagemPopUpSucesso] = useState(true);
+
+    async function editarPetHandle(){
+
+        const valoresNovosDict = {
+            nome: nomeValue,
+            idade: idadeValue,
+            especie: especieValue,
+            local: localValue,
+            adicionadoEm: adicionadoEmValue,
+            status: statusValue,
+            descricao: descricaoValue,
+        }
+
+        const editar = await editarPet(pet.id, valoresNovosDict);
+
+        if(!editar){
+
+            setMensagemPopUp("Erro ao editar informações do pet.");
+            setMensagemPopUpSucesso(false);
+
+            setTimeout(() => {
+                setMensagemPopUp("")
+            }, 3000);
+
+            setNomeValue(pet.nome);
+            setIdadeValue(pet.dataNasc);
+            setEspecieValue(pet.especie);
+            setLocalValue(pet.local);
+            setAdicionadoEmValue(pet.adicionadoEm);
+            setStatusValue(pet.status);
+            setDescricaoValue(pet.descricao);
+
+            setEditando(false);
+
+            return;
+        }
+
+        setMensagemPopUp("Sucesso ao editar informações do pet.");
+        setMensagemPopUpSucesso(true);
+
+        setTimeout(() => {
+            setMensagemPopUp("")
+        }, 3000);
+
+        setEditando(false);
+    }
 
     return (
-        <div style={{ width: width, height: height }} className={styles.cardPet} key={pet.id}>
+        <div style={{ width: width, height: height }} className={styles.cardPet}>
             <img src={TesteImg} alt='Imagem de Ouriço'></img>
             <div className={styles.cardPetTags}>
                 <p>ADOÇÃO</p>
                 <CiHeart size={35} />
             </div>
             <div className={styles.cardPetInfo}>
-                <h1>{pet.nome}</h1>
-                <p>{pet.especie}</p>
-                <p> <FaMapMarkerAlt /> {pet.local}</p>
+                <h1>{nomeValue}</h1>
+                <p>{especieValue}</p>
+                <p> <FaMapMarkerAlt /> {localValue}</p>
                 <a onClick={() => setVerMais(true)}>Ver mais +</a>
             </div>
 
@@ -35,65 +95,138 @@ function CardPet({width = "15%", height = "42%", pet, editar=false, logado=false
                         </div>
 
                         <div className={styles.cardPetVerMaisInfosDivColuna}>
+                            
                             <div className={styles.cardPetVerMaisInfosDivColunaDado}>
                                 <h1>Nome:</h1>
-                                <p>{pet.nome}</p>
+                                { editando ? 
+                                    <InputComponent variavel={nomeValue} funcaoSetVariavel={setNomeValue} 
+                                    height={"50%"} width={"90%"}/> 
+                                    : <p>{nomeValue}</p> 
+                                }
                             </div>
+
                             <div className={styles.cardPetVerMaisInfosDivColunaDado}>
                                 <h1>Especie:</h1>
-                                <p>{pet.especie}</p>
+                                { editando ? 
+                                    <InputComponent variavel={especieValue} funcaoSetVariavel={setEspecieValue} 
+                                    height={"50%"} width={"90%"}/> 
+                                    : <p>{especieValue}</p>
+                                }
                             </div>
+
                             <div className={styles.cardPetVerMaisInfosDivColunaDado}>
                                 <h1>Adicionado Em:</h1>
-                                <p>{pet.adicionadoEm}</p>
+                                { editando ? 
+                                    <InputComponent variavel={adicionadoEmValue} funcaoSetVariavel={setAdicionadoEmValue} 
+                                    height={"50%"} width={"90%"}/> 
+                                    :  <p>{adicionadoEmValue}</p>
+                                }
                             </div>
                         </div>
 
                         <div className={styles.cardPetVerMaisInfosDivColuna}>
+
                             <div className={styles.cardPetVerMaisInfosDivColunaDado}>
                                 <h1>Idade:</h1>
-                                <p>temporario ano / {pet.dataNasc}</p>
+                                { editando ? 
+                                    <InputComponent variavel={idadeValue} funcaoSetVariavel={setIdadeValue} 
+                                    height={"50%"} width={"90%"}/> 
+                                    : <p>temporario ano / {idadeValue}</p>
+                                }
                             </div>
+                            
                             <div className={styles.cardPetVerMaisInfosDivColunaDado}>
                                 <h1>Local:</h1>
-                                <p>{pet.local}</p>
+                                { editando ? 
+                                    <InputComponent variavel={localValue} funcaoSetVariavel={setLocalValue} 
+                                    height={"50%"} width={"90%"}/> 
+                                    : <p>{localValue}</p> 
+                                }
                             </div>
+
                             <div className={styles.cardPetVerMaisInfosDivColunaDado}>
                                 <h1>Status:</h1>
-                                <p>{pet.status}</p>
+                                { editando ? 
+                                    <InputComponent variavel={statusValue} funcaoSetVariavel={setStatusValue} 
+                                    height={"50%"} width={"90%"}/> 
+                                    : <p>{statusValue}</p> 
+                                }
                             </div>
-                        </div>
 
+                        </div>
                     </div>
                     
                     <div className={styles.cardPetVerMaisInfosDiv} style={{justifyContent: "space-between"}}>
 
                         <div className={styles.cardPetVerMaisInfosDivColuna}>
-                            <div className={styles.cardPetVerMaisInfosDivColunaDado} style={{alignSelf: "center"}}>
+                            <div className={styles.cardPetVerMaisInfosDivColunaDado} style={{alignSelf: "center", height: "90%"}}>
                                 <h1>Descricao:</h1>
-                                <p>{pet.descricao}</p>
+                                { editando ? 
+                                    <TextInputComponent variavel={descricaoValue} funcaoSetVariavel={setDescricaoValue} 
+                                    height={"100%"} width={"90%"}/> 
+                                    : <p>{descricaoValue}</p>
+                                }
                             </div>
                         </div>
 
                         <h1 className={styles.cardPetVerMaisInfosDivHeal}>Heal the world, <br/>Adote o amor!</h1>
+                        
+                        {
+                        podeEditarDeletar ?
+                            <div className={styles.cardPetVerMaisInfosDivBotoes}>
+                                {
+                                    editando ?
 
-                        <div className={styles.cardPetVerMaisInfosDivBotoes}>
-                            <ButtonComponent variante={2} textoBotao={"Fechar"} 
-                            funcaoBotao={() => setVerMais(false)}/>
+                                        <ButtonComponent variante={1} textoBotao={"Salvar"} 
+                                            funcaoBotao={editarPetHandle}/>
+                                    :
 
-                            {
-                                editar ?
-                                    <ButtonComponent variante={1} textoBotao={"Editar"} 
-                                    funcaoBotao={() => setEditando(true)}/>
-                                :
-                                    <ButtonComponent variante={1} textoBotao={"Adotar"} 
+                                        <>
+                                            <ButtonComponent variante={2} textoBotao={"Fechar"} 
+                                                funcaoBotao={() => setVerMais(false)}/>
+
+                                            <ButtonComponent variante={1} textoBotao={"Deletar"}
+                                                funcaoBotao={() => {
+                                                    deletarFuncao(pet.id);
+                                                    setVerMais(false);
+                                                }}/>
+
+                                            <ButtonComponent variante={1} textoBotao={"Editar"} 
+                                                funcaoBotao={() => setEditando(true)}/>
+                                        </>
+                                }
+
+                                
+                            </div>
+                            
+                        :
+
+                            <div className={styles.cardPetVerMaisInfosDivBotoes}>
+                                
+                                <ButtonComponent variante={2} textoBotao={"Fechar"} 
                                     funcaoBotao={() => setVerMais(false)}/>
-                            }
-                        </div>
+
+                        
+                                { 
+                                    jaAdotado ? "" :
+                                    <ButtonComponent variante={1} textoBotao={"Adotar"} 
+                                        funcaoBotao={() => setVerMais(false)}/>
+                                } 
+                            
+                            </div>
+                        }
                     </div>
 
                 </div>
             </div>
+
+            {
+                mensagemPopUp ?
+
+                <PopUpComponent mensagem={mensagemPopUp} mensagemSucesso={mensagemPopUpSucesso}/>
+
+                : ""
+            }
         </div>
     );
 }

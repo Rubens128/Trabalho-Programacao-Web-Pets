@@ -54,6 +54,74 @@ async function listarPets(filtros){
     return dados;
 }
 
+async function editarPet(idPet, novosDados) {
+    
+    try{
+        const response = await fetch(`${API_URL}/testePetsEditar`, {
+            method: "PUT",
+            headers:  {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                novosDados
+            }),
+        })
+
+        const dados = await response.json();
+
+        if(!response.ok){
+
+            console.log("Erro ao editar Pet");
+
+            return null;
+        }
+
+        return dados;
+
+    } catch (error){
+
+        console.log("Erro ao editar pet:", error);
+
+        return null;
+    }
+    
+}
+
+async function deletarPet(idPet) {
+    
+    try{
+        const response = await fetch(`${API_URL}/testePetsDeletar`, {
+            method: "DELETE",
+            headers:  {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idPet
+            }),
+        })
+
+        const dados = await response.json();
+
+        if(!response.ok){
+
+            console.log("Erro ao deletar Pet");
+
+            return null;
+        }
+
+        return dados;
+
+    } catch (error){
+
+        console.log("Erro ao deletar pet:", error);
+
+        return null;
+    }
+    
+}
+
 export {
     listarPets,
+    editarPet,
+    deletarPet,
 };

@@ -3,6 +3,7 @@ import Header from "../../components/Header/header";
 import CardInfoAdmComponent from "../../components/CardInfoAdm/cardInfoAdm";
 import ButtonComponent from "../../components/Button/button";
 import TabelaAdmComponent from "../../components/TabelaAdm/tabelaAdm";
+import PopUpComponent from "../../components/popUp/popUp.js";
 import { HiUsers } from "react-icons/hi2";
 import { useState } from "react";
 import { IoPaw } from "react-icons/io5";
@@ -12,6 +13,7 @@ import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { verificarUsuarioLogado } from '../../services/authService.js';
 import { listarPets } from "../../services/petsService.js";
+import { deletarPet } from "../../services/petsService.js";
 
 /*class Usuario {
     constructor(){
@@ -99,9 +101,13 @@ function AdmGerenciar() {
     }
   ]);
 
-  const [animais, setAnimais] = useState([]);
+  const [petsLista, setPetsLista] = useState([]);
 
   const [usuario, setUsuario] = useState(null);
+  const [petIdDeletar, setPetIdDeletar] = useState(null);
+  const [popUpConfimacaoAtivo, setPopUpConfimacaoAtivo] = useState(false);
+  const [mensagemPopUpAviso, setMensagemPopUpAviso] = useState("");
+  const [mensagemPopUpAvisoSucesso, setMensagemPopUpAvisoSucesso] = useState(false);
 
   const navigate = useNavigate();
 
@@ -121,13 +127,45 @@ function AdmGerenciar() {
     async function coletarPets() {
       const petsLista = await listarPets();
 
-      setAnimais(petsLista);
+      setPetsLista(petsLista);
     }
 
     verificarUsuario();
     coletarPets();
 
   }, [navigate]);
+
+  async function deletarPetHandle() {
+        
+        setPopUpConfimacaoAtivo(false);
+
+        const resposta = await deletarPet(petIdDeletar);
+
+        if(!resposta){
+
+            setMensagemPopUpAvisoSucesso(false);
+            setMensagemPopUpAviso("Erro ao deletar o pet.")
+
+            setTimeout(() =>{
+                setMensagemPopUpAviso("");
+            }, 3000);
+
+            setPetIdDeletar(null);
+
+            return;
+        }
+
+        setMensagemPopUpAvisoSucesso(true);
+        setMensagemPopUpAviso("Sucesso ao deletar o pet.");
+
+        setTimeout(() =>{
+            setMensagemPopUpAviso("");
+        }, 3000);
+
+        setPetsLista((petsAntigos) => petsAntigos.filter((pet) => pet.id !== petIdDeletar))
+
+        setPetIdDeletar(null);
+    }
 
   return (
     <div>
@@ -191,10 +229,33 @@ function AdmGerenciar() {
             </div>
 
             <TabelaAdmComponent tabelaExpandida={tabelaExpandida}
-              numTabelaExpandida={2} listaDados={animais} tabelaParaUsuario={false} />
+              numTabelaExpandida={2} listaDados={petsLista} tabelaParaUsuario={false} funcaoDeletar={(petId) => {
+                setPopUpConfimacaoAtivo(true);
+                setPetIdDeletar(petId);
+              }} />
           </div>
         </div>
       </div>
+
+      {
+        popUpConfimacaoAtivo ?
+
+          <PopUpComponent mensagem={"Deseja mesmo remover o pet?"} mensagemSucesso={false}
+            popUpConfirmacao={true} funcaoCancelar={() => {
+              setPetIdDeletar(null);
+              setPopUpConfimacaoAtivo(false);
+            }} funcaoConfirmar={deletarPetHandle} />
+
+          : ""
+      }
+
+      {
+        mensagemPopUpAviso ?
+
+          <PopUpComponent mensagem={mensagemPopUpAviso} mensagemSucesso={mensagemPopUpAvisoSucesso} />
+
+          : ""
+      }
     </div>
   );
 }
