@@ -64,6 +64,8 @@ function Login(){
                 setSenhaInputError(true);
                 setError("Email ou senha invalidos");
             }
+
+            navigate("/");
         }
     }
 

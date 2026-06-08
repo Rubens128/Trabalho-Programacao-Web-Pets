@@ -5,6 +5,7 @@ import ButtonComponent from "../../components/Button/button";
 import SelectComponent from "../../components/Select/select";
 import TextInputComponent from "../../components/TextInput/textInput";
 import imgMichaelPet from "../../assets/imagemMichaelPet.png";
+import PopUpComponent from "../../components/popUp/popUp.js";
 import { useState } from "react";
 import { FaFileCircleCheck } from "react-icons/fa6";
 import { ImFilePicture } from "react-icons/im";
@@ -19,12 +20,13 @@ import { Bs4Circle } from "react-icons/bs";
 import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { verificarUsuarioLogado } from '../../services/authService.js';
+import { AdicionarPet } from "../../services/petsService.js";
 
 function FormularioAdicao() {
 
     const [nomePet, setNomePet] = useState("");
-    const [nomeCientifico, setNomeCientifico] = useState("");
-    const [idade, setIdade] = useState(null);
+    const [especie, setEspecie] = useState("");
+    const [local, setLocal] = useState(null);
     const [dataNascimento, setDataNascimento] = useState("");
     const [sexo, setSexo] = useState("");
     const [cor, setCor] = useState("");
@@ -33,7 +35,21 @@ function FormularioAdicao() {
     const [temperamento, setTemperamento] = useState("");
     const [origem, setOrigem] = useState("");
     const [motivoAnuncio, setMotivoAnuncio] = useState("");
-    const [ usuario, setUsuario ] = useState(null);
+    const [usuario, setUsuario] = useState(null);
+    const [erroPreenchimento, setErroPreenchimento] = useState({
+        nomePet: false,
+        especie: false,
+        local: false,
+        dataNascimento: false,
+        sexo: false,
+        cor: false,
+        peso: false,
+        altura: false,
+        temperamento: false,
+    });
+    const [popUpConfimacaoAtivo, setPopUpConfimacaoAtivo] = useState(false);
+    const [mensagemPopUpAviso, setMensagemPopUpAviso] = useState("");
+    const [mensagemPopUpAvisoSucesso, setMensagemPopUpAvisoSucesso] = useState(false);
 
     const navigate = useNavigate();
 
@@ -43,7 +59,7 @@ function FormularioAdicao() {
         
         const retornoUsuario = await verificarUsuarioLogado();
         
-        if (retornoUsuario.tipo !== "adm"){
+        if (retornoUsuario?.tipo !== "adm"){
           navigate("/");
         }
 
@@ -53,6 +69,62 @@ function FormularioAdicao() {
         verificarUsuario();
 
     }, [navigate]);
+
+    async function AdicionarPetHandle(){
+
+        setErroPreenchimento((erros) => 
+            Object.fromEntries(
+                Object.keys(erros || {}).map((erro) => [erro, false])
+            )
+        );
+
+        const dadosPet = {
+            nomePet: nomePet,
+            especie: especie,
+            local: local,
+            dataNascimento: dataNascimento,
+            sexo: sexo,
+            cor: cor,
+            peso: peso,
+            altura: altura,
+            temperamento: temperamento,
+            origem: origem,
+            motivoAnuncio: motivoAnuncio,
+        }
+
+        const resposta = await AdicionarPet(dadosPet);
+
+        if(Object.keys(resposta.erros || {}).length > 0){
+
+            setErroPreenchimento((dados) => ({
+                ...dados,
+                ...resposta.erros
+            }))
+
+            return;
+        }
+
+        if(resposta.erroBackEnd){
+
+            setMensagemPopUpAvisoSucesso(false);
+            setMensagemPopUpAviso("Erro ao adicionar o pet.")
+
+            setTimeout(() =>{
+                setMensagemPopUpAviso("");
+            }, 3000);
+
+            return;
+        }
+
+        setMensagemPopUpAvisoSucesso(true);
+        setMensagemPopUpAviso("Sucesso ao adicionar o pet.");
+
+        setTimeout(() =>{
+            setMensagemPopUpAviso("");
+            navigate("/");
+        }, 3000);
+
+    }
 
     return (
 
@@ -69,31 +141,31 @@ function FormularioAdicao() {
                         <div>
                             <label for="nomePet" >Nome do pet *</label>
                             <InputComponent variavel={nomePet} funcaoSetVariavel={setNomePet}
-                                placeholder="Digite o nome do pet" id="nomePet" width="100%" />
+                                placeholder="Digite o nome do pet" id="nomePet" width="100%" error={erroPreenchimento.nomePet}/>
                         </div>
 
                         <div className={styles.divComponentesConjuntoInscricaoFormularioCampos}>
                             <div>
-                                <label for="nomeCientifico">Nome Cientifíco *</label>
-                                <InputComponent variavel={nomeCientifico} funcaoSetVariavel={setNomeCientifico}
-                                    placeholder="'Eublepharis macularius'" id="nomeCientifico" width="100%" />
+                                <label for="nomeCientifico">Espécie *</label>
+                                <InputComponent variavel={especie} funcaoSetVariavel={setEspecie}
+                                    placeholder="'Beagle, Macaco Prego...'" id="nomeCientifico" width="100%" error={erroPreenchimento.especie}/>
                             </div>
                             <div>
-                                <label for="telefone">Idade aproximada *</label>
-                                <InputComponent variavel={idade} funcaoSetVariavel={setIdade}
-                                    placeholder="Digite a idade aproximada" id="idade" width="100%" />
+                                <label for="telefone">Local Atual *</label>
+                                <InputComponent variavel={local} funcaoSetVariavel={setLocal}
+                                    placeholder="Digite o local atual, ex: São Paulo SP" id="idade" width="100%" error={erroPreenchimento.local}/>
                             </div>
                         </div>
                         <div className={styles.divComponentesConjuntoInscricaoFormularioCampos}>
                             <div>
                                 <label for="email">Data Nascimento *</label>
                                 <InputComponent variavel={dataNascimento} funcaoSetVariavel={setDataNascimento}
-                                    placeholder="DD/MM/AAAA" id="dataNascimento" width="100%" />
+                                    placeholder="DD/MM/AAAA" id="dataNascimento" width="100%" error={erroPreenchimento.dataNascimento}/>
                             </div>
                             <div>
                                 <label for="sexo">Sexo *</label>
                                 <InputComponent variavel={sexo} funcaoSetVariavel={setSexo}
-                                    placeholder="Digite o sexo do animal" id="sexo" width="100%" />
+                                    placeholder="Digite o sexo do animal" id="sexo" width="100%" error={erroPreenchimento.sexo}/>
                             </div>
                         </div>
 
@@ -103,17 +175,17 @@ function FormularioAdicao() {
                                 <div>
                                     <label for="cor">Cor/Padrão *</label>
                                     <InputComponent variavel={cor} funcaoSetVariavel={setCor}
-                                        placeholder="Descreva a cor ou padrão do pet" id="cor" width="100%" />
+                                        placeholder="Descreva a cor ou padrão do pet" id="cor" width="100%" error={erroPreenchimento.cor}/>
                                 </div>
                                 <div>
                                     <label for="peso">Peso *</label>
                                     <InputComponent variavel={peso} funcaoSetVariavel={setPeso}
-                                        placeholder="Digite o peso do pet" id="peso" width="100%" />
+                                        placeholder="Digite o peso do pet" id="peso" width="100%" error={erroPreenchimento.peso}/>
                                 </div>
                                 <div>
                                     <label for="altura">Altura *</label>
                                     <InputComponent variavel={altura} funcaoSetVariavel={setAltura}
-                                        placeholder="Digite a altura do pet" id="cor" width="100%" />
+                                        placeholder="Digite a altura do pet" id="cor" width="100%" error={erroPreenchimento.altura} />
                                 </div>
                             </div>
                             <div className={styles.divComponentesCaracteristicaConjunto}>
@@ -151,7 +223,7 @@ function FormularioAdicao() {
                             <TextInputComponent variavel={motivoAnuncio} funcaoSetVariavel={setMotivoAnuncio}
                                 placeholder="..." id="experienciaUsuario" width="100%" height="20dvh" />
                         </div>
-                        <ButtonComponent textoBotao="Enviar Formulário" variante={1} />
+                        <ButtonComponent textoBotao="Enviar Formulário" variante={1} funcaoBotao={AdicionarPetHandle}/>
                     </div>
 
                     <div className={styles.divCardsLaterais}>
@@ -224,6 +296,14 @@ function FormularioAdicao() {
                     </div>
                 </div>
             </div>
+
+            {
+                mensagemPopUpAviso ?
+
+                <PopUpComponent mensagem={mensagemPopUpAviso} mensagemSucesso={mensagemPopUpAvisoSucesso}/>
+
+                : ""
+            }
         </div>
     );
 }

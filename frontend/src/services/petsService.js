@@ -120,8 +120,80 @@ async function deletarPet(idPet) {
     
 }
 
+async function AdicionarPet(dadosPet){
+
+    const resposta = {
+        erros: {},
+        dadosPet: dadosPet,
+        erroBackEnd: false,
+        mensageError: "",
+        dados: null,
+    }
+
+    Object.keys(dadosPet).forEach((key, index) => {
+
+        if (index > 7) return;
+
+        if (!dadosPet[key]) resposta.erros[key] = true;
+    })
+
+    if(Object.keys(resposta.erros).length > 0) return resposta;
+
+    const data = new Date(dadosPet.dataNascimento);
+
+    if(isNaN(data.getTime())) resposta.erros["dataNascimento"] = true;
+
+    const peso = dadosPet.peso.replace("," , ".");
+    const altura = dadosPet.altura.replace("," , ".");
+
+    if(isNaN(Number(peso))) resposta.erros["peso"] = true;
+
+    if(isNaN(Number(altura))) resposta.erros["altura"] = true;
+
+    if(Object.keys(resposta.erros).length > 0) return resposta;
+
+    try{
+        const responseBackEnd = await fetch(`${API_URL}/testePetsAdicionar`, {
+            method: "POST",
+            headers:  {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                dadosPet
+            }),
+        })
+
+        const dados = await responseBackEnd.json();
+
+        if(!responseBackEnd.ok){
+
+            console.log("Erro ao adicionar Pet");
+
+            resposta.erroBackEnd = true;
+            resposta.mensageError = "Erro ao adicionar Pet"
+
+            return resposta;
+        }
+
+        resposta.dados = dados;
+
+        return resposta;
+
+    } catch (error){
+
+        console.log("Erro ao adicionar pet:", error);
+
+        resposta.erroBackEnd = true;
+        resposta.mensageError = "Erro ao adicionar Pet";
+
+        return resposta;
+    }
+
+}
+
 export {
     listarPets,
     editarPet,
     deletarPet,
+    AdicionarPet,
 };
