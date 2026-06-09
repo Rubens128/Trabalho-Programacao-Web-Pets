@@ -17,13 +17,12 @@ import { verificarUsuarioLogado } from '../../services/authService.js';
 import { useNavigate } from "react-router-dom";
 import { listarPets } from "../../services/petsService.js";
 import { deletarPet } from "../../services/petsService.js";
+import { EditarUsuario } from "../../services/userService.js";
 
 function Perfil(){
 
     const [listaAberta, setListaAberta] = useState(0);
     const [editar, setEditar] = useState(false);
-    const [nomeValue, setNomeValue] = useState("");
-    const [emailValue, setEmailValue] = useState("");
     const [cepValue, setCepValue] = useState("");
     const [estadoValue, setEstadoValue] = useState("");
     const [cidadeValue, setCidadeValue] = useState("");
@@ -51,6 +50,15 @@ function Perfil(){
             if(retornoUsuario === null) navigate("/login");
 
             setUsuario(retornoUsuario);
+
+            setCepValue(retornoUsuario.endereco.cep);
+            setEstadoValue(retornoUsuario.endereco.estado);
+            setCidadeValue(retornoUsuario.endereco.cidade);
+            setBairroValue(retornoUsuario.endereco.bairro);
+            setRuaValue(retornoUsuario.endereco.rua);
+            setNumeroValue(retornoUsuario.endereco.numero);
+            setComplementoValue(retornoUsuario.endereco.complemento);
+            setReferenciaValue(retornoUsuario.endereco.referencia);
         }
 
         async function coletarPets() {
@@ -110,6 +118,68 @@ function Perfil(){
         setPetIdDeletar(null);
     }
 
+    async function editarPerfilHandle() {
+        
+        const novosDados = {
+            ...usuario,
+            endereco: {
+                cep: cepValue,
+                estado: estadoValue,
+                cidade: cidadeValue,
+                bairro: bairroValue,
+                rua: ruaValue,
+                numero: numeroValue,
+                complemento: complementoValue,
+                referencia: referenciaValue,
+            }
+        }
+
+        if(Object.keys(novosDados.endereco).every((key) => usuario.endereco?.[key] === novosDados.endereco[key])){
+
+            setEditar(false);
+
+            return;
+        }
+
+        setPopUpConfimacaoAtivo(false);
+
+        const resposta = await EditarUsuario(usuario.nome, novosDados);
+
+        if(!resposta){
+
+            setMensagemPopUpAvisoSucesso(false);
+            setMensagemPopUpAviso("Erro ao editar o usuário.")
+
+            setTimeout(() =>{
+                setMensagemPopUpAviso("");
+            }, 3000);
+
+            setCepValue(usuario.endereco.cep);
+            setEstadoValue(usuario.endereco.estado);
+            setCidadeValue(usuario.endereco.cidade);
+            setBairroValue(usuario.endereco.bairro);
+            setRuaValue(usuario.endereco.rua);
+            setNumeroValue(usuario.endereco.numero);
+            setComplementoValue(usuario.endereco.complemento);
+            setReferenciaValue(usuario.endereco.referencia);
+
+            setEditar(false);
+
+            return;
+        }
+
+        setEditar(false);
+
+        setMensagemPopUpAvisoSucesso(true);
+        setMensagemPopUpAviso("Sucesso ao editar o usuário.");
+
+        setTimeout(() =>{
+            setMensagemPopUpAviso("");
+        }, 3000);
+
+        setUsuario(novosDados);
+    }
+
     return(
 
         <div>
@@ -132,7 +202,7 @@ function Perfil(){
                                 {
                                     editar ?
                                     <ButtonComponent variante={2} icone={MdEdit} iconeSize={25} 
-                                    textoBotao="Salvar" funcaoBotao={() => setEditar(false)}/>
+                                    textoBotao="Salvar" funcaoBotao={editarPerfilHandle}/>
                                     :
                                     <ButtonComponent variante={2} icone={MdEdit} iconeSize={25} 
                                     textoBotao="Editar Perfil" funcaoBotao={() => setEditar(true)}/>
@@ -150,7 +220,7 @@ function Perfil(){
                                         {
                                         editar ? 
                                             <InputComponent variavel={cepValue} funcaoSetVariavel={setCepValue}/> 
-                                            : <h1>70000-000</h1>
+                                            : <h1>{cepValue}</h1>
                                         }
                                     </div>
                                     <div>
@@ -158,7 +228,7 @@ function Perfil(){
                                         {
                                         editar ? 
                                         <InputComponent variavel={estadoValue} funcaoSetVariavel={setEstadoValue}/> 
-                                        : <h1>DF</h1>
+                                        : <h1>{estadoValue}</h1>
                                         }
                                         
                                     </div>
@@ -167,7 +237,7 @@ function Perfil(){
                                         {
                                         editar ? 
                                         <InputComponent variavel={cidadeValue} funcaoSetVariavel={setCidadeValue}/> 
-                                        : <h1>Brasília</h1>
+                                        : <h1>{cidadeValue}</h1>
                                         }
                                         
                                     </div>
@@ -176,7 +246,7 @@ function Perfil(){
                                         {
                                         editar ? 
                                         <InputComponent variavel={bairroValue} funcaoSetVariavel={setBairroValue}/> 
-                                        : <h1>Asa Norte</h1>
+                                        : <h1>{bairroValue}</h1>
                                         }
                                         
                                     </div>
@@ -187,7 +257,8 @@ function Perfil(){
                                         {
                                         editar ? 
                                         <InputComponent variavel={ruaValue} funcaoSetVariavel={setRuaValue}/> 
-                                        : <h1>Rua Teste</h1>}
+                                        : <h1>{ruaValue}</h1>
+                                        }
                                         
                                     </div>
                                     <div>
@@ -195,7 +266,7 @@ function Perfil(){
                                         {
                                         editar ? 
                                         <InputComponent variavel={numeroValue} funcaoSetVariavel={setNumeroValue}/> 
-                                        : <h1>123</h1>
+                                        : <h1>{numeroValue}</h1>
                                         }
                                         
                                     </div>
@@ -204,7 +275,7 @@ function Perfil(){
                                         {
                                         editar ? 
                                         <InputComponent variavel={complementoValue} funcaoSetVariavel={setComplementoValue}/> 
-                                        : <h1>Casa Verde</h1>
+                                        : <h1>{complementoValue}</h1>
                                         }
                                         
                                     </div>
@@ -214,7 +285,7 @@ function Perfil(){
                                         editar ? 
                                         <InputComponent variavel={referenciaValue} 
                                         funcaoSetVariavel={setReferenciaValue}/> 
-                                        : <h1>Perto da floresta</h1>
+                                        : <h1>{referenciaValue}</h1>
                                         }
                                         
                                     </div>

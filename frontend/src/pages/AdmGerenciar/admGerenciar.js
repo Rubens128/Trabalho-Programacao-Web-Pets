@@ -4,6 +4,7 @@ import CardInfoAdmComponent from "../../components/CardInfoAdm/cardInfoAdm";
 import ButtonComponent from "../../components/Button/button";
 import TabelaAdmComponent from "../../components/TabelaAdm/tabelaAdm";
 import PopUpComponent from "../../components/popUp/popUp.js";
+import SelectComponent from "../../components/Select/select.js";
 import { HiUsers } from "react-icons/hi2";
 import { useState } from "react";
 import { IoPaw } from "react-icons/io5";
@@ -12,8 +13,8 @@ import { IoDocumentText } from "react-icons/io5";
 import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { verificarUsuarioLogado } from '../../services/authService.js';
-import { listarPets } from "../../services/petsService.js";
-import { deletarPet } from "../../services/petsService.js";
+import { listarPets, deletarPet } from "../../services/petsService.js";
+import { ListarUsuarios, DeletarUsuario, EditarUsuario } from "../../services/userService.js";
 
 /*class Usuario {
     constructor(){
@@ -30,84 +31,15 @@ import { deletarPet } from "../../services/petsService.js";
 function AdmGerenciar() {
 
   const [tabelaExpandida, setTabelaExpandida] = useState(0);
-  /*const [ usuariosInfo, setUsuariosInfo ] = useState([new Usuario(
-
-  )])*/
-
-  // registros temporarios de usuarios e animais.
-  const [usuarios, setUsuarios] = useState([
-    {
-      nome: "Ana Souza",
-      email: "ana.souza@email.com",
-      tipo: "Administrador",
-      data: "2024-01-10",
-      petsAdicionado: 8,
-      petsAdotados: 2,
-      acoes: "Editar",
-    },
-    {
-      nome: "Bruno Lima",
-      email: "bruno.lima@email.com",
-      tipo: "Usuário",
-      data: "2024-01-15",
-      petsAdicionado: 3,
-      petsAdotados: 1,
-      acoes: "Editar",
-    },
-    {
-      nome: "Carla Mendes",
-      email: "carla.mendes@email.com",
-      tipo: "Voluntário",
-      data: "2024-02-02",
-      petsAdicionado: 12,
-      petsAdotados: 4,
-      acoes: "Editar",
-    },
-    {
-      nome: "Diego Alves",
-      email: "diego.alves@email.com",
-      tipo: "Usuário",
-      data: "2024-02-18",
-      petsAdicionado: 1,
-      petsAdotados: 3,
-      acoes: "Editar",
-    },
-    {
-      nome: "Eduarda Rocha",
-      email: "eduarda.rocha@email.com",
-      tipo: "Administrador",
-      data: "2024-03-05",
-      petsAdicionado: 15,
-      petsAdotados: 6,
-      acoes: "Editar",
-    },
-    {
-      nome: "Felipe Costa",
-      email: "felipe.costa@email.com",
-      tipo: "Usuário",
-      data: "2024-03-12",
-      petsAdicionado: 4,
-      petsAdotados: 0,
-      acoes: "Editar",
-    },
-    {
-      nome: "Gabriela Nunes",
-      email: "gabriela.nunes@email.com",
-      tipo: "Voluntário",
-      data: "2024-03-25",
-      petsAdicionado: 10,
-      petsAdotados: 5,
-      acoes: "Editar",
-    }
-  ]);
-
+  const [usuariosLista, setUsuariosLista] = useState([]);
   const [petsLista, setPetsLista] = useState([]);
-
   const [usuario, setUsuario] = useState(null);
   const [petIdDeletar, setPetIdDeletar] = useState(null);
+  const [usuarioNomeDeletar, setUsuarioNomeDeletar] = useState("");
   const [popUpConfimacaoAtivo, setPopUpConfimacaoAtivo] = useState(false);
   const [mensagemPopUpAviso, setMensagemPopUpAviso] = useState("");
   const [mensagemPopUpAvisoSucesso, setMensagemPopUpAvisoSucesso] = useState(false);
+  const [editarTipoUsuario, setEditarTipoUsuario] = useState({nome: "teste", tipo: "Administrador"});
 
   const navigate = useNavigate();
 
@@ -117,7 +49,7 @@ function AdmGerenciar() {
 
       const retornoUsuario = await verificarUsuarioLogado();
 
-      if (retornoUsuario.tipo !== "adm") {
+      if (retornoUsuario?.tipo !== "adm") {
         navigate("/");
       }
 
@@ -130,42 +62,108 @@ function AdmGerenciar() {
       setPetsLista(petsLista);
     }
 
+    async function coletarUsuarios(params) {
+      
+      const usuariosLista = await ListarUsuarios();
+
+      console.log(usuariosLista);
+
+      setUsuariosLista(usuariosLista);
+    } 
+
     verificarUsuario();
     coletarPets();
+    coletarUsuarios();
 
   }, [navigate]);
 
-  async function deletarPetHandle() {
-        
-        setPopUpConfimacaoAtivo(false);
+  async function deletarPetouUsuarioHandle(deletarUsuarioVariavel = false) {
 
-        const resposta = await deletarPet(petIdDeletar);
+    setPopUpConfimacaoAtivo(false);
+    
+    let resposta;
 
-        if(!resposta){
+    if(deletarUsuarioVariavel === true){
 
-            setMensagemPopUpAvisoSucesso(false);
-            setMensagemPopUpAviso("Erro ao deletar o pet.")
+      resposta = await DeletarUsuario(petIdDeletar);
 
-            setTimeout(() =>{
-                setMensagemPopUpAviso("");
-            }, 3000);
+    } else{
 
-            setPetIdDeletar(null);
-
-            return;
-        }
-
-        setMensagemPopUpAvisoSucesso(true);
-        setMensagemPopUpAviso("Sucesso ao deletar o pet.");
-
-        setTimeout(() =>{
-            setMensagemPopUpAviso("");
-        }, 3000);
-
-        setPetsLista((petsAntigos) => petsAntigos.filter((pet) => pet.id !== petIdDeletar))
-
-        setPetIdDeletar(null);
+      resposta = await deletarPet(petIdDeletar);
     }
+
+    if (!resposta) {
+
+      setMensagemPopUpAvisoSucesso(false);
+      setMensagemPopUpAviso("Erro ao deletar")
+
+      setTimeout(() => {
+        setMensagemPopUpAviso("");
+      }, 3000);
+
+      setPetIdDeletar(null);
+
+      return;
+    }
+
+    setMensagemPopUpAvisoSucesso(true);
+    setMensagemPopUpAviso("Sucesso ao deletar");
+
+    setTimeout(() => {
+      setMensagemPopUpAviso("");
+    }, 3000);
+
+    if(deletarUsuarioVariavel === true){
+
+      setUsuariosLista((usuariosAntigos) => usuariosAntigos.filter((usuario) => usuario.nome !== usuarioNomeDeletar));
+
+      setUsuarioNomeDeletar("");
+
+    }else{
+
+      setPetsLista((petsAntigos) => petsAntigos.filter((pet) => pet.id !== petIdDeletar))
+
+      setPetIdDeletar(null);
+    }
+    
+  }
+
+  async function editarUsuarioHandle() {
+    
+    const usuarioComTipoAntigo = usuariosLista.find((usuario) => usuario.nome === editarTipoUsuario.nome)
+
+    let resposta;
+
+    if(usuarioComTipoAntigo?.tipo === editarTipoUsuario?.tipo) resposta = true; 
+    else resposta = await EditarUsuario(editarTipoUsuario.nome, editarTipoUsuario);
+
+    if (!resposta) {
+
+      setMensagemPopUpAvisoSucesso(false);
+      setMensagemPopUpAviso("Erro ao editar a permissão")
+
+      setTimeout(() => {
+        setMensagemPopUpAviso("");
+      }, 3000);
+
+      setEditarTipoUsuario(null);
+
+      return;
+    }
+
+    setMensagemPopUpAvisoSucesso(true);
+    setMensagemPopUpAviso("Sucesso ao editar a permissão ");
+
+    setTimeout(() => {
+      setMensagemPopUpAviso("");
+    }, 3000);
+
+    setUsuariosLista((usuarios) => usuarios.map(
+        (usuario => usuario.nome === editarTipoUsuario.nome ? {...usuario, tipo: editarTipoUsuario.tipo} : usuario)
+        ))
+
+    setEditarTipoUsuario(null);
+  }
 
   return (
     <div>
@@ -207,7 +205,11 @@ function AdmGerenciar() {
 
             </div>
 
-            <TabelaAdmComponent tabelaExpandida={tabelaExpandida} numTabelaExpandida={1} listaDados={usuarios} />
+            <TabelaAdmComponent tabelaExpandida={tabelaExpandida} numTabelaExpandida={1} listaDados={usuariosLista} 
+              funcaoDeletar={(nome) => {
+                setPopUpConfimacaoAtivo(true);
+                setUsuarioNomeDeletar(nome);
+              }} funcaoEditar={(usuario) => setEditarTipoUsuario(usuario)}/>
           </div>
 
           <div className={styles.divGeralUserPetsGeral}
@@ -232,7 +234,7 @@ function AdmGerenciar() {
               numTabelaExpandida={2} listaDados={petsLista} tabelaParaUsuario={false} funcaoDeletar={(petId) => {
                 setPopUpConfimacaoAtivo(true);
                 setPetIdDeletar(petId);
-              }} />
+              }}/>
           </div>
         </div>
       </div>
@@ -240,11 +242,12 @@ function AdmGerenciar() {
       {
         popUpConfimacaoAtivo ?
 
-          <PopUpComponent mensagem={"Deseja mesmo remover o pet?"} mensagemSucesso={false}
+          <PopUpComponent mensagem={"Deseja mesmo deletar?"} mensagemSucesso={false}
             popUpConfirmacao={true} funcaoCancelar={() => {
               setPetIdDeletar(null);
+              setUsuarioNomeDeletar("");
               setPopUpConfimacaoAtivo(false);
-            }} funcaoConfirmar={deletarPetHandle} />
+            }} funcaoConfirmar={() => deletarPetouUsuarioHandle(petIdDeletar === null)} />
 
           : ""
       }
@@ -255,6 +258,26 @@ function AdmGerenciar() {
           <PopUpComponent mensagem={mensagemPopUpAviso} mensagemSucesso={mensagemPopUpAvisoSucesso} />
 
           : ""
+      }
+
+      {
+        editarTipoUsuario !== null ?
+
+          <div className={styles.popUpEditar}>
+            <h1> {editarTipoUsuario?.nome} </h1>
+            <p>Alterar permissão do Usuario:</p>
+            <SelectComponent variavel={editarTipoUsuario?.tipo}
+              funcaoSetVariavel={(novoTipo) => setEditarTipoUsuario((infoUsuario) => ({
+                ...infoUsuario,
+                tipo: novoTipo
+              }))} opcoes={["Administrador", "Usuário", "Voluntário"]}/>
+            <div className={styles.popUpEditarDivBotoes}>
+              <ButtonComponent variante={1} textoBotao="Cancelar" funcaoBotao={() => setEditarTipoUsuario(null)}/>
+              <ButtonComponent variante={2} textoBotao="Confirmar" funcaoBotao={editarUsuarioHandle}/>
+            </div>
+          </div>
+
+        : ""
       }
     </div>
   );

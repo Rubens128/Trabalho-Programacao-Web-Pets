@@ -1,5 +1,3 @@
-import Pet from "../models/pet";
-
 const API_URL = "http://localHost:3001";
 
 async function listarPets(filtros){

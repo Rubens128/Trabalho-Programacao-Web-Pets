@@ -60,7 +60,16 @@ async function verificarUsuarioLogado() {
 
     const data = await response.json();
 
-    return  new Usuario("teste", "teste", "teste", "teste", "teste", "adm");
+    return  new Usuario("teste", "teste", "teste", "teste", {
+        cep: "70000-000",
+        estado: "DF",
+        cidade: "Brasília",
+        bairro: "Asa Norte",
+        rua: "Rua Teste",
+        numero: "123",
+        complemento: "Casa Verde",
+        referencia: "Perto da floresta"
+    }, "adm");
 }
 
 export {loginUsuario, verificarUsuarioLogado};

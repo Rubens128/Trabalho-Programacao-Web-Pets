@@ -38,7 +38,7 @@ function Login(){
 
     }, [navigate]);
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
 
         setEmailInputError(false);
         setSenhaInputError(false);
@@ -56,13 +56,15 @@ function Login(){
 
         } else {
 
-            const data = loginUsuario(emailInputValue, senhaInputValue);
+            const data = await loginUsuario(emailInputValue, senhaInputValue);
 
             if (data === null){
 
                 setEmailInputError(true);
                 setSenhaInputError(true);
                 setError("Email ou senha invalidos");
+
+                return;
             }
 
             navigate("/");
@@ -101,9 +103,11 @@ function Login(){
                     <p style={{display: error ? "flex" : "none", justifyContent: "center", color: "#ac302c", fontFamily: "Arial, Helvetica, sans-serif"}}>{error}</p>
 
                     <div className={styles.divPrincipalDivBotoes}>
-                        <ButtonComponent textoBotao="Entrar" icone={FaPaw} variante={1} width="100%" height="8dvh" funcaoBotao={handleLogin}/>
+                        <ButtonComponent textoBotao="Entrar" icone={FaPaw} 
+                        variante={1} width="100%" height="8dvh" funcaoBotao={handleLogin}/>
                         <p>ou</p>
-                        <ButtonComponent textoBotao="Criar uma conta" icone={FaPaw} variante={2} width="100%" height="7dvh"/>
+                        <ButtonComponent textoBotao="Criar uma conta" icone={FaPaw} 
+                        variante={2} width="100%" height="7dvh" funcaoBotao={() => navigate("/registrar")}/>
                     </div>
                 </div>
             </div>
