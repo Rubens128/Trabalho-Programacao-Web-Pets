@@ -1,6 +1,8 @@
-const authService = require("../service/authService");
+import { auth } from "../config/firebase.js";
+import { InserirUsuarioDb } from "../service/usuarioService.js"
+import authService from "../service/authService.js";
 
-async function login(req, res){
+export async function login(req, res){
 
     try{
 
@@ -35,7 +37,7 @@ async function login(req, res){
     }
 }
 
-async function retornoUsuario(req, res) {
+export async function retornoUsuario(req, res) {
     
     return res.status(200).json({
 
@@ -48,7 +50,58 @@ async function retornoUsuario(req, res) {
     });
 }
 
-module.exports = {
-    login,
-    retornoUsuario
-};
+export async function registrarUsuarioController(req, res) {
+
+    const { nome, email, senha } = req.body;
+
+    const senhaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,16}$/;
+
+    if (!nome || nome === "null") {
+        
+        return res.status(400).json({
+
+            message: "Nome inválido"
+        });
+    }       
+
+    if (!email || !email.includes("@")) {
+    
+        return res.status(400).json({
+
+            message: "Email inválido"
+        });
+    }
+
+    if (!senha || !senhaRegex.test(senha)) {
+
+        return res.status(400).json({
+
+            message: "A senha deve ter entre 8 e 16 caracteres, com letra maiúscula, minúscula, número e caractere especial."
+        });
+    }
+
+    try{
+
+        console.log(nome, email, senha);
+        const usuario = await authService.registrarUsuarioService({
+
+            nome: nome,
+            email: email,
+            senha: senha
+        });
+
+        if (Object.keys(usuario).includes("error") === true) {
+
+            return res.status(400).json(usuario);
+        }
+
+        const dicionario = await InserirUsuarioDb(usuario);
+        return res.status(200).json(dicionario);
+
+    }catch(error){
+        
+        return res.status(400).json({
+            message: error
+        })
+    }
+}

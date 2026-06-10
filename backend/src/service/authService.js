@@ -1,3 +1,5 @@
+import { auth } from "../config/firebase.js";
+
 async function login(email, senha){
 
     const apiKey = process.env.FIREBASE_API_KEY;
@@ -40,6 +42,42 @@ async function login(email, senha){
     };
 }
 
-module.exports = {
-    login,
-};
+async function registrarUsuarioService(usuario) {
+
+
+  try {
+
+    await auth.getUserByEmail(usuario.email);
+
+    return {
+        error: true,
+        message: "email já está em uso."
+    }
+
+  } catch (error) {
+
+    if (error.code !== "auth/user-not-found") {
+        
+        console.log(error);
+    }
+  }
+
+  try {
+    const usuarioCriado = await auth.createUser({
+      email: usuario.email,
+      password: usuario.senha,
+      displayName: usuario.nome
+    });
+
+    return {
+      uid: usuarioCriado.uid,
+      email: usuarioCriado.email,
+      nome: usuario.nome,
+    };
+
+  } catch (error) {
+    throw new Error(error.message || "Erro ao criar usuário");
+  }
+}
+
+export default { login, registrarUsuarioService };

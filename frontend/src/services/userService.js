@@ -6,8 +6,8 @@ async function ListarUsuarios(filtros){
 
         const filtrosPadrao = {
             userId: null,
-            nome: "",
-            email: "",
+            pesquisa: "",
+            limit: 50,
         }
 
         const filtrosFinal = {
