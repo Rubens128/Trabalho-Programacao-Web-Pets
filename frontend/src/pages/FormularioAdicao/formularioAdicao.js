@@ -21,6 +21,7 @@ import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { verificarUsuarioLogado } from '../../services/authService.js';
 import { AdicionarPet } from "../../services/petsService.js";
+import { FiUpload } from "react-icons/fi";
 
 function FormularioAdicao() {
 
@@ -50,6 +51,8 @@ function FormularioAdicao() {
     const [popUpConfimacaoAtivo, setPopUpConfimacaoAtivo] = useState(false);
     const [mensagemPopUpAviso, setMensagemPopUpAviso] = useState("");
     const [mensagemPopUpAvisoSucesso, setMensagemPopUpAvisoSucesso] = useState(false);
+    const [arquivoValue, setArquivoValue] = useState(null);
+    const [arquivoPreview, setArquivoPreview] = useState(null);
 
     const navigate = useNavigate();
 
@@ -126,6 +129,28 @@ function FormularioAdicao() {
 
     }
 
+    async function handleFile(event) {
+
+        const file = event.target.files[0];
+
+        if(file){
+
+            setArquivoValue(file);
+            setArquivoPreview(URL.createObjectURL(file));
+        }   
+    }
+
+    useEffect(() => {
+
+        return () => {
+            
+            if(arquivoPreview){
+                URL.revokeObjectURL(arquivoPreview);
+            }
+        };
+
+    }, [arquivoPreview]);
+
     return (
 
         <div>
@@ -188,37 +213,22 @@ function FormularioAdicao() {
                                         placeholder="Digite a altura do pet" id="cor" width="100%" error={erroPreenchimento.altura} />
                                 </div>
                             </div>
-                            <div className={styles.divComponentesCaracteristicaConjunto}>
-                                <div>
-                                    <label for="temperamento">Descreva o temperamento/comportamento do pet *</label>
-                                    <TextInputComponent variavel={temperamento} funcaoSetVariavel={setTemperamento}
-                                        placeholder="Dócil e amigável..." id="experimento" width="100%" height="20dvh" />
-                                </div>
-                            </div>
                         </div>
                         <div className={styles.divComponentesFoto}>
 
                             <h1>3.Fotos do pet</h1>
                             <h3>Adicione fotos nítidas do pet de diferentes ângulos</h3>
                             <div className={styles.divComponentesFotoConjunto}>
-
-                            </div>
-                        </div>
-
-                        <div className={styles.divComponentesOrigem}>
-                            <h1>4.Origem do pet</h1>
-                            <div className={styles.divComponentesOrigemConjunto}>
-                                <label>Conte-nos um pouco sobre a origem do pet e sua história com ele *: </label>
-                                <TextInputComponent variavel={origem} funcaoSetVariavel={setOrigem}
-                                    placeholder="..." id="origem" width="100%" height="20dvh" />
-                            </div>
-                            <div className={styles.divComponentesOrigemConjunto}>
-                                <p>Documento De origem</p>
+                                <label for="inputImage" className={styles.divComponentesFotoConjuntoLabel}>
+                                    {arquivoPreview ? "" : <p> <FiUpload size={30}/> Upload da foto </p>}
+                                    {arquivoPreview ? <img src={arquivoPreview || ""}/> : ""}
+                                </label>
+                                <input style={{display: "none"}} type="file" onChange={handleFile} id="inputImage"/>
                             </div>
                         </div>
 
                         <div className={styles.divComponentesComentario}>
-                            <h1>5.Comentários</h1>
+                            <h1>4.Comentários</h1>
                             <label>Conte-nos porque tem interesse em doar esse pet (opcional):</label>
                             <TextInputComponent variavel={motivoAnuncio} funcaoSetVariavel={setMotivoAnuncio}
                                 placeholder="..." id="experienciaUsuario" width="100%" height="20dvh" />

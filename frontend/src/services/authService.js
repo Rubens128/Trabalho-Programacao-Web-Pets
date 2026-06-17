@@ -41,35 +41,45 @@ async function verificarUsuarioLogado() {
         return null;
     }
 
-    const response = await fetch("http://localhost:3001/auth/retornoUsuario", {
+    try{
 
-        method: "GET",
-        headers: {
+        const response = await fetch("http://localhost:3001/auth/retornoUsuario", {
 
-            token: token
+            method: "GET",
+            headers: {
+
+                token: token
+            }
+        })
+
+        if(!response.ok){
+
+            localStorage.removeItem("token");
+            localStorage.removeItem("usuario");
+
+            return null;
         }
-    })
 
-    if(!response.ok){
+        const data = await response.json();
 
-        localStorage.removeItem("token");
-        localStorage.removeItem("usuario");
+        return new Usuario("teste", "teste", "teste", "teste", {
+            cep: "70000-000",
+            estado: "DF",
+            cidade: "Brasília",
+            bairro: "Asa Norte",
+            rua: "Rua Teste",
+            numero: "123",
+            complemento: "Casa Verde",
+            referencia: "Perto da floresta"
+        }, "adm");
+
+    } catch(error){
+
+        console.log(error);
 
         return null;
     }
-
-    const data = await response.json();
-
-    return  new Usuario("teste", "teste", "teste", "teste", {
-        cep: "70000-000",
-        estado: "DF",
-        cidade: "Brasília",
-        bairro: "Asa Norte",
-        rua: "Rua Teste",
-        numero: "123",
-        complemento: "Casa Verde",
-        referencia: "Perto da floresta"
-    }, "adm");
+    
 }
 
-export {loginUsuario, verificarUsuarioLogado};
+export { loginUsuario, verificarUsuarioLogado };

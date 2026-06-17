@@ -38,7 +38,6 @@ async function ListarUsuarios(filtros){
 
         return [];
     }
-    
 }
 
 

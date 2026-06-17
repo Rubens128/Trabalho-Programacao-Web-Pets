@@ -5,6 +5,8 @@
     padding: 10px;
     resize:none;
     border-radius: 10px;
+    border: 2px solid transparent;
+
     background:
     linear-gradient(#000000, #000000) padding-box,
     linear-gradient(

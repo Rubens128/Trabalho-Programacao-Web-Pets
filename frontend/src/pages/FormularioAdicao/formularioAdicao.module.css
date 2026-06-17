@@ -88,6 +88,51 @@
     display: flex;
     flex-direction: column;
     gap:20px;
+    width: 100%;
+}
+
+.divComponentesFotoConjunto{
+
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+}
+
+.divComponentesFotoConjuntoLabel{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 15dvw;
+    aspect-ratio: 1/1;
+    border: 2px solid transparent;
+    border-radius: 20px;
+
+    background:
+    linear-gradient(#000000, #000000) padding-box,
+    linear-gradient(
+      135deg,
+      #fff3d4,
+      #d6a559,
+      #8f6b29
+    ) border-box;
+}
+
+.divComponentesFotoConjuntoLabel p{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.divComponentesFotoConjuntoLabel img{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 20px;
 }
 
 .divComponentesOrigem{

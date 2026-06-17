@@ -41,7 +41,7 @@ function Registrar(){
         
         if (retornoUsuario) navigate("/");
 
-        setUsuario(retornoUsuario);
+            setUsuario(retornoUsuario);
         }
         
         verificarUsuario();

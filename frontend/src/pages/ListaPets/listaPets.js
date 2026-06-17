@@ -80,7 +80,7 @@ function ListaPets(){
                             Object.keys(filtroEspecie).map((index) => {
                                 return (
                                     <CheckBoxComponent texto={index} variavel={filtroEspecie} 
-                                    setFuncaoVariavel={setFiltroEspecie} index={index}/> 
+                                    setFuncaoVariavel={setFiltroEspecie} index={index} key={index}/> 
                                 );
                             })
                         }
@@ -92,7 +92,7 @@ function ListaPets(){
                             Object.keys(filtroPorte).map((index) => {
                                 return (
                                     <CheckBoxComponent texto={index} variavel={filtroPorte} 
-                                    setFuncaoVariavel={setfiltroPorte} index={index}/> 
+                                    setFuncaoVariavel={setfiltroPorte} index={index} key={index}/> 
                                 );
                             })
                         }
@@ -125,7 +125,7 @@ function ListaPets(){
                         <div className={styles.divPetsOpcoesCards}>
                             { animaisInfo?.map((animal) => {
                                 return (
-                                    <CardPet pet={animal} width='23%' height='50dvh'/>
+                                    <CardPet pet={animal} width='23%' height='50dvh' key={animal.id}/>
                                 );
                             })}
                         </div>

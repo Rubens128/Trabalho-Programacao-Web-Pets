@@ -17,7 +17,7 @@ function App(){
         <Route path="/login" element={<Login />} />
         <Route path="/perfil" element={<Perfil />}/>
         <Route path="/listaPets" element={<ListaPets />} />
-        <Route path="/formularioAdocao" element={<FormularioAdocao/>} />
+        <Route path="/formularioAdocao/:petId" element={<FormularioAdocao/>} />
         <Route path="/formularioAdicao" element={<FormularioAdicao/>} />
         <Route path="/registrar" element={<Registrar/>} />
         <Route path="/admGerenciar" element={<AdmGerenciar />} />

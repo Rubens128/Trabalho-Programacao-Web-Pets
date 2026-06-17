@@ -62,6 +62,69 @@
     font-size: 0.9rem;
 }
 
+.divGeralRelatorios{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+
+    background:
+    linear-gradient(#000000, #000000) padding-box,
+    linear-gradient(
+      135deg,
+      #fff3d4,
+      #d6a559,
+      #8f6b29
+    ) border-box;
+}
+
+.divGeralRelatoriosTexto{
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+    gap: 10px;
+}
+
+.divGeralRelatoriosTexto h1{
+    font-weight: 400;
+    font-size: 1.5rem;
+}
+
+.divGeralRelatoriosTexto p{
+    opacity: 0.8;
+    font-size: 1rem;
+}
+
+.divGeralRelatoriosCards{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    gap: 20px;
+}
+
+.divGeralRelatoriosCards::-webkit-scrollbar {
+  height: 5px;
+}
+
+.divGeralRelatoriosCards::-webkit-scrollbar-track {
+  background: #151515;
+  border-radius: 10px;
+}
+
+.divGeralRelatoriosCards::-webkit-scrollbar-thumb {
+  background: #997237;
+  border-radius: 10px;
+}
+
+.divGeralRelatoriosCards::-webkit-scrollbar-thumb:hover {
+  background: #5a4319;
+}
+
 .popUpEditar{
     position: fixed;
     display: flex;

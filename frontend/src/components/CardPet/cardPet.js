@@ -7,7 +7,7 @@ import PopUpComponent from '../popUp/popUp';
 import { CiHeart } from "react-icons/ci";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { useState } from 'react';
-import { useNavigation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { editarPet } from '../../services/petsService';
 
 function CardPet({width = "15%", height = "42%", pet, podeEditarDeletar=false, 
@@ -24,6 +24,8 @@ function CardPet({width = "15%", height = "42%", pet, podeEditarDeletar=false,
     const [ descricaoValue, setDescricaoValue ] = useState(pet.descricao);
     const [ mensagemPopUp, setMensagemPopUp ] = useState("");
     const [ mensagemPopUpSucesso, setMensagemPopUpSucesso] = useState(true);
+    
+    const navigate = useNavigate();
 
     async function editarPetHandle(){
 
@@ -210,7 +212,7 @@ function CardPet({width = "15%", height = "42%", pet, podeEditarDeletar=false,
                                 { 
                                     jaAdotado ? "" :
                                     <ButtonComponent variante={1} textoBotao={"Adotar"} 
-                                        funcaoBotao={() => setVerMais(false)}/>
+                                        funcaoBotao={() => navigate(`/formularioAdocao/${pet.id}`)}/>
                                 } 
                             
                             </div>

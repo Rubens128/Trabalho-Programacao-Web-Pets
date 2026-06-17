@@ -5,6 +5,7 @@ import ButtonComponent from "../../components/Button/button";
 import TabelaAdmComponent from "../../components/TabelaAdm/tabelaAdm";
 import PopUpComponent from "../../components/popUp/popUp.js";
 import SelectComponent from "../../components/Select/select.js";
+import CardRelatorioComponent from "../../components/CardRelatorio/cardRelatorio.js";
 import { HiUsers } from "react-icons/hi2";
 import { useState } from "react";
 import { IoPaw } from "react-icons/io5";
@@ -15,31 +16,23 @@ import { useNavigate } from "react-router-dom";
 import { verificarUsuarioLogado } from '../../services/authService.js';
 import { listarPets, deletarPet } from "../../services/petsService.js";
 import { ListarUsuarios, DeletarUsuario, EditarUsuario } from "../../services/userService.js";
-
-/*class Usuario {
-    constructor(){
-        this.nome = "";
-        this.email = "";
-        this.tipo = "";
-        this.data = "";
-        this.petsAdicionado = 0;
-        this.petsAdotados = 0;
-        this.acoes = "";
-    }
-}*/
+import { ListarRelatorios, DeletarRelatorio, EditarRelatorio } from "../../services/relatorioService.js";
 
 function AdmGerenciar() {
 
   const [tabelaExpandida, setTabelaExpandida] = useState(0);
   const [usuariosLista, setUsuariosLista] = useState([]);
   const [petsLista, setPetsLista] = useState([]);
+  const [relatoriosLista, setRelatoriosLista] = useState([]);
   const [usuario, setUsuario] = useState(null);
   const [petIdDeletar, setPetIdDeletar] = useState(null);
   const [usuarioNomeDeletar, setUsuarioNomeDeletar] = useState("");
+  const [relatorioIdDeletar, setRelatorioIdDeletar] = useState(null);
   const [popUpConfimacaoAtivo, setPopUpConfimacaoAtivo] = useState(false);
   const [mensagemPopUpAviso, setMensagemPopUpAviso] = useState("");
   const [mensagemPopUpAvisoSucesso, setMensagemPopUpAvisoSucesso] = useState(false);
-  const [editarTipoUsuario, setEditarTipoUsuario] = useState({nome: "teste", tipo: "Administrador"});
+  const [editarTipoUsuario, setEditarTipoUsuario] = useState(null);
+  const [editarTipoRelatorio, setEditarTipoRelatorio] = useState(null);
 
   const navigate = useNavigate();
 
@@ -69,27 +62,38 @@ function AdmGerenciar() {
       console.log(usuariosLista);
 
       setUsuariosLista(usuariosLista);
-    } 
+    }
+
+    async function coletarRelatorios(params) {
+      const relatoriosLista = await ListarRelatorios();
+
+      setRelatoriosLista(relatoriosLista);
+    }
 
     verificarUsuario();
     coletarPets();
     coletarUsuarios();
+    coletarRelatorios();
 
   }, [navigate]);
 
-  async function deletarPetouUsuarioHandle(deletarUsuarioVariavel = false) {
+  async function deletarHandle() {
 
     setPopUpConfimacaoAtivo(false);
     
     let resposta;
 
-    if(deletarUsuarioVariavel === true){
+    if(usuarioNomeDeletar !== ""){
 
-      resposta = await DeletarUsuario(petIdDeletar);
+      resposta = await DeletarUsuario(usuarioNomeDeletar);
 
-    } else{
+    }else if (petIdDeletar !== null){
 
       resposta = await deletarPet(petIdDeletar);
+    
+    } else if (relatorioIdDeletar !== null){
+
+      resposta = await DeletarRelatorio(relatorioIdDeletar);
     }
 
     if (!resposta) {
@@ -102,6 +106,8 @@ function AdmGerenciar() {
       }, 3000);
 
       setPetIdDeletar(null);
+      setRelatorioIdDeletar(null);
+      setUsuarioNomeDeletar("");
 
       return;
     }
@@ -113,17 +119,23 @@ function AdmGerenciar() {
       setMensagemPopUpAviso("");
     }, 3000);
 
-    if(deletarUsuarioVariavel === true){
+    if(usuarioNomeDeletar !== ""){
 
       setUsuariosLista((usuariosAntigos) => usuariosAntigos.filter((usuario) => usuario.nome !== usuarioNomeDeletar));
 
       setUsuarioNomeDeletar("");
 
-    }else{
+    }else if(petIdDeletar !== null){
 
       setPetsLista((petsAntigos) => petsAntigos.filter((pet) => pet.id !== petIdDeletar))
 
       setPetIdDeletar(null);
+    
+    } else if(relatorioIdDeletar !== null){
+
+      setRelatoriosLista((relatoriosAntigos) => relatoriosAntigos.filter((relatorio) => relatorio.id !== relatorioIdDeletar))
+
+      setRelatorioIdDeletar(null);
     }
     
   }
@@ -163,6 +175,42 @@ function AdmGerenciar() {
         ))
 
     setEditarTipoUsuario(null);
+  }
+
+  async function editarRelatorioHandle() {
+    const relatorioStatusAntigo = relatoriosLista.find((relatorio) => relatorio.id === editarTipoRelatorio.id)
+
+    let resposta;
+
+    if(relatorioStatusAntigo?.status === editarTipoRelatorio?.status) resposta = true; 
+    else resposta = await EditarRelatorio(editarTipoRelatorio.id, editarTipoRelatorio);
+
+    if (!resposta) {
+
+      setMensagemPopUpAvisoSucesso(false);
+      setMensagemPopUpAviso("Erro ao editar a permissão")
+
+      setTimeout(() => {
+        setMensagemPopUpAviso("");
+      }, 3000);
+
+      setEditarTipoRelatorio(null);
+
+      return;
+    }
+
+    setMensagemPopUpAvisoSucesso(true);
+    setMensagemPopUpAviso("Sucesso ao editar a permissão ");
+
+    setTimeout(() => {
+      setMensagemPopUpAviso("");
+    }, 3000);
+
+    setRelatoriosLista((relatorios) => relatorios.map(
+        (relatorio => relatorio.id === editarTipoRelatorio.id ? {...relatorio, status: editarTipoRelatorio.status} : relatorio)
+        ))
+
+    setEditarTipoRelatorio(null);
   }
 
   return (
@@ -237,6 +285,30 @@ function AdmGerenciar() {
               }}/>
           </div>
         </div>
+
+        <div className={styles.divGeralRelatorios}>
+
+          <div className={styles.divGeralRelatoriosTexto}>
+
+            <h1>Relatórios</h1>
+            <p>Veja as informçaões dos Relatórios abaixo:</p>
+
+          </div>
+          
+          <div className={styles.divGeralRelatoriosCards}> 
+              
+              {
+              relatoriosLista.map((relatorio) => (
+                <CardRelatorioComponent key={relatorio.id} relatorio={relatorio} funcaoDeletarRelatorio={(relatorioId) => {
+                  setRelatorioIdDeletar(relatorioId);
+                  setPopUpConfimacaoAtivo(true);
+                }} funcaoEditarRelatorio={(relatorio) => setEditarTipoRelatorio(relatorio)}/>
+              ))
+              }
+          </div>
+
+        </div>
+
       </div>
 
       {
@@ -247,7 +319,7 @@ function AdmGerenciar() {
               setPetIdDeletar(null);
               setUsuarioNomeDeletar("");
               setPopUpConfimacaoAtivo(false);
-            }} funcaoConfirmar={() => deletarPetouUsuarioHandle(petIdDeletar === null)} />
+            }} funcaoConfirmar={() => deletarHandle()} />
 
           : ""
       }
@@ -277,7 +349,25 @@ function AdmGerenciar() {
             </div>
           </div>
 
-        : ""
+        : editarTipoRelatorio !== null ?
+
+          <div className={styles.popUpEditar} style={{ height: "55dvh", top: "22.5dvh" }}>
+            <p>Pet: {editarTipoRelatorio?.nomePet} </p>
+            <p>Dono Atual: {editarTipoRelatorio?.nomeAntigoDono} </p>
+            <p>Futuro Dono: {editarTipoRelatorio?.usuario.nomeCompleto} </p>
+            <p>Alterar Status do Relatório:</p>
+            <SelectComponent variavel={editarTipoRelatorio?.status}
+              funcaoSetVariavel={(novoStatus) => setEditarTipoRelatorio((infoRelatorio) => ({
+                ...infoRelatorio,
+                status: novoStatus
+              }))} opcoes={["pendente", "aprovado", "recusado"]}/>
+            <div className={styles.popUpEditarDivBotoes}>
+              <ButtonComponent variante={1} textoBotao="Cancelar" funcaoBotao={() => setEditarTipoRelatorio(null)}/>
+              <ButtonComponent variante={2} textoBotao="Confirmar" funcaoBotao={editarRelatorioHandle}/>
+            </div>
+          </div>
+          
+          : ""
       }
     </div>
   );

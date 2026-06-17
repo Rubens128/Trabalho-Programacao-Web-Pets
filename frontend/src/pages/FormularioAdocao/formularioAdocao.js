@@ -3,6 +3,7 @@ import Header from "../../components/Header/header";
 import InputComponent from "../../components/Input/input";
 import ButtonComponent from "../../components/Button/button";
 import SelectComponent from "../../components/Select/select";
+import PopUpComponent from "../../components/popUp/popUp.js";
 import TextInputComponent from "../../components/TextInput/textInput";
 import AveImg from "../../assets/aves.png";
 import michaelLuaImg from "../../assets/michaelLua.png";
@@ -28,14 +29,16 @@ import { Bs2Circle } from "react-icons/bs";
 import { Bs3Circle } from "react-icons/bs";
 import { Bs4Circle } from "react-icons/bs";
 import { useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { verificarUsuarioLogado } from '../../services/authService.js';
+import { listarPets } from "../../services/petsService.js";
+import { AdicionarRelatorio } from "../../services/relatorioService.js";
 
 
 function FormularioAdocao({ gender = "macho" }) {
 
     const [nomeCompleto, setNomeCompleto] = useState("");
-    const [telefone, setTelefone] = useState(null);
+    const [telefone, setTelefone] = useState("");
     const [email, setEmail] = useState("");
     const [dataNascimento, setDataNascimento] = useState("");
     const [cpf, setCpf] = useState("");
@@ -43,15 +46,41 @@ function FormularioAdocao({ gender = "macho" }) {
     const [estado, setEstado] = useState("");
     const [cidade, setCidade] = useState("");
     const [bairro, setBairro] = useState("");
-    const [numero, setNumero] = useState(null);
+    const [numero, setNumero] = useState("");
     const [complemento, setComplemento] = useState("");
-    const [residencia, setResidencia] = useState("");
-    const [posseResidencia, setPosseResidencia] = useState("");
-    const [areaExterna, setAreaExterna] = useState(null);
-    const [outrosAnimais, setOutrosAnimais] = useState(null);
-    const [tevePetExo, setTevePetExo] = useState(null);
-    const [experenciaUsuario, setExperienciaUsuario] = useState("");
-    const [ usuario, setUsuario ] = useState(null);
+    const [tipoMoradia, setTipoMoradia] = useState("");
+    const [posseMoradia, setPosseMoradia] = useState("");
+    const [areaExternaSegura, setAreaExternaSegura] = useState("");
+    const [outrosAnimais, setOutrosAnimais] = useState("");
+    const [tevePet, setTevePet] = useState("");
+    const [experienciaUsuario, setExperienciaUsuario] = useState("");
+    const [comentarios, setComentarios] = useState("");
+    const [usuario, setUsuario] = useState(null);
+    const [petDados, setPetDados] = useState(null);
+    const [popUpConfimacaoAtivo, setPopUpConfimacaoAtivo] = useState(false);
+    const [mensagemPopUpAviso, setMensagemPopUpAviso] = useState("");
+    const [mensagemPopUpAvisoSucesso, setMensagemPopUpAvisoSucesso] = useState(false);
+    const [editarTipoUsuario, setEditarTipoUsuario] = useState(null);
+    const [erros, setErros] = useState({
+        nomeCompleto: false,
+        telefone: false,
+        email: false,
+        dataNascimento: false,
+        cpf: false,
+        cep: false,
+        estado: false,
+        cidade: false,
+        bairro: false,
+        numero: false,
+        complemento: false,
+        tipoMoradia: false,
+        posseMoradia: false,
+        areaExternaSegura: false,
+        outrosAnimais: false,
+        tevePet: false,
+    });
+
+    const { petId } = useParams();
 
     const navigate = useNavigate();
 
@@ -59,18 +88,96 @@ function FormularioAdocao({ gender = "macho" }) {
         
         async function verificarUsuario() {
         
-        const retornoUsuario = await verificarUsuarioLogado();
-        
-        if (retornoUsuario.tipo !== "adm"){
-          navigate("/");
+            const retornoUsuario = await verificarUsuarioLogado();
+            
+            if(retornoUsuario === null) navigate("/login");
+
+            setNomeCompleto(retornoUsuario?.nome || "");
+            setEmail(retornoUsuario?.email || "");
+            setCep(retornoUsuario?.endereco.cep || "");
+            setEstado(retornoUsuario?.endereco.estado || "");
+            setCidade(retornoUsuario?.endereco.cidade || "");
+            setBairro(retornoUsuario?.endereco.bairro || "");
+            setNumero(retornoUsuario?.endereco.numero || "");
+            setComplemento(retornoUsuario?.endereco.complemento || "");
+
+            setUsuario(retornoUsuario);
         }
 
-        setUsuario(retornoUsuario);
+        async function buscarPetInfo() {
+
+            const petIdInt = parseInt(petId);
+                    
+            const pet = await listarPets({petId: petIdInt});
+
+            if(!pet) navigate("/");
+
+            if(pet.status !== "Disponível") navigate("/");
+
+            setPetDados(pet);
         }
-        
+
+        buscarPetInfo();
+
         verificarUsuario();
 
     }, [navigate]);
+
+    async function formularioEnviarHandle() {
+        
+        const dados = {
+            petId: petId,
+            usuarioId: usuario.id,
+            nomeCompleto: nomeCompleto,
+            telefone: telefone,
+            email: email,
+            dataNascimento: dataNascimento,
+            cpf: cpf,
+            cep: cep,
+            estado: estado,
+            cidade: cidade,
+            bairro: bairro,
+            numero: numero,
+            complemento: complemento,
+            tipoMoradia: tipoMoradia,
+            posseMoradia: posseMoradia,
+            areaExternaSegura: areaExternaSegura,
+            outrosAnimais: outrosAnimais,
+            tevePet: tevePet,
+            experienciaUsuario: experienciaUsuario,
+            comentarios: comentarios,
+        }
+
+        const resposta = await AdicionarRelatorio(dados);
+        
+        if(!Object.keys(resposta.erros).every((key) => resposta.erros[key] === false)) {
+            
+            setErros(resposta.erros);
+
+            return;
+        }else
+
+        if (!resposta.erroBackEnd) {
+
+            setMensagemPopUpAvisoSucesso(false);
+            setMensagemPopUpAviso("Erro ao criar o relatorio, tente novamente.");
+
+            setTimeout(() => {
+                setMensagemPopUpAviso("");
+            }, 3000);
+
+            return;
+        }
+
+        setMensagemPopUpAvisoSucesso(true);
+        setMensagemPopUpAviso("Sucesso ao criar o relatorio");
+
+        setTimeout(() => {
+            setMensagemPopUpAviso("");
+            navigate("/");
+        }, 3000);
+
+    }
 
     return (
 
@@ -84,14 +191,14 @@ function FormularioAdocao({ gender = "macho" }) {
                         <div className={styles.divComponentesPetSpace}>
                             <img src={AveImg} alt="Imagem do Pet Selecionado" />
                             <div className={styles.divComponentesPetInfos}>
-                                <h1>Gecko Leopardo</h1>
-                                <p><FaRegUser color="#d6a559" size={23} />Nome: Bolt</p>
-                                <p><FaPaw color="#d6a559" size={23} />Espécie: Eublepharis macularius</p>
-                                <p><CiCalendar color="#d6a559" size={23} />Idade: 1 ano</p>
+                                <h1>{petDados?.especie}</h1>
+                                <p><FaRegUser color="#d6a559" size={23} />Nome: {petDados?.nome}</p>
+                                <p><FaPaw color="#d6a559" size={23} />Espécie:  {petDados?.especie}</p>
+                                <p><CiCalendar color="#d6a559" size={23} />Idade:  {petDados?.dataNasc}</p>
                                 <p>{gender === "macho" ? <BsGenderMale color="#d6a559" size={23} /> : <BsGenderFemale color="#d6a559" size={23} />}Sexo: Masculino</p>
-                                <p><IoMdPin color="#d6a559" size={23} />Origem: </p>
-                                <p><LuBrain color="#d6a559" size={23} />Temperamento: Dócil e curioso</p>
-                                <p><GiWeight color="#d6a559" size={23} />Peso Atual: 55g</p>
+                                <p><IoMdPin color="#d6a559" size={23} />Origem: {petDados?.local}</p>
+                                <p><LuBrain color="#d6a559" size={23} />Temperamento: mudar</p>
+                                <p><GiWeight color="#d6a559" size={23} />Peso Atual: mudar</p>
                             </div>
                         </div>
 
@@ -181,33 +288,33 @@ function FormularioAdocao({ gender = "macho" }) {
                         <div className={styles.divComponentesConjuntoInscricao}>
                             <h1>1.Sobre você</h1>
                             <div>
-                                <label for="nomeCompleto" >Nome Completo *</label>
+                                <label htmlFor="nomeCompleto" >Nome Completo *</label>
                                 <InputComponent variavel={nomeCompleto} funcaoSetVariavel={setNomeCompleto}
-                                    placeholder="Digite seu nome completo" id="nomeCompleto" width="100%" />
+                                    placeholder="Digite seu nome completo" id="nomeCompleto" width="100%" error={erros.nomeCompleto}/>
                             </div>
 
                             <div className={styles.divComponentesConjuntoInscricaoFormularioCampos}>
                                 <div>
-                                    <label for="cpf">CPF *</label>
+                                    <label htmlFor="cpf">CPF *</label>
                                     <InputComponent variavel={cpf} funcaoSetVariavel={setCpf}
-                                        placeholder="000.000.000-00" id="cpf" width="100%" />
+                                        placeholder="000.000.000-00" id="cpf" width="100%" error={erros.cpf}/>
                                 </div>
                                 <div>
-                                    <label for="telefone">Telefone / WhatsApp *</label>
+                                    <label htmlFor="telefone">Telefone / WhatsApp *</label>
                                     <InputComponent variavel={telefone} funcaoSetVariavel={setTelefone}
-                                        placeholder="(00) 00000-0000" id="telefone" width="100%" />
+                                        placeholder="(00) 00000-0000" id="telefone" width="100%" error={erros.telefone}/>
                                 </div>
                             </div>
                             <div className={styles.divComponentesConjuntoInscricaoFormularioCampos}>
                                 <div>
-                                    <label for="email">E-mail *</label>
+                                    <label htmlFor="email">E-mail *</label>
                                     <InputComponent variavel={email} funcaoSetVariavel={setEmail}
-                                        placeholder="Digite seu email" id="email" width="100%" />
+                                        placeholder="Digite seu email" id="email" width="100%" error={erros.email}/>
                                 </div>
                                 <div>
-                                    <label for="dataNascimento">Data Nascimento *</label>
+                                    <label htmlFor="dataNascimento">Data Nascimento *</label>
                                     <InputComponent variavel={dataNascimento} funcaoSetVariavel={setDataNascimento}
-                                        placeholder="DD/MM/AAAA" id="dataNascimento" width="100%" />
+                                        placeholder="DD/MM/AAAA" id="dataNascimento" width="100%" error={erros.dataNascimento}/>
                                 </div>
                             </div>
 
@@ -216,39 +323,39 @@ function FormularioAdocao({ gender = "macho" }) {
 
                                 <div className={styles.divComponentesConjuntoInscricaoFormularioCampos}>
                                     <div>
-                                        <label for="cep">CEP </label>
+                                        <label htmlFor="cep">CEP </label>
                                         <InputComponent variavel={cep} funcaoSetVariavel={setCep}
-                                            placeholder="00.000-000" id="cep" width="100%" />
+                                            placeholder="00.000-000" id="cep" width="100%" error={erros.cep}/>
                                     </div>
                                     <div>
-                                        <label for="estado">Estado </label>
+                                        <label htmlFor="estado">Estado </label>
                                         <InputComponent variavel={estado} funcaoSetVariavel={setEstado}
-                                            placeholder="Estado" id="estado" width="100%" />
+                                            placeholder="Estado" id="estado" width="100%" error={erros.estado}/>
                                     </div>
                                 </div>
 
                                 <div className={styles.divComponentesConjuntoInscricaoFormularioCampos}>
                                     <div>
-                                        <label for="cidade">Cidade </label>
+                                        <label htmlFor="cidade">Cidade </label>
                                         <InputComponent variavel={cidade} funcaoSetVariavel={setCidade}
-                                            placeholder="Cidade" id="cidade" width="100%" />
+                                            placeholder="Cidade" id="cidade" width="100%" error={erros.cidade}/>
                                     </div>
                                     <div>
-                                        <label for="bairro">Bairro </label>
+                                        <label htmlFor="bairro">Bairro </label>
                                         <InputComponent variavel={bairro} funcaoSetVariavel={setBairro}
-                                            placeholder="Bairro" id="bairro" width="100%" />
+                                            placeholder="Bairro" id="bairro" width="100%" error={erros.bairro}/>
                                     </div>
                                 </div>
                                 <div className={styles.divComponentesConjuntoInscricaoFormularioCampos}>
                                     <div>
-                                        <label for="numero">Número </label>
+                                        <label htmlFor="numero">Número </label>
                                         <InputComponent variavel={numero} funcaoSetVariavel={setNumero}
-                                            placeholder="Número" id="numero" width="100%" />
+                                            placeholder="Número" id="numero" width="100%" error={erros.numero}/>
                                     </div>
                                     <div>
-                                        <label for="complemento">Complemento </label>
+                                        <label htmlFor="complemento">Complemento </label>
                                         <InputComponent variavel={complemento} funcaoSetVariavel={setComplemento}
-                                            placeholder="Complemeto" id="complemento" width="100%" />
+                                            placeholder="Complemeto" id="complemento" width="100%" error={erros.complemento}/>
                                     </div>
                                 </div>
                             </div>
@@ -256,26 +363,26 @@ function FormularioAdocao({ gender = "macho" }) {
                                 <h1>2.Sobre o ambiente</h1>
                                 <div className={styles.divComponentesAmbienteConjunto}>
                                     <div>
-                                        <label for="residencia">Você mora em casa ou apartamento? *</label>
-                                        <SelectComponent variavel={residencia} funcaoSetVariavel={setResidencia}
-                                            opcoes={["Apartamento", "Casa"]} width="100%" id={residencia} />
+                                        <label htmlFor="tipoMoradia">Você mora em casa ou apartamento? *</label>
+                                        <SelectComponent variavel={tipoMoradia} funcaoSetVariavel={setTipoMoradia}
+                                            opcoes={["Apartamento", "Casa"]} width="100%" id={tipoMoradia} error={erros.tipoMoradia}/>
                                     </div>
                                     <div>
-                                        <label for="posseResidencia">O imóvel é próprio ou alugado? *</label>
-                                        <SelectComponent variavel={posseResidencia} funcaoSetVariavel={setPosseResidencia}
-                                            opcoes={["Próprio", "Alugado"]} width="100%" id={posseResidencia} />
+                                        <label htmlFor="posseMoradia">O imóvel é próprio ou alugado? *</label>
+                                        <SelectComponent variavel={posseMoradia} funcaoSetVariavel={setPosseMoradia}
+                                            opcoes={["Próprio", "Alugado"]} width="100%" id={posseMoradia} error={erros.posseMoradia}/>
                                     </div>
                                 </div>
                                 <div className={styles.divComponentesAmbienteConjunto}>
                                     <div>
-                                        <label for="areaExterna">Você possui área externa segura? *</label>
-                                        <SelectComponent variavel={areaExterna} funcaoSetVariavel={setAreaExterna}
-                                            opcoes={["Sim", "Não"]} width="100%" id={areaExterna} />
+                                        <label htmlFor="areaExternaSegura">Você possui área externa segura? *</label>
+                                        <SelectComponent variavel={areaExternaSegura} funcaoSetVariavel={setAreaExternaSegura}
+                                            opcoes={["Sim", "Não"]} width="100%" id={areaExternaSegura} error={erros.areaExternaSegura}/>
                                     </div>
                                     <div>
-                                        <label for="outrosAnimais">Outros animais no local? *</label>
+                                        <label htmlFor="outrosAnimais">Outros animais no local? *</label>
                                         <SelectComponent variavel={outrosAnimais} funcaoSetVariavel={setOutrosAnimais}
-                                            opcoes={["Sim", "Não"]} width="100%" id={outrosAnimais} />
+                                            opcoes={["Sim", "Não"]} width="100%" id={outrosAnimais} error={erros.outrosAnimais}/>
                                     </div>
                                 </div>
                             </div>
@@ -284,29 +391,38 @@ function FormularioAdocao({ gender = "macho" }) {
                                 <h1>3.Sobre sua experiência</h1>
 
                                 <div className={styles.divComponentesExperienciaConjunto}>
-                                    <label>Você já teve pets exóticos antes? *</label>
-                                    <SelectComponent variavel={tevePetExo} funcaoSetVariavel={setTevePetExo}
-                                        opcoes={["Sim", "Não"]} width="100%" id={tevePetExo} />
+                                    <label htmlFor="tevePet">Você já teve pets exóticos antes? *</label>
+                                    <SelectComponent variavel={tevePet} funcaoSetVariavel={setTevePet}
+                                        opcoes={["Sim", "Não"]} width="100%" id={tevePet} error={erros.tevePet}/>
                                 </div>
 
                                 <div className={styles.divComponentesExperienciaConjunto}>
-                                    <label>Conte sobre a sua experiência, se houver:</label>
-                                    <TextInputComponent variavel={experenciaUsuario} funcaoSetVariavel={setExperienciaUsuario}
-                                        placeholder="'Tive um cameleão quando morava em uma apartamento...'" id="experienciaUsuario" width="100%" height="20dvh" />
+                                    <label htmlFor="experienciaUsuario">Conte sobre a sua experiência, se houver:</label>
+                                    <TextInputComponent variavel={experienciaUsuario} funcaoSetVariavel={setExperienciaUsuario}
+                                        placeholder="'Tive um cameleão quando morava em uma apartamento...'" 
+                                        id="experienciaUsuario" width="100%" height="20dvh" error={erros.experienciaUsuario}/>
                                 </div>
                             </div>
 
                             <div className={styles.divComponentesComentario}>
                                 <h1>4.Comentários</h1>
-                                <label>Conte-nos um pouco mais sobre o seu interesse nesse pet (opcional):</label>
-                                <TextInputComponent variavel={experenciaUsuario} funcaoSetVariavel={setExperienciaUsuario}
-                                    placeholder="..." id="experienciaUsuario" width="100%" height="20dvh" />
+                                <label htmlFor="comentarios">Conte-nos um pouco mais sobre o seu interesse nesse pet (opcional):</label>
+                                <TextInputComponent variavel={comentarios} funcaoSetVariavel={setComentarios}
+                                    placeholder="..." id="comentarios" width="100%" height="20dvh" error={erros.comentarios}/>
                             </div>
-                            <ButtonComponent textoBotao="Enviar Formulário" variante={1} />
+                            <ButtonComponent textoBotao="Enviar Formulário" variante={1} funcaoBotao={formularioEnviarHandle}/>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {
+                mensagemPopUpAviso ?
+
+                <PopUpComponent mensagem={mensagemPopUpAviso} mensagemSucesso={mensagemPopUpAvisoSucesso} />
+
+                : ""
+            }
         </div>
     );
 }

@@ -7,6 +7,7 @@ async function listarPets(filtros){
         limit: 50,
         idadeMin: 0,
         idadeMax: 1000,
+        petId: null,
         usuario:{
             userId: null,
             verificarAdotados: false,
@@ -32,9 +33,9 @@ async function listarPets(filtros){
     const filtrosFinal = {
         ...filtrosPadrao,
         ...filtros
-    };
+    }
 
-    const response = await fetch(`${API_URL}/testePets`, {
+    const response = await fetch(`${API_URL}/testeTeste`, {
         method: "GET",
         headers:  {
             "Content-Type": "application/json",
@@ -49,7 +50,16 @@ async function listarPets(filtros){
         return null;
     }
 
-    return dados;
+    // temp
+
+    if(filtrosFinal.petId){
+            
+        const pet = dados.find((pet) => pet.id === filtros.petId);
+
+        return pet;
+    } 
+
+   return dados;
 }
 
 async function editarPet(idPet, novosDados) {
@@ -137,7 +147,9 @@ async function AdicionarPet(dadosPet){
 
     if(Object.keys(resposta.erros).length > 0) return resposta;
 
-    const data = new Date(dadosPet.dataNascimento);
+    const [ dia, mes, ano ] = dadosPet.dataNascimento.split(/[\/\-., ]+/);
+
+    const data = new Date(ano, mes, dia);
 
     if(isNaN(data.getTime())) resposta.erros["dataNascimento"] = true;
 
