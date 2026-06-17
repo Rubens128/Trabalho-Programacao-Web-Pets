@@ -19,11 +19,18 @@ function CardPet({width = "15%", height = "42%", pet, podeEditarDeletar=false,
     const [ idadeValue, setIdadeValue ] = useState(pet.dataNasc);
     const [ especieValue, setEspecieValue ] = useState(pet.especie);
     const [ localValue, setLocalValue ] = useState(pet.local);
-    const [ adicionadoEmValue, setAdicionadoEmValue] = useState(pet.adicionadoEm);
     const [ statusValue, setStatusValue ] = useState(pet.status);
     const [ descricaoValue, setDescricaoValue ] = useState(pet.descricao);
     const [ mensagemPopUp, setMensagemPopUp ] = useState("");
     const [ mensagemPopUpSucesso, setMensagemPopUpSucesso] = useState(true);
+    const [ valoresAntigos, setValoresAntigos ] = useState({
+        nome: pet.nome,
+        idade: pet.dataNasc,
+        especie: pet.especie,
+        local: pet.local,
+        status: pet.status,
+        descricao: pet.descricao,
+    });
     
     const navigate = useNavigate();
 
@@ -31,37 +38,49 @@ function CardPet({width = "15%", height = "42%", pet, podeEditarDeletar=false,
 
         const valoresNovosDict = {
             nome: nomeValue,
-            idade: idadeValue,
+            dataNasc: idadeValue,
             especie: especieValue,
             local: localValue,
-            adicionadoEm: adicionadoEmValue,
             status: statusValue,
             descricao: descricaoValue,
         }
 
+        if(Object.keys(valoresNovosDict).every((chave) => valoresNovosDict[chave] === valoresAntigos[chave])){
+
+            setEditando(false);
+
+            return;
+        }
+
         const editar = await editarPet(pet.id, valoresNovosDict);
 
-        if(!editar){
+        if(!editar || Object.keys(editar).includes("erro")){
 
-            setMensagemPopUp("Erro ao editar informações do pet.");
+            let messagemErro = "";
+
+            if(editar && Object.keys(editar).includes("erro")) messagemErro = editar.erro;
+            else messagemErro = "Erro ao editar pet. Tente novamente mais tarde.";
+
+            setMensagemPopUp(messagemErro);
             setMensagemPopUpSucesso(false);
 
             setTimeout(() => {
                 setMensagemPopUp("")
             }, 3000);
 
-            setNomeValue(pet.nome);
-            setIdadeValue(pet.dataNasc);
-            setEspecieValue(pet.especie);
-            setLocalValue(pet.local);
-            setAdicionadoEmValue(pet.adicionadoEm);
-            setStatusValue(pet.status);
-            setDescricaoValue(pet.descricao);
+            setNomeValue(valoresAntigos.nome);
+            setIdadeValue(valoresAntigos.idade);
+            setEspecieValue(valoresAntigos.especie);
+            setLocalValue(valoresAntigos.local);
+            setStatusValue(valoresAntigos.status);
+            setDescricaoValue(valoresAntigos.descricao);
 
             setEditando(false);
 
             return;
         }
+
+        setValoresAntigos(valoresNovosDict);
 
         setMensagemPopUp("Sucesso ao editar informações do pet.");
         setMensagemPopUpSucesso(true);
@@ -118,11 +137,7 @@ function CardPet({width = "15%", height = "42%", pet, podeEditarDeletar=false,
 
                             <div className={styles.cardPetVerMaisInfosDivColunaDado}>
                                 <h1>Adicionado Em:</h1>
-                                { editando ? 
-                                    <InputComponent variavel={adicionadoEmValue} funcaoSetVariavel={setAdicionadoEmValue} 
-                                    height={"50%"} width={"90%"}/> 
-                                    :  <p>{adicionadoEmValue}</p>
-                                }
+                                <p>{pet.adicionadoEm}</p>
                             </div>
                         </div>
 

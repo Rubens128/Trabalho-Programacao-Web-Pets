@@ -43,11 +43,15 @@ function Perfil(){
 
     useEffect(() => {
         
+        let retornoUsuario = null;
+
         async function verificarUsuario() {
         
-            const retornoUsuario = await verificarUsuarioLogado();
+            retornoUsuario  = await verificarUsuarioLogado();
             
             if(retornoUsuario === null) navigate("/login");
+            
+            console.log("Usuário logado:", retornoUsuario);
 
             setUsuario(retornoUsuario);
 
@@ -63,21 +67,19 @@ function Perfil(){
 
         async function coletarPets() {
             
-            verificarUsuario();
+            await verificarUsuario();
 
-            const petsListaAdicionados = await listarPets({
+            const petsLista = await listarPets({
                 usuario:{
-                    userId: usuario?.uid,
-                    verficarAdicionados: true
+                    userId: retornoUsuario ? retornoUsuario.id : null,
                 }
             });
-            const petsListaAdotados = await listarPets({
-                usuario:{
-                    userId: usuario?.uid,
-                    verficarAdotados: true
-                }
-            });
-            
+
+            if(petsLista === null) return;
+
+            const petsListaAdicionados = petsLista.filter((pet) => pet.antigoDono === retornoUsuario.id);
+            const petsListaAdotados = petsLista.filter((pet) => pet.novoDono === retornoUsuario.id);
+
             setPetAdicionados(petsListaAdicionados);
             setPetAdotados(petsListaAdotados);
         }

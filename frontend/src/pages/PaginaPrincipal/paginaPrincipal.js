@@ -107,7 +107,7 @@ function PaginaPrincipal() {
             <div className='divSelecaoAnimaisInfoOpcoesItem'>
               <img src={AnfibioImg} alt='imagem de anfíbio'></img>
               <p>Anfíbios</p>
-              <a href='/listaPets?filtro=anfíbios'>Ver mais +</a>
+              <a href='/listaPets?filtro=anfibios'>Ver mais +</a>
             </div>
 
             <div className='divSelecaoAnimaisInfoOpcoesItem'>

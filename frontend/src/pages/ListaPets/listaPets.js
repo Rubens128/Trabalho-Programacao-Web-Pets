@@ -11,13 +11,14 @@ import { IoFilterOutline } from "react-icons/io5";
 import { useEffect } from 'react';
 import { verificarUsuarioLogado } from '../../services/authService.js';
 import { listarPets } from '../../services/petsService.js';
+import { useSearchParams } from 'react-router-dom';
 
 function ListaPets(){
 
     const [ inputValue, setInputValue ] = useState("");
     const [ filtroEspecie, setFiltroEspecie ] = useState({
-        Todos: true,
-        Repteis: false,
+        todos: true,
+        repteis: false,
         mamiferos: false,
         aves: false,
         anfibios: false,
@@ -25,16 +26,16 @@ function ListaPets(){
         invertebrados: false
     });
     const [ filtroPorte, setfiltroPorte ] = useState({
-        Todos: true,
-        Pequeno: false,
-        Medio: false,
-        Grande: false
+        todos: true,
+        pequeno: false,
+        medio: false,
+        grande: false
     });
     const [ idadeMin, setIdadeMin ] = useState(undefined);
     const [ idadeMax, setIdadeMax ] = useState(undefined);
     const [ animaisInfo, setAnimaisInfo ] = useState();
-
     const [ usuario, setUsuario ] = useState(null);
+    const [ searchParams ] = useSearchParams();
 
     useEffect(() => {
         
@@ -46,8 +47,31 @@ function ListaPets(){
         }
 
         async function coletarPets() {
-                
-            const petsLista = await listarPets();
+
+            const filtro = searchParams.get("filtro");
+
+            let filtrosFinais = {...filtroEspecie};
+
+            if(filtro) {
+
+                setFiltroEspecie((filtrosAntigos) => ({
+                    ...filtrosAntigos,
+                    "todos": false,
+                    [filtro]: true,
+                }));
+
+                filtrosFinais ={
+                    ...filtroEspecie,
+                    "todos": false,
+                    [filtro]: true,
+                }
+            }
+
+            const petsLista = await listarPets({
+                filtroEspecie: {
+                    ...filtrosFinais
+                }
+            });
             
             setAnimaisInfo(petsLista);
         }
@@ -56,6 +80,35 @@ function ListaPets(){
         coletarPets();
 
     }, []);
+
+    async function aplicarFiltros() {
+
+        console.log("Aplicando filtros:", {
+            filtroEspecie,
+            filtroPorte,
+            idadeMin,
+            idadeMax
+        });
+
+        const filtros = {
+            filtroEspecie: {
+                ...filtroEspecie
+            },
+            filtroPorte: {
+                ...filtroPorte
+            },
+            idadeMin: idadeMin ? parseInt(idadeMin) : 0,
+            idadeMax: idadeMax ? parseInt(idadeMax) : 1000,
+        }
+
+        if(inputValue.trim() !== "") filtros.pesquisa = inputValue.charAt(0).toUpperCase() + inputValue.slice(1).toLocaleLowerCase();
+
+        const petsLista = await listarPets(filtros);
+
+        console.log("Pets encontrados com filtros:", petsLista);
+
+        setAnimaisInfo(petsLista);
+    }
 
     return (
         <div>
@@ -67,7 +120,7 @@ function ListaPets(){
                 </div>
                 <InputComponent variavel={inputValue} funcaoSetVariavel={setInputValue} icone={CiSearch} sizeIcon={25}
                 placeholder='Buscar por nome, espécie ou característica...' width='40%' height='7dvh' type='text'/>
-                <button> <IoSend size={25}/> </button>
+                <button onClick={aplicarFiltros}> <IoSend size={25}/> </button>
             </div>
             <div className={styles.divPets}>
                 <div className={styles.divPetsFiltros}>
@@ -103,18 +156,19 @@ function ListaPets(){
                         <div>
                             <p style={{marginRight: 12}}>Idade Min:</p>
                             <InputComponent placeholder='2,5,8,10,15' height={"4dvh"} type='number'
-                            variavel={idadeMin} setFuncaoVariavel={setIdadeMin}/>
+                            variavel={idadeMin} funcaoSetVariavel={setIdadeMin}/>
                         </div>
 
                         <div>
                             <p style={{marginRight: 7}} >Idade Max:</p>
                             <InputComponent placeholder='2,5,8,10,15' height={"4dvh"} type='number'
-                            variavel={idadeMax} setIdadeMax={setIdadeMax}/>
+                            variavel={idadeMax} funcaoSetVariavel={setIdadeMax}/>
                         </div>
 
                     </div>
 
-                    <ButtonComponent variante={1} icone={IoFilterOutline} iconeSize={20} textoBotao='Aplicar Filtros'/>
+                    <ButtonComponent variante={1} icone={IoFilterOutline} iconeSize={20} textoBotao='Aplicar Filtros'
+                    funcaoBotao={aplicarFiltros}/>
                 </div>
 
                 <div className={styles.divPetsOpcoes}>

@@ -52,6 +52,8 @@ function AdmGerenciar() {
     async function coletarPets() {
       const petsLista = await listarPets();
 
+      console.log(petsLista);
+
       setPetsLista(petsLista);
     }
 

@@ -4,18 +4,19 @@ async function listarPets(filtros){
 
     const filtrosPadrao = {
         recentes: false,
-        limit: 50,
+        limit: 100,
         idadeMin: 0,
         idadeMax: 1000,
         petId: null,
+        pesquisa: "",
         usuario:{
             userId: null,
             verificarAdotados: false,
             verificarAdicionados: false,
         },
         filtroEspecie: {
-            Todos: true,
-            Repteis: false,
+            todos: true,
+            repteis: false,
             mamiferos: false,
             aves: false,
             anfibios: false,
@@ -23,10 +24,10 @@ async function listarPets(filtros){
             invertebrados: false
         },
         filtroPorte: {
-            Todos: true,
-            Pequeno: false,
-            Medio: false,
-            Grande: false
+            todos: true,
+            pequeno: false,
+            medio: false,
+            grande: false
         }
     }
 
@@ -35,7 +36,13 @@ async function listarPets(filtros){
         ...filtros
     }
 
-    const response = await fetch(`${API_URL}/testeTeste`, {
+    const parametros = new URLSearchParams();
+
+    parametros.append("filtros", JSON.stringify(filtrosFinal));
+
+    console.log("Filtros enviados para o backend:", filtrosFinal);
+
+    const response = await fetch(`${API_URL}/pets/listarPets?${parametros}`, {
         method: "GET",
         headers:  {
             "Content-Type": "application/json",
@@ -44,34 +51,36 @@ async function listarPets(filtros){
 
     const dados = await response.json();
 
+    console.log("Resposta do backend ao listar Pets:", dados);
+
     if(!response.ok){
 
         console.log("Erro ao listar Pets");
         return null;
     }
-
-    // temp
-
-    if(filtrosFinal.petId){
-            
-        const pet = dados.find((pet) => pet.id === filtros.petId);
-
-        return pet;
-    } 
-
+    
    return dados;
 }
 
-async function editarPet(idPet, novosDados) {
+async function editarPet(petId, novosDados) {
     
+    const [ dia, mes, ano ] = novosDados.dataNasc.split(/[\/\-., ]+/);
+
+    const data = new Date(`${ano}-${mes}-${dia}`);
+
+    if(isNaN(data.getTime())) return {erro: "Data de nascimento inválida"};
+
+    novosDados.dataNasc = data;
+
     try{
-        const response = await fetch(`${API_URL}/testePetsEditar`, {
+        const response = await fetch(`${API_URL}/pets/editarPet`, {
             method: "PUT",
             headers:  {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                novosDados
+                petId: petId,
+                novosDados: novosDados,
             }),
         })
 
@@ -95,16 +104,16 @@ async function editarPet(idPet, novosDados) {
     
 }
 
-async function deletarPet(idPet) {
+async function deletarPet(petId) {
     
     try{
-        const response = await fetch(`${API_URL}/testePetsDeletar`, {
+        const response = await fetch(`${API_URL}/pets/deletarPet`, {
             method: "DELETE",
             headers:  {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                idPet
+                petId: petId,
             }),
         })
 
@@ -147,23 +156,20 @@ async function AdicionarPet(dadosPet){
 
     if(Object.keys(resposta.erros).length > 0) return resposta;
 
-    const [ dia, mes, ano ] = dadosPet.dataNascimento.split(/[\/\-., ]+/);
+    const [ dia, mes, ano ] = dadosPet.dataNasc.split(/[\/\-., ]+/);
 
     const data = new Date(ano, mes, dia);
 
-    if(isNaN(data.getTime())) resposta.erros["dataNascimento"] = true;
+    if(isNaN(data.getTime())) resposta.erros["dataNasc"] = true;
 
-    const peso = dadosPet.peso.replace("," , ".");
     const altura = dadosPet.altura.replace("," , ".");
-
-    if(isNaN(Number(peso))) resposta.erros["peso"] = true;
 
     if(isNaN(Number(altura))) resposta.erros["altura"] = true;
 
     if(Object.keys(resposta.erros).length > 0) return resposta;
 
     try{
-        const responseBackEnd = await fetch(`${API_URL}/testePetsAdicionar`, {
+        const responseBackEnd = await fetch(`${API_URL}/pets/adicionarPet`, {
             method: "POST",
             headers:  {
                 "Content-Type": "application/json",

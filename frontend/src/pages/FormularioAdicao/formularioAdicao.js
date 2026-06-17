@@ -27,15 +27,15 @@ function FormularioAdicao() {
 
     const [nomePet, setNomePet] = useState("");
     const [especie, setEspecie] = useState("");
-    const [local, setLocal] = useState(null);
+    const [local, setLocal] = useState("");
     const [dataNascimento, setDataNascimento] = useState("");
     const [sexo, setSexo] = useState("");
     const [cor, setCor] = useState("");
-    const [peso, setPeso] = useState("");
+    const [porte, setPorte] = useState("");
     const [altura, setAltura] = useState("");
     const [temperamento, setTemperamento] = useState("");
     const [origem, setOrigem] = useState("");
-    const [motivoAnuncio, setMotivoAnuncio] = useState("");
+    const [descricao, setDescricao] = useState("");
     const [usuario, setUsuario] = useState(null);
     const [erroPreenchimento, setErroPreenchimento] = useState({
         nomePet: false,
@@ -44,14 +44,14 @@ function FormularioAdicao() {
         dataNascimento: false,
         sexo: false,
         cor: false,
-        peso: false,
+        porte: false,
         altura: false,
         temperamento: false,
     });
     const [popUpConfimacaoAtivo, setPopUpConfimacaoAtivo] = useState(false);
     const [mensagemPopUpAviso, setMensagemPopUpAviso] = useState("");
     const [mensagemPopUpAvisoSucesso, setMensagemPopUpAvisoSucesso] = useState(false);
-    const [arquivoValue, setArquivoValue] = useState(null);
+    const [arquivoValue, setArquivoValue] = useState(undefined);
     const [arquivoPreview, setArquivoPreview] = useState(null);
 
     const navigate = useNavigate();
@@ -82,22 +82,27 @@ function FormularioAdicao() {
         );
 
         const dadosPet = {
-            nomePet: nomePet,
+            nome: nomePet,
+            antigoDono: usuario?.id || null,
+            decricao: descricao,
             especie: especie,
             local: local,
-            dataNascimento: dataNascimento,
+            dataNasc: dataNascimento,
             sexo: sexo,
             cor: cor,
-            peso: peso,
+            porte: porte,
             altura: altura,
             temperamento: temperamento,
             origem: origem,
-            motivoAnuncio: motivoAnuncio,
+            descricao: descricao,
+            fotoPetUrl: "temporario/fotoPet.jpg"
         }
 
         const resposta = await AdicionarPet(dadosPet);
 
         if(Object.keys(resposta.erros || {}).length > 0){
+
+            console.log("Erros de preenchimento:", resposta.erros);
 
             setErroPreenchimento((dados) => ({
                 ...dados,
@@ -164,31 +169,31 @@ function FormularioAdicao() {
                     <div className={styles.divComponentesConjuntoInscricao}>
                         <h1>1.Informações Básicas</h1>
                         <div>
-                            <label for="nomePet" >Nome do pet *</label>
+                            <label htmlFor="nomePet" >Nome do pet *</label>
                             <InputComponent variavel={nomePet} funcaoSetVariavel={setNomePet}
                                 placeholder="Digite o nome do pet" id="nomePet" width="100%" error={erroPreenchimento.nomePet}/>
                         </div>
 
                         <div className={styles.divComponentesConjuntoInscricaoFormularioCampos}>
                             <div>
-                                <label for="nomeCientifico">Espécie *</label>
+                                <label htmlFor="nomeCientifico">Espécie *</label>
                                 <InputComponent variavel={especie} funcaoSetVariavel={setEspecie}
-                                    placeholder="'Beagle, Macaco Prego...'" id="nomeCientifico" width="100%" error={erroPreenchimento.especie}/>
+                                    placeholder="'mamiferos, repteis...'" id="nomeCientifico" width="100%" error={erroPreenchimento.especie}/>
                             </div>
                             <div>
-                                <label for="telefone">Local Atual *</label>
+                                <label htmlFor="telefone">Local Atual *</label>
                                 <InputComponent variavel={local} funcaoSetVariavel={setLocal}
                                     placeholder="Digite o local atual, ex: São Paulo SP" id="idade" width="100%" error={erroPreenchimento.local}/>
                             </div>
                         </div>
                         <div className={styles.divComponentesConjuntoInscricaoFormularioCampos}>
                             <div>
-                                <label for="email">Data Nascimento *</label>
+                                <label htmlFor="email">Data Nascimento *</label>
                                 <InputComponent variavel={dataNascimento} funcaoSetVariavel={setDataNascimento}
                                     placeholder="DD/MM/AAAA" id="dataNascimento" width="100%" error={erroPreenchimento.dataNascimento}/>
                             </div>
                             <div>
-                                <label for="sexo">Sexo *</label>
+                                <label htmlFor="sexo">Sexo *</label>
                                 <InputComponent variavel={sexo} funcaoSetVariavel={setSexo}
                                     placeholder="Digite o sexo do animal" id="sexo" width="100%" error={erroPreenchimento.sexo}/>
                             </div>
@@ -198,19 +203,19 @@ function FormularioAdicao() {
                             <h1>2. Características do pet</h1>
                             <div className={styles.divComponentesCaracteristicaConjunto}>
                                 <div>
-                                    <label for="cor">Cor/Padrão *</label>
+                                    <label htmlFor="cor">Cor/Padrão *</label>
                                     <InputComponent variavel={cor} funcaoSetVariavel={setCor}
                                         placeholder="Descreva a cor ou padrão do pet" id="cor" width="100%" error={erroPreenchimento.cor}/>
                                 </div>
                                 <div>
-                                    <label for="peso">Peso *</label>
-                                    <InputComponent variavel={peso} funcaoSetVariavel={setPeso}
-                                        placeholder="Digite o peso do pet" id="peso" width="100%" error={erroPreenchimento.peso}/>
+                                    <label htmlFor="porte">Porte *</label>
+                                    <InputComponent variavel={porte} funcaoSetVariavel={setPorte}
+                                        placeholder="Digite o porte do pet" id="porte" width="100%" error={erroPreenchimento.porte}/>
                                 </div>
                                 <div>
-                                    <label for="altura">Altura *</label>
+                                    <label htmlFor="altura">Altura *</label>
                                     <InputComponent variavel={altura} funcaoSetVariavel={setAltura}
-                                        placeholder="Digite a altura do pet" id="cor" width="100%" error={erroPreenchimento.altura} />
+                                        placeholder="Digite a altura do pet" id="altura" width="100%" error={erroPreenchimento.altura} />
                                 </div>
                             </div>
                         </div>
@@ -219,18 +224,19 @@ function FormularioAdicao() {
                             <h1>3.Fotos do pet</h1>
                             <h3>Adicione fotos nítidas do pet de diferentes ângulos</h3>
                             <div className={styles.divComponentesFotoConjunto}>
-                                <label for="inputImage" className={styles.divComponentesFotoConjuntoLabel}>
+                                <label htmlFor="inputImage" className={styles.divComponentesFotoConjuntoLabel}>
                                     {arquivoPreview ? "" : <p> <FiUpload size={30}/> Upload da foto </p>}
                                     {arquivoPreview ? <img src={arquivoPreview || ""}/> : ""}
                                 </label>
-                                <input style={{display: "none"}} type="file" onChange={handleFile} id="inputImage"/>
+                                <input style={{display: "none"}} type="file" onChange={handleFile} 
+                                id="inputImage" value={arquivoValue}/>
                             </div>
                         </div>
 
                         <div className={styles.divComponentesComentario}>
-                            <h1>4.Comentários</h1>
-                            <label>Conte-nos porque tem interesse em doar esse pet (opcional):</label>
-                            <TextInputComponent variavel={motivoAnuncio} funcaoSetVariavel={setMotivoAnuncio}
+                            <h1>4.Descrição</h1>
+                            <label>Faça uma breve descrição do pet:</label>
+                            <TextInputComponent variavel={descricao} funcaoSetVariavel={setDescricao}
                                 placeholder="..." id="experienciaUsuario" width="100%" height="20dvh" />
                         </div>
                         <ButtonComponent textoBotao="Enviar Formulário" variante={1} funcaoBotao={AdicionarPetHandle}/>
