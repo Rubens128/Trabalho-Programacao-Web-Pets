@@ -13,7 +13,7 @@ import { FaPaw } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
 import { useState } from "react";
 import { useEffect } from 'react';
-import { verificarUsuarioLogado } from '../../services/authService.js';
+import { verificarUsuarioLogado } from '../../services/userService.js';
 import { useNavigate } from "react-router-dom";
 import { listarPets } from "../../services/petsService.js";
 import { deletarPet } from "../../services/petsService.js";

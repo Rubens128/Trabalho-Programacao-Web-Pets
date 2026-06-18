@@ -19,7 +19,7 @@ import { Bs3Circle } from "react-icons/bs";
 import { Bs4Circle } from "react-icons/bs";
 import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { verificarUsuarioLogado } from '../../services/authService.js';
+import { verificarUsuarioLogado, EditarUsuario } from '../../services/userService.js';
 import { AdicionarPet } from "../../services/petsService.js";
 import { FiUpload } from "react-icons/fi";
 
@@ -123,6 +123,9 @@ function FormularioAdicao() {
 
             return;
         }
+
+        const respostaEditarUsuario = await EditarUsuario(usuario.id, 
+            {petsAdicionados: usuario.petsAdicionados ? usuario.petsAdicionados + 1 : 1});
 
         setMensagemPopUpAvisoSucesso(true);
         setMensagemPopUpAviso("Sucesso ao adicionar o pet.");

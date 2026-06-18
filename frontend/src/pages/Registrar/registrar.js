@@ -11,7 +11,7 @@ import { FaPaw } from "react-icons/fa";
 import { MdDriveFileRenameOutline } from "react-icons/md";
 import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { verificarUsuarioLogado } from '../../services/authService.js';
+import { verificarUsuarioLogado } from '../../services/userService.js';
 import { AdicionarUsuario } from "../../services/userService.js";
 
 function Registrar(){

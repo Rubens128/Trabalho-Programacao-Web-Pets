@@ -12,8 +12,6 @@ async function AdicionarRelatorio(dadosRelatorio){
 
     Object.keys(dadosRelatorio).forEach((key, index) => {
 
-        if (index > 18) return;
-
         if (!dadosRelatorio[key]){
 
             resposta.erros[key] = true;
@@ -58,13 +56,13 @@ async function AdicionarRelatorio(dadosRelatorio){
     }
 
     try{
-        const responseBackEnd = await fetch(`${API_URL}/testeRelatorioAdicionar`, {
+        const responseBackEnd = await fetch(`${API_URL}/pedidosAdocao/adicionarPedidoAdocao`, {
             method: "POST",
             headers:  {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                dadosRelatorio
+                dadosPedidoAdocao: dadosRelatorio
             }),
         })
 
@@ -72,10 +70,10 @@ async function AdicionarRelatorio(dadosRelatorio){
 
         if(!responseBackEnd.ok){
 
-            console.log("Erro ao adicionar Relatório");
+            console.log("Erro ao adicionar Pedido de Adoção: " + dados.error);
 
             resposta.erroBackEnd = true;
-            resposta.mensageError = "Erro ao adicionar Relatório"
+            resposta.mensageError = "Erro ao adicionar Pedido de Adoção"
 
             return resposta;
         }
@@ -100,7 +98,7 @@ async function ListarRelatorios(filtros){
     try{
 
         const filtrosPadrao = {
-            userId: null,
+            pesquisa: "",
             limit: 50,
         }
 
@@ -109,7 +107,11 @@ async function ListarRelatorios(filtros){
             ...filtros
         };
 
-        const response = await fetch(`${API_URL}/testeRelatorioListar`, {
+        const parametros = new URLSearchParams();
+
+        parametros.append("filtros", JSON.stringify(filtrosFinal));
+
+        const response = await fetch(`${API_URL}/pedidosAdocao/listarPedidosAdocao?${parametros}`, {
             method: "GET",
             headers:  {
                 "Content-Type": "application/json",
@@ -120,10 +122,10 @@ async function ListarRelatorios(filtros){
 
         if(!response.ok){
 
-            console.log("Erro ao listar Relatorios");
+            console.log("Erro ao listar Relatorios: " + dados.error);
             return [];
         }
-    
+        
         return dados;
 
     } catch (error){
@@ -135,16 +137,16 @@ async function ListarRelatorios(filtros){
 }
 
 
-async function DeletarRelatorio(idRelatorio) {
+async function DeletarRelatorio(pedidosAdocaoId) {
     
     try{
-        const response = await fetch(`${API_URL}/testeRelatorioDeletar`, {
+        const response = await fetch(`${API_URL}/pedidosAdocao/deletarPedidoAdocao`, {
             method: "DELETE",
             headers:  {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                idRelatorio
+                pedidosAdocaoId: pedidosAdocaoId
             }),
         })
 
@@ -169,16 +171,19 @@ async function DeletarRelatorio(idRelatorio) {
 }
 
 
-async function EditarRelatorio(idRelatorio, novosDados) {
+async function EditarRelatorio(pedidoAdocaoId, novosDados) {
     
+    console.log("Editar Relatório - idRelatorio:", pedidoAdocaoId, "novosDados:", novosDados);
+
     try{
-        const response = await fetch(`${API_URL}/testeRelatorioEditar`, {
+        const response = await fetch(`${API_URL}/pedidosAdocao/editarPedidoAdocao`, {
             method: "PUT",
             headers:  {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                novosDados
+                pedidoAdocaoId: pedidoAdocaoId,
+                novosDados: novosDados,
             }),
         })
 
@@ -199,7 +204,6 @@ async function EditarRelatorio(idRelatorio, novosDados) {
 
         return null;
     }
-    
 }
 
 export { AdicionarRelatorio, ListarRelatorios, DeletarRelatorio, EditarRelatorio };

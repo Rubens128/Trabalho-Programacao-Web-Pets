@@ -22,7 +22,7 @@ function CardRelatorioComponent({ relatorio, funcaoDeletarRelatorio = () => {}, 
 
                     <div>
                         <h1>Nome Futuro Dono: </h1>
-                        <p>{relatorio.usuario.nomeCompleto}</p>
+                        <p>{relatorio.nomeNovoDono}</p>
                     </div>
 
                     <div>
@@ -50,7 +50,7 @@ function CardRelatorioComponent({ relatorio, funcaoDeletarRelatorio = () => {}, 
 
                     <div>
                         <h1>Comentário: </h1>
-                        <p>{relatorio.comentario}</p>
+                        <p>{relatorio.comentarios}</p>
                     </div>
 
                 </div>
@@ -59,7 +59,7 @@ function CardRelatorioComponent({ relatorio, funcaoDeletarRelatorio = () => {}, 
 
                     <div>
                         <h1>Experiência: </h1>
-                        <p>{relatorio.experiencia.experienciaAnterior}</p>
+                        <p>{relatorio.experiencia?.experienciaAnterior}</p>
                     </div>
 
                 </div>

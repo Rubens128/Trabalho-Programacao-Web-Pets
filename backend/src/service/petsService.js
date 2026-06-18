@@ -4,6 +4,8 @@ import { Filter } from "firebase-admin/firestore";
 async function ListarPetsService(filtros) {
     try {
 
+        let petsLista;
+
         if(filtros.userId === null){
 
             let petsSnapshot;
@@ -21,13 +23,16 @@ async function ListarPetsService(filtros) {
                     .limit(filtros.limit)
                     .get();
 
+                petsLista = petsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
             } else {
+                
                 petsSnapshot = await db.collection("pets")
                     .doc(filtros.petId)
                     .get();
-            }
 
-            const petsLista = petsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+                petsLista = petsSnapshot.exists ? [{ id: petsSnapshot.id, ...petsSnapshot.data() }] : [];
+            }
 
             return petsLista;
         
@@ -49,9 +54,9 @@ async function ListarPetsService(filtros) {
 
     } catch (error) {
 
-        console.error("Erro ao listar pets:", error);
+        console.log("Erro ao listar pets:", error);
 
-        throw new Error("Erro ao listar pets");
+        throw new Error("Erro ao listar pets" + error.message);
     }
 }
 

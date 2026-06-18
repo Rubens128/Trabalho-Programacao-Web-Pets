@@ -30,9 +30,9 @@ import { Bs3Circle } from "react-icons/bs";
 import { Bs4Circle } from "react-icons/bs";
 import { useEffect } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
-import { verificarUsuarioLogado } from '../../services/authService.js';
+import { verificarUsuarioLogado } from '../../services/userService.js';
 import { listarPets } from "../../services/petsService.js";
-import { AdicionarRelatorio } from "../../services/relatorioService.js";
+import { AdicionarRelatorio } from "../../services/pedidosAdocaoService.js";
 
 
 function FormularioAdocao({ gender = "macho" }) {
@@ -78,6 +78,7 @@ function FormularioAdocao({ gender = "macho" }) {
         areaExternaSegura: false,
         outrosAnimais: false,
         tevePet: false,
+        comentarios:false
     });
 
     const { petId } = useParams();
@@ -105,14 +106,21 @@ function FormularioAdocao({ gender = "macho" }) {
         }
 
         async function buscarPetInfo() {
+        
+            const petLista = await listarPets({petId: petId});
 
-            const petIdInt = parseInt(petId);
-                    
-            const pet = await listarPets({petId: petIdInt});
+            const pet = petLista ? petLista[0] : null;
 
-            if(!pet) navigate("/");
+            if(!pet){
+                navigate("/");
+                return;
 
-            if(pet.status !== "Disponível") navigate("/");
+            }
+
+            if(pet.status !== "disponivel"){
+                navigate("/");
+                return;
+            }
 
             setPetDados(pet);
         }
@@ -121,13 +129,14 @@ function FormularioAdocao({ gender = "macho" }) {
 
         verificarUsuario();
 
-    }, [navigate]);
+    }, [petId, navigate]);
 
     async function formularioEnviarHandle() {
         
         const dados = {
             petId: petId,
-            usuarioId: usuario.id,
+            antigoDonoId: petDados?.antigoDono || "",
+            novoDonoId: usuario.id,
             nomeCompleto: nomeCompleto,
             telefone: telefone,
             email: email,
@@ -157,7 +166,7 @@ function FormularioAdocao({ gender = "macho" }) {
             return;
         }else
 
-        if (!resposta.erroBackEnd) {
+        if (resposta.erroBackEnd) {
 
             setMensagemPopUpAvisoSucesso(false);
             setMensagemPopUpAviso("Erro ao criar o relatorio, tente novamente.");
@@ -191,7 +200,7 @@ function FormularioAdocao({ gender = "macho" }) {
                         <div className={styles.divComponentesPetSpace}>
                             <img src={AveImg} alt="Imagem do Pet Selecionado" />
                             <div className={styles.divComponentesPetInfos}>
-                                <h1>{petDados?.especie}</h1>
+                                <h1>{petDados?.nome}</h1>
                                 <p><FaRegUser color="#d6a559" size={23} />Nome: {petDados?.nome}</p>
                                 <p><FaPaw color="#d6a559" size={23} />Espécie:  {petDados?.especie}</p>
                                 <p><CiCalendar color="#d6a559" size={23} />Idade:  {petDados?.dataNasc}</p>

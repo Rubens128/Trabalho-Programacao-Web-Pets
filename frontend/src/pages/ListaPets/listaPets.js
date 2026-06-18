@@ -9,7 +9,7 @@ import { CiSearch } from "react-icons/ci";
 import { IoSend } from "react-icons/io5";
 import { IoFilterOutline } from "react-icons/io5";
 import { useEffect } from 'react';
-import { verificarUsuarioLogado } from '../../services/authService.js';
+import { verificarUsuarioLogado } from '../../services/userService.js';
 import { listarPets } from '../../services/petsService.js';
 import { useSearchParams } from 'react-router-dom';
 

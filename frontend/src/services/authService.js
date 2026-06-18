@@ -2,12 +2,12 @@ import Usuario from "../models/usuario";
 
 const API_URL = "http://localhost:3001";
 
-async function loginUsuario(email, senha){
+async function loginUsuario(email, senha) {
 
     const response = await fetch(`${API_URL}/auth/login`, {
 
         method: "POST",
-        headers:  {
+        headers: {
             "Content-Type": "application/json",
         },
 
@@ -19,8 +19,8 @@ async function loginUsuario(email, senha){
 
     const data = await response.json();
 
-    if(!response.ok) {
-        
+    if (!response.ok) {
+
         console.log()
         return null;
     }
@@ -28,48 +28,54 @@ async function loginUsuario(email, senha){
     localStorage.setItem("token", data.token);
     localStorage.setItem("usuario", JSON.stringify(data.usuario));
 
-    return {sucesso: true, usuario: data.usuario};
+    return { sucesso: true, usuario: data.usuario };
 }
 
-
-async function verificarUsuarioLogado() {
+async function RegistrarUsuario(email, senha, nome) {
     
-    const token = localStorage.getItem("token");
+    try {
+        
+        const erros = {
+            email: false,
+            nome: false,
+            senha: false,
+            mensagem: "",
+        };
 
-    if(!token) {
-
-        return null;
-    }
-
-    try{
-
-        const response = await fetch("http://localhost:3001/auth/retornoUsuario", {
-
-            method: "GET",
+        const responseUsuarioAuth = await fetch(`${API_URL}/auth/registrarUsuario`, {
+            method: "POST",
             headers: {
-                token: token
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                nome: nome,
+                email: email,
+                senha: senha,
+            }),
+        });
+        
+        const usuarioAuth = await responseUsuarioAuth.json();
+
+        if (!responseUsuarioAuth.ok) {
+
+            if (usuarioAuth?.error) {
+
+                erros.email = true;
+                erros.mensagem = "Email já está em uso.";
+
+                return erros;
             }
-        })
-
-        if(!response.ok){
-
-            localStorage.removeItem("token");
-            localStorage.removeItem("usuario");
 
             return null;
         }
 
-        const data = await response.json();
+        return usuarioAuth;
 
-        return data.usuario;
+    } catch (error) {
 
-    } catch(error){
-
-        console.log(error);
-
+        console.log("Erro ao adicionar Usuario no authentication", error);
         return null;
     }
-    
 }
 
-export { loginUsuario, verificarUsuarioLogado };
+export { loginUsuario, RegistrarUsuario };

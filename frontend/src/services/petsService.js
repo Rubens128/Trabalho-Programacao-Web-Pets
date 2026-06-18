@@ -49,8 +49,6 @@ async function listarPets(filtros){
 
     const dados = await response.json();
 
-    console.log("Resposta do backend ao listar Pets:", dados);
-
     if(!response.ok){
 
         console.log("Erro ao listar Pets");
@@ -62,13 +60,16 @@ async function listarPets(filtros){
 
 async function editarPet(petId, novosDados) {
     
-    const [ dia, mes, ano ] = novosDados.dataNasc.split(/[\/\-., ]+/);
+    if(novosDados.dataNasc) {
 
-    const data = new Date(`${ano}-${mes}-${dia}`);
+        const [ dia, mes, ano ] = novosDados.dataNasc.split(/[\/\-., ]+/);
 
-    if(isNaN(data.getTime())) return {erro: "Data de nascimento inválida"};
+        const data = new Date(`${ano}-${mes}-${dia}`);
 
-    novosDados.dataNasc = data;
+        if(isNaN(data.getTime())) return {erro: "Data de nascimento inválida"};
+
+        novosDados.dataNasc = data;
+    }
 
     try{
         const response = await fetch(`${API_URL}/pets/editarPet`, {

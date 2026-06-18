@@ -103,7 +103,7 @@ async function ListarPets(req, res) {
 
         console.error("Erro ao listar pets:", error);
 
-        return res.status(500).json({ error: "Erro ao listar pets" });
+        return res.status(500).json({ error: "Erro ao listar pets " + error.message });
     }
 }
 
@@ -115,7 +115,10 @@ async function EditarPets(req, res) {
 
     try{
 
-        novosDados.dataNasc = new Date(novosDados.dataNasc);
+        if(novosDados.dataNasc) {
+            
+            novosDados.dataNasc = new Date(novosDados.dataNasc);
+        }
 
         await EditarPetsService(petId, novosDados);
 

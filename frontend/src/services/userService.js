@@ -1,3 +1,5 @@
+import { RegistrarUsuario } from "./authService";
+
 const API_URL = "http://localHost:3001";
 
 async function ListarUsuarios(filtros){
@@ -195,32 +197,10 @@ async function AdicionarUsuario(usuarioDados) {
     }
 
     try{
-        const responseUsuarioAuth = await fetch(`${API_URL}/auth/registrarUsuario`, {
-            method: "POST",
-            headers:  {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                nome: usuarioDados.nome,
-                email: usuarioDados.email,
-                senha: usuarioDados.senha,
-            }),
-        })
+        
+        const usuarioAuth = await RegistrarUsuario(usuarioDados.email, usuarioDados.senha, usuarioDados.nome);
 
-        const usuarioAuth = await responseUsuarioAuth.json();
-
-        if(!responseUsuarioAuth.ok){
-
-            if(usuarioAuth?.error){
-                
-                erros.email = true;
-                erros.mensagem = "Email já está em uso.";
-
-                return erros;
-            }
-
-            return null;
-        }
+        if (usuarioAuth === null || !Object.keys(usuarioAuth).every((key) => !usuarioAuth[key])) return usuarioAuth;
 
         const responseUsuario = await fetch(`${API_URL}/usuario/adicionarUsuario`, {
             method: "POST",
@@ -253,9 +233,50 @@ async function AdicionarUsuario(usuarioDados) {
     }
 }
 
+async function verificarUsuarioLogado() {
+    
+    const token = localStorage.getItem("token");
+
+    if(!token) {
+
+        return null;
+    }
+
+    try{
+
+        const response = await fetch("http://localhost:3001/usuario/retornoUsuario", {
+
+            method: "GET",
+            headers: {
+                token: token
+            }
+        })
+
+        if(!response.ok){
+
+            localStorage.removeItem("token");
+            localStorage.removeItem("usuario");
+
+            return null;
+        }
+
+        const data = await response.json();
+
+        return data.usuario;
+
+    } catch(error){
+
+        console.log(error);
+
+        return null;
+    }
+    
+}
+
 export {
     ListarUsuarios,
     DeletarUsuario,
     EditarUsuario,
-    AdicionarUsuario
+    AdicionarUsuario,
+    verificarUsuarioLogado
 }

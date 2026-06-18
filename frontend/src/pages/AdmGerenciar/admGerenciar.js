@@ -13,10 +13,10 @@ import { FaHeart } from "react-icons/fa";
 import { IoDocumentText } from "react-icons/io5";
 import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { verificarUsuarioLogado } from '../../services/authService.js';
-import { listarPets, deletarPet } from "../../services/petsService.js";
+import { verificarUsuarioLogado } from '../../services/userService.js';
+import { listarPets, deletarPet, editarPet } from "../../services/petsService.js";
 import { ListarUsuarios, DeletarUsuario, EditarUsuario } from "../../services/userService.js";
-import { ListarRelatorios, DeletarRelatorio, EditarRelatorio } from "../../services/relatorioService.js";
+import { ListarRelatorios, DeletarRelatorio, EditarRelatorio } from "../../services/pedidosAdocaoService.js";
 
 function AdmGerenciar() {
 
@@ -44,37 +44,54 @@ function AdmGerenciar() {
 
       if (retornoUsuario?.tipo !== "adm") {
         navigate("/");
+
+        return null;
       }
 
       setUsuario(retornoUsuario);
+
+      return retornoUsuario;
     }
 
     async function coletarPets() {
       const petsLista = await listarPets();
 
-      console.log(petsLista);
-
       setPetsLista(petsLista);
+
+      return petsLista;
     }
 
     async function coletarUsuarios(params) {
       
       const usuariosLista = await ListarUsuarios();
 
-      console.log(usuariosLista);
-
       setUsuariosLista(usuariosLista);
+
+      return usuariosLista;
     }
 
     async function coletarRelatorios(params) {
-      const relatoriosLista = await ListarRelatorios();
 
-      setRelatoriosLista(relatoriosLista);
+      const usuarioLogado = await verificarUsuario();
+
+      if(!usuarioLogado) return;
+
+      const pets = await coletarPets();
+      const usuarios = await coletarUsuarios();
+
+      const relatorios = await ListarRelatorios();
+
+      const relatoriosListaFormatada = relatorios.map((relatorio) => ({
+        ...relatorio,
+        nomeAntigoDono: usuarios.find((usuario) => usuario.id === relatorio.antigoDonoId)?.nome || "Usuário não encontrado",
+        nomeNovoDono: usuarios.find((usuario) => usuario.id === relatorio.novoDonoId)?.nome || "Usuário não encontrado",
+        nomePet: pets.find((pet) => pet.id === relatorio.petId)?.nome || "Pet não encontrado",
+
+      }));
+
+      setRelatoriosLista(relatoriosListaFormatada);
     }
 
-    verificarUsuario();
-    coletarPets();
-    coletarUsuarios();
     coletarRelatorios();
 
   }, [navigate]);
@@ -185,7 +202,7 @@ function AdmGerenciar() {
     let resposta;
 
     if(relatorioStatusAntigo?.status === editarTipoRelatorio?.status) resposta = true; 
-    else resposta = await EditarRelatorio(editarTipoRelatorio.id, editarTipoRelatorio);
+    else resposta = await EditarRelatorio(editarTipoRelatorio.id, {status: editarTipoRelatorio.status});
 
     if (!resposta) {
 
@@ -199,6 +216,24 @@ function AdmGerenciar() {
       setEditarTipoRelatorio(null);
 
       return;
+    }
+
+    if(editarTipoRelatorio.status === "aprovado") {
+      
+      const petParaEditar = petsLista.find((pet) => pet.id === editarTipoRelatorio.petId);
+
+      const usuarioParaEditar = usuariosLista.find((usuario) => usuario.id === editarTipoRelatorio.novoDonoId);
+
+      const respostaEditarPet = await editarPet(petParaEditar.id, {novoDono: usuarioParaEditar.id, status: "adotado"});
+
+      const respostaEditarUsuario = await EditarUsuario(usuarioParaEditar.id, 
+        {petsAdotados: usuarioParaEditar.petsAdotados ? usuarioParaEditar.petsAdotados + 1 : 1}
+      );
+
+      if(!respostaEditarPet || !respostaEditarUsuario) {
+        
+        return;
+      }
     }
 
     setMensagemPopUpAvisoSucesso(true);
@@ -356,7 +391,7 @@ function AdmGerenciar() {
           <div className={styles.popUpEditar} style={{ height: "55dvh", top: "22.5dvh" }}>
             <p>Pet: {editarTipoRelatorio?.nomePet} </p>
             <p>Dono Atual: {editarTipoRelatorio?.nomeAntigoDono} </p>
-            <p>Futuro Dono: {editarTipoRelatorio?.usuario.nomeCompleto} </p>
+            <p>Futuro Dono: {editarTipoRelatorio?.nomeNovoDono} </p>
             <p>Alterar Status do Relatório:</p>
             <SelectComponent variavel={editarTipoRelatorio?.status}
               funcaoSetVariavel={(novoStatus) => setEditarTipoRelatorio((infoRelatorio) => ({

@@ -10,7 +10,7 @@ import { FaLock } from "react-icons/fa";
 import { FaPaw } from "react-icons/fa";
 import { useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { verificarUsuarioLogado } from '../../services/authService.js';
+import { verificarUsuarioLogado } from '../../services/userService.js';
 
 function Login(){
 

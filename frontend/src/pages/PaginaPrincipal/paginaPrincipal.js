@@ -20,7 +20,7 @@ import { FaRegHeart } from "react-icons/fa";
 import { TfiHeadphoneAlt } from "react-icons/tfi";
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { verificarUsuarioLogado } from '../../services/authService.js';
+import { verificarUsuarioLogado } from '../../services/userService.js';
 import { listarPets } from '../../services/petsService.js';
 
 function PaginaPrincipal() {

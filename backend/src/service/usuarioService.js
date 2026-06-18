@@ -56,8 +56,6 @@ async function ListarUsuariosService(filtros) {
 
     } else {
 
-      console.log("Buscando usuário com ID:", filtros.userId);
-
       const usuarioSnapshot = await db.collection("usuarios").doc(filtros.userId).get();
       
       if(usuarioSnapshot.data() === undefined) {
@@ -67,16 +65,14 @@ async function ListarUsuariosService(filtros) {
 
       const usuario = { ...usuarioSnapshot.data(), id: usuarioSnapshot.id };
 
-      console.log("Usuario encontrado:", usuario);
-
       return usuario;
     }
 
   } catch (error) {
 
     console.error("Erro ao listar usuários:", error);
-    throw new Error("Erro ao listar usuários");
 
+    throw new Error("Erro ao listar usuários");
   }
 }
 
