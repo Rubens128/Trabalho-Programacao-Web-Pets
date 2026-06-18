@@ -15,7 +15,11 @@ async function ListarUsuarios(filtros){
             ...filtros
         };
 
-        const response = await fetch(`${API_URL}/testeUsuario`, {
+        const parametros = new URLSearchParams();
+
+        parametros.append("filtros", JSON.stringify(filtrosFinal));
+
+        const response = await fetch(`${API_URL}/usuario/listarUsuarios?${parametros}`, {
             method: "GET",
             headers:  {
                 "Content-Type": "application/json",
@@ -41,16 +45,16 @@ async function ListarUsuarios(filtros){
 }
 
 
-async function DeletarUsuario(nome) {
+async function DeletarUsuario(userId) {
     
     try{
-        const response = await fetch(`${API_URL}/testeUsuarioDeletar`, {
+        const response = await fetch(`${API_URL}/usuario/deletarUsuario`, {
             method: "DELETE",
             headers:  {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                nome: nome,
+                userId: userId,
             }),
         })
 
@@ -74,16 +78,16 @@ async function DeletarUsuario(nome) {
     
 }
 
-async function EditarUsuario(nomeUsuario, novosDados) {
+async function EditarUsuario(userId, novosDados) {
     
     try{
-        const response = await fetch(`${API_URL}/testeUsuarioEditar`, {
+        const response = await fetch(`${API_URL}/usuario/editarUsuario`, {
             method: "PUT",
             headers:  {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                nome: nomeUsuario,
+                userId: userId,
                 novosDados: novosDados,
             }),
         })
@@ -191,21 +195,50 @@ async function AdicionarUsuario(usuarioDados) {
     }
 
     try{
-        const response = await fetch(`${API_URL}/testeUsuarioAdicionar`, {
+        const responseUsuarioAuth = await fetch(`${API_URL}/auth/registrarUsuario`, {
             method: "POST",
             headers:  {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                usuarioDados: usuarioDados
+                nome: usuarioDados.nome,
+                email: usuarioDados.email,
+                senha: usuarioDados.senha,
             }),
         })
 
-        const dados = await response.json();
+        const usuarioAuth = await responseUsuarioAuth.json();
 
-        if(!response.ok){
+        if(!responseUsuarioAuth.ok){
 
-            console.log("Erro ao adicionar Usuario");
+            if(usuarioAuth?.error){
+                
+                erros.email = true;
+                erros.mensagem = "Email já está em uso.";
+
+                return erros;
+            }
+
+            return null;
+        }
+
+        const responseUsuario = await fetch(`${API_URL}/usuario/adicionarUsuario`, {
+            method: "POST",
+            headers:  {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                nome: usuarioDados.nome,
+                email: usuarioDados.email,
+                uid: usuarioAuth.uid,
+            }),
+        })
+        
+        const usuario = await responseUsuario.json();
+
+        if(!responseUsuario.ok){
+
+            console.log("Erro ao adicionar Usuario no banco de dados");
 
             return null;
         }
@@ -219,7 +252,6 @@ async function AdicionarUsuario(usuarioDados) {
         return null;
     }
 }
-
 
 export {
     ListarUsuarios,

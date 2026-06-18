@@ -27,11 +27,11 @@ function Login(){
         
         async function verificarUsuario() {
         
-        const retornoUsuario = await verificarUsuarioLogado();
+            const retornoUsuario = await verificarUsuarioLogado();
         
-        if (retornoUsuario) navigate("/");
+            if (retornoUsuario) navigate("/");
 
-        setUsuario(retornoUsuario);
+            setUsuario(retornoUsuario);
         }
         
         verificarUsuario();

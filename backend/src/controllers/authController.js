@@ -1,5 +1,4 @@
 import { auth } from "../config/firebase.js";
-import { InserirUsuarioDb } from "../service/usuarioService.js"
 import authService from "../service/authService.js";
 
 export async function login(req, res){
@@ -37,19 +36,6 @@ export async function login(req, res){
     }
 }
 
-export async function retornoUsuario(req, res) {
-    
-    return res.status(200).json({
-
-        message: "Usuário autenticado.",
-        usuario: {
-
-            uid: req.usuario.uid,
-            email: req.usuario.email
-        }
-    });
-}
-
 export async function registrarUsuarioController(req, res) {
 
     const { nome, email, senha } = req.body;
@@ -82,7 +68,6 @@ export async function registrarUsuarioController(req, res) {
 
     try{
 
-        console.log(nome, email, senha);
         const usuario = await authService.registrarUsuarioService({
 
             nome: nome,
@@ -95,12 +80,11 @@ export async function registrarUsuarioController(req, res) {
             return res.status(400).json(usuario);
         }
 
-        const dicionario = await InserirUsuarioDb(usuario);
-        return res.status(200).json(dicionario);
+        return res.status(200).json(usuario);
 
     }catch(error){
         
-        return res.status(400).json({
+        return res.status(500).json({
             message: error
         })
     }

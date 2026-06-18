@@ -40,8 +40,6 @@ async function listarPets(filtros){
 
     parametros.append("filtros", JSON.stringify(filtrosFinal));
 
-    console.log("Filtros enviados para o backend:", filtrosFinal);
-
     const response = await fetch(`${API_URL}/pets/listarPets?${parametros}`, {
         method: "GET",
         headers:  {

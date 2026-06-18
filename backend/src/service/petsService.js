@@ -8,8 +8,6 @@ async function ListarPetsService(filtros) {
 
             let petsSnapshot;
 
-            console.log(filtros);
-
             if(filtros.petId === null){
                 
                 petsSnapshot = await db.collection("pets")

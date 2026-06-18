@@ -123,7 +123,6 @@ function Perfil(){
     async function editarPerfilHandle() {
         
         const novosDados = {
-            ...usuario,
             endereco: {
                 cep: cepValue,
                 estado: estadoValue,
@@ -145,7 +144,7 @@ function Perfil(){
 
         setPopUpConfimacaoAtivo(false);
 
-        const resposta = await EditarUsuario(usuario.nome, novosDados);
+        const resposta = await EditarUsuario(usuario.id, novosDados);
 
         if(!resposta){
 

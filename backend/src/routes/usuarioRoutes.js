@@ -1,10 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
-// router.post("/adicionarUsuario");
-// router.put("/atualizarUsuario");
-// router.get("/listarUsuarios");
-// router.delete("/deletarUsuario");
-// router.get("/listarUsuarioPorId");
+const usuarioController = require("../controllers/usuarioController");
+const verificarToken = require("../middlewares/middleware.js");
+
+router.post("/adicionarUsuario", usuarioController.AdicionarUsuario);
+router.put("/editarUsuario", usuarioController.EditarUsuario);
+router.get("/listarUsuarios", usuarioController.ListarUsuarios);
+router.delete("/deletarUsuario", usuarioController.DeletarUsuario);
+router.get("/retornoUsuario", verificarToken, usuarioController.RetornoUsuario);
 
 module.exports = router;

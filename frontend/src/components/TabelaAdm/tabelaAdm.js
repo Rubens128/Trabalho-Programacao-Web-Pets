@@ -83,16 +83,18 @@ function TabelaAdmComponent({ tabelaExpandida, numTabelaExpandida, listaDados = 
                                 {
                                     tabelaExpandida === numTabelaExpandida ?
                                         <td className={styles.colTipo} style={{ width: "12.5%" }}>{
-                                            tabelaParaUsuario ? dado.data : dado.adicionadoEm}</td>
+                                            tabelaParaUsuario ? dado.criadoEm : dado.adicionadoEm}</td>
                                         : ""
                                 }
 
                                 <td style={{ width: tabelaExpandida === numTabelaExpandida ? "10%" : "15%" }}>
-                                    {tabelaParaUsuario ? dado.petsAdicionado : dado.status}
+                                    {tabelaParaUsuario && dado.petsAdicionados ? dado.petsAdicionados : ""}
+                                    {tabelaParaUsuario && !dado.petsAdicionados ? 0 : dado.status}
                                 </td>
 
                                 <td style={{ width: tabelaExpandida === numTabelaExpandida ? "10%" : "15%" }}>
-                                    {tabelaParaUsuario ? dado.petsAdotados : dado.local}
+                                    {tabelaParaUsuario && dado.petsAdotados ? dado.petsAdotados : ""}
+                                    {tabelaParaUsuario && !dado.petsAdotados ? 0 : dado.local}
                                 </td>
 
                                 {
@@ -112,14 +114,14 @@ function TabelaAdmComponent({ tabelaExpandida, numTabelaExpandida, listaDados = 
                                                         <button style={{ backgroundColor: "#2c46ac"}}
                                                         onClick={() => funcaoEditar(dado)}><MdAdminPanelSettings size={18} />Permissões</button>
                                                         <button style={{ backgroundColor: "#ac302c" }}><FaTrash size={15} 
-                                                        onClick={() => funcaoDeletar(dado.nome)}/>Deletar</button>
+                                                        onClick={() => funcaoDeletar(dado.id)}/>Deletar</button>
                                                     </div>
                                                     :
                                                     <div className={styles.colAcoes}>
                                                         <button style={{ backgroundColor: "#2c46ac" }}
                                                         onClick={() => funcaoEditar(dado)}><MdAdminPanelSettings size={18} /></button>
                                                         <button style={{ backgroundColor: "#ac302c" }}
-                                                        onClick={() => funcaoDeletar(dado.nome)}><FaTrash size={15} /></button>
+                                                        onClick={() => funcaoDeletar(dado.id)}><FaTrash size={15} /></button>
                                                     </div>
                                             }
                                         </td>

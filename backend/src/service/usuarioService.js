@@ -1,716 +1,147 @@
 import { db } from "../config/firebase.js";
 
-export async function InserirUsuarioDb (usuarioDict){
+async function AdicionarUsuarioService(usuarioDict) {
 
-    try{
-        await db.collection("usuarios").doc(usuarioDict.uid).set({
+  try {
 
-            uid: usuarioDict.uid,
-            nome: usuarioDict.nome,
-            email: usuarioDict.email,
-            tipo: "usuario",
-            criadoEm: new Date(),
-            fotoPerfilUrl: "",
-            endereco: {
-                cidade: "",
-                cep: "",
-                estado: "",
-                rua: "",
-                complemento: "",
-                numero: "",
-                referencia: "",
-                bairro: ""
-            }
-        });
+    const usuario = {
 
-        const dicionario = {
+      uid: usuarioDict.uid,
+      nome: usuarioDict.nome,
+      email: usuarioDict.email,
+      tipo: "usuario",
+      criadoEm: new Date(),
+      fotoPerfilUrl: "",
+      endereco: {
+        cidade: "",
+        cep: "",
+        estado: "",
+        rua: "",
+        complemento: "",
+        numero: "",
+        referencia: "",
+        bairro: ""
+      },
+      petsAdicionados: 0,
+      petsAdotados: 0
+    }
 
-            uid: usuarioDict.uid,
-            nome: usuarioDict.nome,
-            email: usuarioDict.email,
-            tipo: "usuario",
-            criadoEm: new Date(),
-            fotoPerfilUrl: "",
-            endereco: {
-                cidade: "",
-                cep: "",
-                estado: "",
-                rua: "",
-                complemento: "",
-                numero: "",
-                referencia: "",
-                bairro: ""
-            }
-        }
+    await db.collection("usuarios").doc(usuarioDict.uid).set(usuario);
 
-        return dicionario;
+    return usuario;
 
-    }catch(error){
+  } catch (error) {
 
-        return {
+    console.log("Erro ao adicionar usuário:", error);
 
-            message: error
-        };
+    throw new Error("Erro ao adicionar usuário", error);
+  }
+}
+
+async function ListarUsuariosService(filtros) {
+  try {
+    if (filtros.userId === null) {
+
+
+      const usuariosSnapshot = await db.collection("usuarios")
+        .orderBy("nome")
+        .startAt(filtros.pesquisa)
+        .endAt(filtros.pesquisa + "\uf8ff")
+        .limit(filtros.limit)
+        .get();
+
+      const usuariosLista = usuariosSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+      return usuariosLista;
+
+    } else {
+
+      console.log("Buscando usuário com ID:", filtros.userId);
+
+      const usuarioSnapshot = await db.collection("usuarios").doc(filtros.userId).get();
+      
+      if(usuarioSnapshot.data() === undefined) {
+        
+        throw new Error("Usuário não encontrado");
+      }
+
+      const usuario = { ...usuarioSnapshot.data(), id: usuarioSnapshot.id };
+
+      console.log("Usuario encontrado:", usuario);
+
+      return usuario;
+    }
+
+  } catch (error) {
+
+    console.error("Erro ao listar usuários:", error);
+    throw new Error("Erro ao listar usuários");
+
+  }
+}
+
+
+async function DeletarUsuarioService(userId) {
+
+    try {
+        await db.collection("usuarios").doc(userId).delete();
+
+        return { sucesso: true };
+
+    } catch (error) {
+
+        console.log("Erro ao deletar usuário:", error);
+
+        throw new Error("Erro ao deletar usuário", error);
     }
 }
 
-const pets = [
-  {
-    adicionadoEm: new Date("2026-06-01"),
-    dataNasc: new Date("2024-03-12"),
-    descricao: "Coelho dócil, acostumado com pessoas e ideal para ambientes internos.",
-    antigoDono: 1,
-    especie: "mamiferos",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/1.jpg",
-    local: "São Paulo - SP",
-    nome: "Bolinha",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-06-02"),
-    dataNasc: new Date("2022-08-20"),
-    descricao: "Iguana tranquila, saudável e acostumada a terrário amplo.",
-    antigoDono: 2,
-    especie: "Repteis",
-    porte: "medio",
-    fotoPetUrl: "https://example.com/pets/2.jpg",
-    local: "São Paulo - SP",
-    nome: "Verde",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-06-03"),
-    dataNasc: new Date("2025-01-15"),
-    descricao: "Calopsita sociável, gosta de cantar e interagir com pessoas.",
-    antigoDono: 3,
-    novoDono: 103,
-    especie: "aves",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/3.jpg",
-    local: "São Paulo - SP",
-    nome: "Pipoca",
-    status: "adotado",
-  },
-  {
-    adicionadoEm: new Date("2026-06-04"),
-    dataNasc: new Date("2023-11-05"),
-    descricao: "Sapo pacífico, indicado para tutor com experiência em anfíbios.",
-    antigoDono: 4,
-    especie: "anfibios",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/4.jpg",
-    local: "São Paulo - SP",
-    nome: "Kiko",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-06-05"),
-    dataNasc: new Date("2025-04-22"),
-    descricao: "Peixe betta de cores vivas, ativo e fácil de cuidar.",
-    antigoDono: 5,
-    especie: "peixes",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/5.jpg",
-    local: "São Paulo - SP",
-    nome: "Azul",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-06-06"),
-    dataNasc: new Date("2024-09-30"),
-    descricao: "Tarântula calma, necessita de terrário seguro e ambiente controlado.",
-    antigoDono: 6,
-    novoDono: 106,
-    especie: "invertebrados",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/6.jpg",
-    local: "São Paulo - SP",
-    nome: "Sombra",
-    status: "adotado",
-  },
-  {
-    adicionadoEm: new Date("2026-06-07"),
-    dataNasc: new Date("2021-02-18"),
-    descricao: "Furão brincalhão, curioso e acostumado com rotina doméstica.",
-    antigoDono: 7,
-    especie: "mamiferos",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/7.jpg",
-    local: "São Paulo - SP",
-    nome: "Tico",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-06-08"),
-    dataNasc: new Date("2020-07-10"),
-    descricao: "Jiboia dócil, bem alimentada e acostumada ao manejo responsável.",
-    antigoDono: 8,
-    especie: "Repteis",
-    porte: "grande",
-    fotoPetUrl: "https://example.com/pets/8.jpg",
-    local: "São Paulo - SP",
-    nome: "Naja",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-06-09"),
-    dataNasc: new Date("2024-12-01"),
-    descricao: "Canário saudável, canta bastante e se adapta bem a gaiolas espaçosas.",
-    antigoDono: 9,
-    novoDono: 109,
-    especie: "aves",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/9.jpg",
-    local: "São Paulo - SP",
-    nome: "Sol",
-    status: "adotado",
-  },
-  {
-    adicionadoEm: new Date("2026-06-10"),
-    dataNasc: new Date("2023-05-14"),
-    descricao: "Axolote jovem, precisa de aquário bem filtrado e água fria.",
-    antigoDono: 10,
-    especie: "anfibios",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/10.jpg",
-    local: "São Paulo - SP",
-    nome: "Luna",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-06-11"),
-    dataNasc: new Date("2025-03-03"),
-    descricao: "Peixe japonês resistente, ideal para aquário comunitário adequado.",
-    antigoDono: 11,
-    especie: "peixes",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/11.jpg",
-    local: "São Paulo - SP",
-    nome: "Dourado",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-06-12"),
-    dataNasc: new Date("2022-10-19"),
-    descricao: "Caracol de observação, precisa de ambiente úmido e seguro.",
-    antigoDono: 12,
-    novoDono: 112,
-    especie: "invertebrados",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/12.jpg",
-    local: "São Paulo - SP",
-    nome: "Lento",
-    status: "adotado",
-  },
-  {
-    adicionadoEm: new Date("2026-06-13"),
-    dataNasc: new Date("2023-01-25"),
-    descricao: "Porquinho-da-índia carinhoso, gosta de companhia e alimentação variada.",
-    antigoDono: 13,
-    especie: "mamiferos",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/13.jpg",
-    local: "São Paulo - SP",
-    nome: "Cookie",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-06-14"),
-    dataNasc: new Date("2021-09-09"),
-    descricao: "Tartaruga aquática ativa, precisa de aquaterrário com área seca.",
-    antigoDono: 14,
-    especie: "Repteis",
-    porte: "medio",
-    fotoPetUrl: "https://example.com/pets/14.jpg",
-    local: "São Paulo - SP",
-    nome: "Cascudo",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-06-15"),
-    dataNasc: new Date("2024-04-04"),
-    descricao: "Papagaio comunicativo, necessita de atenção diária e enriquecimento ambiental.",
-    antigoDono: 15,
-    novoDono: 115,
-    especie: "aves",
-    porte: "medio",
-    fotoPetUrl: "https://example.com/pets/15.jpg",
-    local: "São Paulo - SP",
-    nome: "Louro",
-    status: "adotado",
-  },
-  {
-    adicionadoEm: new Date("2026-06-16"),
-    dataNasc: new Date("2025-02-02"),
-    descricao: "Rã pequena, saudável e indicada para terrário úmido com plantas.",
-    antigoDono: 16,
-    especie: "anfibios",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/16.jpg",
-    local: "São Paulo - SP",
-    nome: "Mel",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-05-01"),
-    dataNasc: new Date("2024-06-18"),
-    descricao: "Peixe palhaço ativo, ideal para aquário marinho bem estabilizado.",
-    antigoDono: 17,
-    especie: "peixes",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/17.jpg",
-    local: "São Paulo - SP",
-    nome: "Nemo",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-05-02"),
-    dataNasc: new Date("2023-07-07"),
-    descricao: "Escorpião de observação, indicado apenas para tutor experiente.",
-    antigoDono: 18,
-    novoDono: 118,
-    especie: "invertebrados",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/18.jpg",
-    local: "São Paulo - SP",
-    nome: "Ferrão",
-    status: "adotado",
-  },
-  {
-    adicionadoEm: new Date("2026-05-03"),
-    dataNasc: new Date("2022-12-12"),
-    descricao: "Hamster ativo durante a noite, precisa de roda e espaço adequado.",
-    antigoDono: 19,
-    especie: "mamiferos",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/19.jpg",
-    local: "São Paulo - SP",
-    nome: "Amendoim",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-05-04"),
-    dataNasc: new Date("2020-05-23"),
-    descricao: "Camaleão saudável, precisa de controle de umidade e iluminação especial.",
-    antigoDono: 20,
-    especie: "Repteis",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/20.jpg",
-    local: "São Paulo - SP",
-    nome: "Colorido",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-05-05"),
-    dataNasc: new Date("2023-03-17"),
-    descricao: "Periquito alegre, acostumado com interação e ambiente calmo.",
-    antigoDono: 21,
-    novoDono: 121,
-    especie: "aves",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/21.jpg",
-    local: "São Paulo - SP",
-    nome: "Kiwi",
-    status: "adotado",
-  },
-  {
-    adicionadoEm: new Date("2026-05-06"),
-    dataNasc: new Date("2024-01-29"),
-    descricao: "Salamandra tranquila, precisa de habitat úmido e temperatura estável.",
-    antigoDono: 22,
-    especie: "anfibios",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/22.jpg",
-    local: "São Paulo - SP",
-    nome: "Brasa",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-05-07"),
-    dataNasc: new Date("2025-05-11"),
-    descricao: "Guppy colorido, saudável e ideal para aquário comunitário.",
-    antigoDono: 23,
-    especie: "peixes",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/23.jpg",
-    local: "São Paulo - SP",
-    nome: "Flash",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-05-08"),
-    dataNasc: new Date("2023-08-08"),
-    descricao: "Louva-a-deus de observação, precisa de terrário ventilado e seguro.",
-    antigoDono: 24,
-    novoDono: 124,
-    especie: "invertebrados",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/24.jpg",
-    local: "São Paulo - SP",
-    nome: "Folha",
-    status: "adotado",
-  },
-  {
-    adicionadoEm: new Date("2026-05-09"),
-    dataNasc: new Date("2021-06-16"),
-    descricao: "Chinchila dócil, precisa de ambiente fresco e banho de pó.",
-    antigoDono: 25,
-    especie: "mamiferos",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/25.jpg",
-    local: "São Paulo - SP",
-    nome: "Neve",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-05-10"),
-    dataNasc: new Date("2022-02-26"),
-    descricao: "Gecko leopardo tranquilo, ideal para tutor iniciante em répteis.",
-    antigoDono: 26,
-    especie: "Repteis",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/26.jpg",
-    local: "São Paulo - SP",
-    nome: "Manchinha",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-05-11"),
-    dataNasc: new Date("2024-10-10"),
-    descricao: "Arara jovem, precisa de espaço, atenção e alimentação balanceada.",
-    antigoDono: 27,
-    novoDono: 127,
-    especie: "aves",
-    porte: "grande",
-    fotoPetUrl: "https://example.com/pets/27.jpg",
-    local: "São Paulo - SP",
-    nome: "Aurora",
-    status: "adotado",
-  },
-  {
-    adicionadoEm: new Date("2026-05-12"),
-    dataNasc: new Date("2023-09-13"),
-    descricao: "Perereca pequena, ativa e indicada para terrário com galhos.",
-    antigoDono: 28,
-    especie: "anfibios",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/28.jpg",
-    local: "São Paulo - SP",
-    nome: "Grilo",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-05-13"),
-    dataNasc: new Date("2024-07-21"),
-    descricao: "Molinésia saudável, sociável e ótima para aquário plantado.",
-    antigoDono: 29,
-    especie: "peixes",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/29.jpg",
-    local: "São Paulo - SP",
-    nome: "Molly",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-05-14"),
-    dataNasc: new Date("2022-11-22"),
-    descricao: "Caranguejo de aquário, precisa de espaço com parte seca e água limpa.",
-    antigoDono: 30,
-    novoDono: 130,
-    especie: "invertebrados",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/30.jpg",
-    local: "São Paulo - SP",
-    nome: "Pinça",
-    status: "adotado",
-  },
-  {
-    adicionadoEm: new Date("2026-05-15"),
-    dataNasc: new Date("2020-04-19"),
-    descricao: "Mini porco inteligente, sociável e acostumado com rotina familiar.",
-    antigoDono: 31,
-    especie: "mamiferos",
-    porte: "medio",
-    fotoPetUrl: "https://example.com/pets/31.jpg",
-    local: "São Paulo - SP",
-    nome: "Bacon",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-05-16"),
-    dataNasc: new Date("2021-01-06"),
-    descricao: "Corn snake mansa, alimenta-se bem e possui manejo simples.",
-    antigoDono: 32,
-    especie: "Repteis",
-    porte: "medio",
-    fotoPetUrl: "https://example.com/pets/32.jpg",
-    local: "São Paulo - SP",
-    nome: "Cobre",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-05-17"),
-    dataNasc: new Date("2025-06-01"),
-    descricao: "Diamante mandarim pequeno, ativo e ideal para viveiro tranquilo.",
-    antigoDono: 33,
-    novoDono: 133,
-    especie: "aves",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/33.jpg",
-    local: "São Paulo - SP",
-    nome: "Faísca",
-    status: "adotado",
-  },
-  {
-    adicionadoEm: new Date("2026-05-18"),
-    dataNasc: new Date("2024-02-09"),
-    descricao: "Tritão aquático, precisa de água limpa e esconderijos no aquário.",
-    antigoDono: 34,
-    especie: "anfibios",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/34.jpg",
-    local: "São Paulo - SP",
-    nome: "Nilo",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-05-19"),
-    dataNasc: new Date("2023-10-24"),
-    descricao: "Acará bandeira elegante, ideal para aquário grande e bem cuidado.",
-    antigoDono: 35,
-    especie: "peixes",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/35.jpg",
-    local: "São Paulo - SP",
-    nome: "Bandeira",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-05-20"),
-    dataNasc: new Date("2021-12-30"),
-    descricao: "Besouro de observação, resistente e indicado para terrário simples.",
-    antigoDono: 36,
-    novoDono: 136,
-    especie: "invertebrados",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/36.jpg",
-    local: "São Paulo - SP",
-    nome: "Casca",
-    status: "adotado",
-  },
-  {
-    adicionadoEm: new Date("2026-05-21"),
-    dataNasc: new Date("2022-06-06"),
-    descricao: "Lhama jovem, dócil e indicada para espaço externo adequado.",
-    antigoDono: 37,
-    especie: "mamiferos",
-    porte: "grande",
-    fotoPetUrl: "https://example.com/pets/37.jpg",
-    local: "São Paulo - SP",
-    nome: "Paco",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-05-22"),
-    dataNasc: new Date("2020-03-28"),
-    descricao: "Dragão-barbudo calmo, gosta de aquecimento e iluminação correta.",
-    antigoDono: 38,
-    especie: "Repteis",
-    porte: "medio",
-    fotoPetUrl: "https://example.com/pets/38.jpg",
-    local: "São Paulo - SP",
-    nome: "Spike",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-05-23"),
-    dataNasc: new Date("2023-04-15"),
-    descricao: "Cacatua afetuosa, precisa de bastante interação e enriquecimento.",
-    antigoDono: 39,
-    novoDono: 139,
-    especie: "aves",
-    porte: "medio",
-    fotoPetUrl: "https://example.com/pets/39.jpg",
-    local: "São Paulo - SP",
-    nome: "Nina",
-    status: "adotado",
-  },
-  {
-    adicionadoEm: new Date("2026-05-24"),
-    dataNasc: new Date("2025-01-01"),
-    descricao: "Girino em fase de desenvolvimento, precisa de cuidados específicos.",
-    antigoDono: 40,
-    especie: "anfibios",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/40.jpg",
-    local: "São Paulo - SP",
-    nome: "Pingo",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-05-25"),
-    dataNasc: new Date("2024-08-18"),
-    descricao: "Tetra neon pequeno, colorido e ideal para cardume em aquário plantado.",
-    antigoDono: 41,
-    especie: "peixes",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/41.jpg",
-    local: "São Paulo - SP",
-    nome: "Neon",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-05-26"),
-    dataNasc: new Date("2022-09-27"),
-    descricao: "Camarão ornamental, ótimo para aquário estabilizado e com esconderijos.",
-    antigoDono: 42,
-    novoDono: 142,
-    especie: "invertebrados",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/42.jpg",
-    local: "São Paulo - SP",
-    nome: "Rubí",
-    status: "adotado",
-  },
-  {
-    adicionadoEm: new Date("2026-05-27"),
-    dataNasc: new Date("2021-11-11"),
-    descricao: "Gato dócil, vacinado e acostumado com apartamento.",
-    antigoDono: 43,
-    especie: "mamiferos",
-    porte: "medio",
-    fotoPetUrl: "https://example.com/pets/43.jpg",
-    local: "São Paulo - SP",
-    nome: "Mingau",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-05-28"),
-    dataNasc: new Date("2023-12-03"),
-    descricao: "Lagarto teiú jovem, ativo e indicado para tutor experiente.",
-    antigoDono: 44,
-    especie: "Repteis",
-    porte: "grande",
-    fotoPetUrl: "https://example.com/pets/44.jpg",
-    local: "São Paulo - SP",
-    nome: "Trovão",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-05-29"),
-    dataNasc: new Date("2024-05-30"),
-    descricao: "Pombo domesticado, tranquilo e acostumado com contato humano.",
-    antigoDono: 45,
-    novoDono: 145,
-    especie: "aves",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/45.jpg",
-    local: "São Paulo - SP",
-    nome: "Cinza",
-    status: "adotado",
-  },
-  {
-    adicionadoEm: new Date("2026-05-30"),
-    dataNasc: new Date("2023-02-14"),
-    descricao: "Rã-touro jovem, precisa de espaço, água limpa e alimentação adequada.",
-    antigoDono: 46,
-    especie: "anfibios",
-    porte: "medio",
-    fotoPetUrl: "https://example.com/pets/46.jpg",
-    local: "São Paulo - SP",
-    nome: "Touro",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-05-31"),
-    dataNasc: new Date("2024-09-09"),
-    descricao: "Peixe kinguio calmo, precisa de aquário espaçoso e boa filtragem.",
-    antigoDono: 47,
-    especie: "peixes",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/47.jpg",
-    local: "São Paulo - SP",
-    nome: "Laranja",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-06-01"),
-    dataNasc: new Date("2022-01-20"),
-    descricao: "Bicho-pau discreto, ideal para observação em terrário com galhos.",
-    antigoDono: 48,
-    novoDono: 148,
-    especie: "invertebrados",
-    porte: "pequeno",
-    fotoPetUrl: "https://example.com/pets/48.jpg",
-    local: "São Paulo - SP",
-    nome: "Galho",
-    status: "adotado",
-  },
-  {
-    adicionadoEm: new Date("2026-06-02"),
-    dataNasc: new Date("2020-10-05"),
-    descricao: "Cachorro carinhoso, brincalhão e acostumado com crianças.",
-    antigoDono: 49,
-    especie: "mamiferos",
-    porte: "grande",
-    fotoPetUrl: "https://example.com/pets/49.jpg",
-    local: "São Paulo - SP",
-    nome: "Thor",
-    status: "disponivel",
-  },
-  {
-    adicionadoEm: new Date("2026-06-03"),
-    dataNasc: new Date("2021-07-19"),
-    descricao: "Tartaruga terrestre tranquila, precisa de espaço externo seguro.",
-    antigoDono: 50,
-    especie: "Repteis",
-    porte: "medio",
-    fotoPetUrl: "https://example.com/pets/50.jpg",
-    local: "São Paulo - SP",
-    nome: "Gaia",
-    status: "disponivel",
-  },
-];
+async function EditarUsuariosService(userId, novosDados) {
+
+    try {
+        
+      await db.collection("usuarios").doc(userId).update({...novosDados});
+
+        return { sucesso: true };
+
+    } catch (error) {
+        
+      console.log("Erro ao editar usuário:", error);
+
+      throw new Error("Erro ao editar usuário", error);
+    }
+}
 
 export async function teste(req, res) {
 
-    try{
-        
-        const petsAtualizados = pets.map((pet) => {
-            return {
-                ...pet,
-                especie: pet.especie.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
-                porte: pet.porte.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
-                status: pet.status.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-            }
-        });
+  try {
 
-        const resultados = await Promise.all(petsAtualizados.map(async (pet) => {
-            return db.collection("pets").add(pet);
-        }));
+    const petsAtualizados = pets.map((pet) => {
+      return {
+        ...pet,
+        especie: pet.especie.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+        porte: pet.porte.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+        status: pet.status.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      }
+    });
 
-        console.log(`${resultados.length} pets adicionados!`);
+    const resultados = await Promise.all(petsAtualizados.map(async (pet) => {
+      return db.collection("pets").add(pet);
+    }));
 
-        resultados.forEach((docRef) => {
-            console.log(docRef.id);
-        });
+    console.log(`${resultados.length} pets adicionados!`);
 
-        return res.status(200).json({ message: `${resultados.length} pets adicionados!` });
-        
-    } catch (error) {
-        console.error(error);
+    resultados.forEach((docRef) => {
+      console.log(docRef.id);
+    });
 
-        return res.status(500).json({ message: "Erro ao adicionar pets." });
-    }
+    return res.status(200).json({ message: `${resultados.length} pets adicionados!` });
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({ message: "Erro ao adicionar pets." });
+  }
 }
 
-// async function ListarUsuario(filtros){
-
-//     if(filtros.hasOwnProperty("pesquisa")) {
-
-//         const dados = await db.collection("usuarios")
-//         .where("pesquisa", "==", filtros.)
-//         .get();
-//     }
-// }
+export { AdicionarUsuarioService, ListarUsuariosService, DeletarUsuarioService, EditarUsuariosService };

@@ -26,7 +26,7 @@ function AdmGerenciar() {
   const [relatoriosLista, setRelatoriosLista] = useState([]);
   const [usuario, setUsuario] = useState(null);
   const [petIdDeletar, setPetIdDeletar] = useState(null);
-  const [usuarioNomeDeletar, setUsuarioNomeDeletar] = useState("");
+  const [usuarioIdDeletar, setUsuarioIdDeletar] = useState("");
   const [relatorioIdDeletar, setRelatorioIdDeletar] = useState(null);
   const [popUpConfimacaoAtivo, setPopUpConfimacaoAtivo] = useState(false);
   const [mensagemPopUpAviso, setMensagemPopUpAviso] = useState("");
@@ -85,9 +85,9 @@ function AdmGerenciar() {
     
     let resposta;
 
-    if(usuarioNomeDeletar !== ""){
+    if(usuarioIdDeletar !== ""){
 
-      resposta = await DeletarUsuario(usuarioNomeDeletar);
+      resposta = await DeletarUsuario(usuarioIdDeletar);
 
     }else if (petIdDeletar !== null){
 
@@ -109,7 +109,7 @@ function AdmGerenciar() {
 
       setPetIdDeletar(null);
       setRelatorioIdDeletar(null);
-      setUsuarioNomeDeletar("");
+      setUsuarioIdDeletar("");
 
       return;
     }
@@ -121,11 +121,11 @@ function AdmGerenciar() {
       setMensagemPopUpAviso("");
     }, 3000);
 
-    if(usuarioNomeDeletar !== ""){
+    if(usuarioIdDeletar !== ""){
 
-      setUsuariosLista((usuariosAntigos) => usuariosAntigos.filter((usuario) => usuario.nome !== usuarioNomeDeletar));
+      setUsuariosLista((usuariosAntigos) => usuariosAntigos.filter((usuario) => usuario.id !== usuarioIdDeletar));
 
-      setUsuarioNomeDeletar("");
+      setUsuarioIdDeletar("");
 
     }else if(petIdDeletar !== null){
 
@@ -256,9 +256,9 @@ function AdmGerenciar() {
             </div>
 
             <TabelaAdmComponent tabelaExpandida={tabelaExpandida} numTabelaExpandida={1} listaDados={usuariosLista} 
-              funcaoDeletar={(nome) => {
+              funcaoDeletar={(userId) => {
                 setPopUpConfimacaoAtivo(true);
-                setUsuarioNomeDeletar(nome);
+                setUsuarioIdDeletar(userId);
               }} funcaoEditar={(usuario) => setEditarTipoUsuario(usuario)}/>
           </div>
 
@@ -319,7 +319,7 @@ function AdmGerenciar() {
           <PopUpComponent mensagem={"Deseja mesmo deletar?"} mensagemSucesso={false}
             popUpConfirmacao={true} funcaoCancelar={() => {
               setPetIdDeletar(null);
-              setUsuarioNomeDeletar("");
+              setUsuarioIdDeletar(null);
               setPopUpConfimacaoAtivo(false);
             }} funcaoConfirmar={() => deletarHandle()} />
 

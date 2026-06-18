@@ -6,8 +6,6 @@ async function ListarPets(req, res) {
 
     const filtros = filtrosRecebidos ? JSON.parse(filtrosRecebidos) : null;
 
-    console.log("Filtros recebidos:", filtros);
-
     if (filtros === null) return res.status(400).json({ error: "Filtros não fornecidos" });
 
     if(filtros.usuario.userId !== null){

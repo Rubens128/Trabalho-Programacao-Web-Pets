@@ -28,7 +28,7 @@ async function loginUsuario(email, senha){
     localStorage.setItem("token", data.token);
     localStorage.setItem("usuario", JSON.stringify(data.usuario));
 
-    return new Usuario("WN1wgFw9UhLZdneqCRjm", "teste", "teste", "teste", "adm");
+    return {sucesso: true, usuario: data.usuario};
 }
 
 
@@ -47,7 +47,6 @@ async function verificarUsuarioLogado() {
 
             method: "GET",
             headers: {
-
                 token: token
             }
         })
@@ -62,16 +61,7 @@ async function verificarUsuarioLogado() {
 
         const data = await response.json();
 
-        return new Usuario("WN1wgFw9UhLZdneqCRjm", "teste", "teste", "teste", {
-            cep: "70000-000",
-            estado: "DF",
-            cidade: "Brasília",
-            bairro: "Asa Norte",
-            rua: "Rua Teste",
-            numero: "123",
-            complemento: "Casa Verde",
-            referencia: "Perto da floresta"
-        }, "adm");
+        return data.usuario;
 
     } catch(error){
 

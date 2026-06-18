@@ -76,6 +76,9 @@ async function registrarUsuarioService(usuario) {
     };
 
   } catch (error) {
+
+    console.log("Erro ao criar usuário:", error);
+
     throw new Error(error.message || "Erro ao criar usuário");
   }
 }
