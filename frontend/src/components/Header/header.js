@@ -11,16 +11,14 @@ function Header({ usuario = null }){
 
     return (
         <div className={styles.header}>
-            <LogoPets/>
+            <a href='/' style={{height: "100%", textDecoration: "none"}}><LogoPets/></a>
             <div className={styles.headerLinks}>
                 <a href='/'>Início</a>
                 <a href='/listaPets'>Adotar Pet</a>
                 <a href={usuario !== null ? '/formularioAdicao' : "/login"}>Adicionar Pet</a>
-                <a href='/'>FAQ</a>
                 {usuario?.tipo === "adm" ? <a href='/admGerenciar'>Painel Administrador</a> : "" }
             </div>
             <div className={styles.headerIcons}>
-                <CiSearch color='white' size={40}/>
                 <div className={styles.headerIconsPerfil}>
 
                     {

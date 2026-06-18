@@ -200,7 +200,9 @@ async function AdicionarUsuario(usuarioDados) {
         
         const usuarioAuth = await RegistrarUsuario(usuarioDados.email, usuarioDados.senha, usuarioDados.nome);
 
-        if (usuarioAuth === null || !Object.keys(usuarioAuth).every((key) => !usuarioAuth[key])) return usuarioAuth;
+        console.log("Resposta do backend ao criar usuário:", usuarioAuth);
+
+        if (!usuarioAuth || !Object.keys(usuarioAuth).every((key) => !usuarioAuth[key] || key === "uid")) return usuarioAuth;
 
         const responseUsuario = await fetch(`${API_URL}/usuario/adicionarUsuario`, {
             method: "POST",
@@ -222,6 +224,8 @@ async function AdicionarUsuario(usuarioDados) {
 
             return null;
         }
+
+        console.log("Usuário adicionado com sucesso", usuario);
 
         return erros;
 

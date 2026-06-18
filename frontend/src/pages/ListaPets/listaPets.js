@@ -83,12 +83,19 @@ function ListaPets(){
 
     async function aplicarFiltros() {
 
-        console.log("Aplicando filtros:", {
-            filtroEspecie,
-            filtroPorte,
-            idadeMin,
-            idadeMax
-        });
+        let idadeMinVariavel = idadeMin ? parseInt(idadeMin) : "";
+        let idadeMaxVariavel = idadeMax ? parseInt(idadeMax) : "";
+
+        if(idadeMinVariavel > idadeMaxVariavel) {
+            
+            setIdadeMin(idadeMaxVariavel);
+            setIdadeMax(idadeMinVariavel);
+
+            let temp = idadeMinVariavel;
+
+            idadeMinVariavel = idadeMaxVariavel;
+            idadeMaxVariavel = temp;
+        }
 
         const filtros = {
             filtroEspecie: {
@@ -97,15 +104,13 @@ function ListaPets(){
             filtroPorte: {
                 ...filtroPorte
             },
-            idadeMin: idadeMin ? parseInt(idadeMin) : 0,
-            idadeMax: idadeMax ? parseInt(idadeMax) : 1000,
+            idadeMin: idadeMinVariavel ? parseInt(idadeMinVariavel) : 0,
+            idadeMax: idadeMaxVariavel ? parseInt(idadeMaxVariavel) : 1000,
         }
 
         if(inputValue.trim() !== "") filtros.pesquisa = inputValue.charAt(0).toUpperCase() + inputValue.slice(1).toLocaleLowerCase();
 
         const petsLista = await listarPets(filtros);
-
-        console.log("Pets encontrados com filtros:", petsLista);
 
         setAnimaisInfo(petsLista);
     }
@@ -156,13 +161,13 @@ function ListaPets(){
                         <div>
                             <p style={{marginRight: 12}}>Idade Min:</p>
                             <InputComponent placeholder='2,5,8,10,15' height={"4dvh"} type='number'
-                            variavel={idadeMin} funcaoSetVariavel={setIdadeMin}/>
+                            variavel={idadeMin} funcaoSetVariavel={(value) => setIdadeMin(value)}/>
                         </div>
 
                         <div>
                             <p style={{marginRight: 7}} >Idade Max:</p>
                             <InputComponent placeholder='2,5,8,10,15' height={"4dvh"} type='number'
-                            variavel={idadeMax} funcaoSetVariavel={setIdadeMax}/>
+                            variavel={idadeMax} funcaoSetVariavel={(value) => setIdadeMax(value)}/>
                         </div>
 
                     </div>
@@ -174,7 +179,6 @@ function ListaPets(){
                 <div className={styles.divPetsOpcoes}>
                         <div className={styles.divPetsTexto}>
                             <h1>{animaisInfo?.length} Animais Encontrados</h1>
-                            <p>Ordernar por</p>
                         </div>
                         <div className={styles.divPetsOpcoesCards}>
                             { animaisInfo?.map((animal) => {

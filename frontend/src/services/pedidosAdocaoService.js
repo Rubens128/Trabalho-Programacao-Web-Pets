@@ -55,6 +55,12 @@ async function AdicionarRelatorio(dadosRelatorio){
         return resposta;
     }
 
+    const [ dia, mes, ano ] = dadosRelatorio.dataNasc.split(/[\/\-., ]+/);
+
+    const data = new Date(ano, mes, dia);
+
+    if(isNaN(data.getTime())) resposta.erros.dataNasc = true;
+
     try{
         const responseBackEnd = await fetch(`${API_URL}/pedidosAdocao/adicionarPedidoAdocao`, {
             method: "POST",

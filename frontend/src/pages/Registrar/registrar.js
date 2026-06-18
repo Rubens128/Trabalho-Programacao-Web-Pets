@@ -59,8 +59,6 @@ function Registrar(){
         
         const resposta = await AdicionarUsuario(dadosUsuario);
 
-        console.log(resposta);
-
         if(resposta === null){
 
             setMensagemPopUpAvisoSucesso(false);
@@ -73,7 +71,7 @@ function Registrar(){
             return;
         }
 
-        if(!Object.keys(resposta).every((key) => !resposta[key])){
+        if(!Object.keys(resposta).every((key) => !resposta[key] || key === "uid")){
 
             setErrosInput(resposta);
 

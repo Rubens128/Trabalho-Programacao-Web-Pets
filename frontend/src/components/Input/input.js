@@ -12,7 +12,7 @@ function InputComponent({variavel, funcaoSetVariavel, icone: Icon = null, sizeIc
                 padding: Icon ? "5px 10px 5px 40px" : "5px 10px", 
                 background: error ? "none" : "", 
                 border: error ? "2px solid #ac302c" : ""
-            }} id={id}
+            }} id={id} min={type === "number" ? 0 : ""}
             onChange={funcaoSetVariavel ? (e) => funcaoSetVariavel(e.currentTarget.value) : (e) => {return;}}>
             </input>
 

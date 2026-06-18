@@ -40,6 +40,7 @@ async function RegistrarUsuario(email, senha, nome) {
             nome: false,
             senha: false,
             mensagem: "",
+            uid: null,
         };
 
         const responseUsuarioAuth = await fetch(`${API_URL}/auth/registrarUsuario`, {
@@ -69,7 +70,9 @@ async function RegistrarUsuario(email, senha, nome) {
             return null;
         }
 
-        return usuarioAuth;
+        erros.uid = usuarioAuth.uid;
+
+        return erros;
 
     } catch (error) {
 

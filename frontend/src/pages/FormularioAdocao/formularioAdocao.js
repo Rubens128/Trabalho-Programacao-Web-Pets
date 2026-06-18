@@ -65,7 +65,7 @@ function FormularioAdocao({ gender = "macho" }) {
         nomeCompleto: false,
         telefone: false,
         email: false,
-        dataNascimento: false,
+        dataNasc: false,
         cpf: false,
         cep: false,
         estado: false,
@@ -91,7 +91,7 @@ function FormularioAdocao({ gender = "macho" }) {
         
             const retornoUsuario = await verificarUsuarioLogado();
             
-            if(retornoUsuario === null) navigate("/login");
+            if(!retornoUsuario) navigate("/login");
 
             setNomeCompleto(retornoUsuario?.nome || "");
             setEmail(retornoUsuario?.email || "");
@@ -140,7 +140,7 @@ function FormularioAdocao({ gender = "macho" }) {
             nomeCompleto: nomeCompleto,
             telefone: telefone,
             email: email,
-            dataNascimento: dataNascimento,
+            dataNasc: dataNascimento,
             cpf: cpf,
             cep: cep,
             estado: estado,
@@ -323,7 +323,7 @@ function FormularioAdocao({ gender = "macho" }) {
                                 <div>
                                     <label htmlFor="dataNascimento">Data Nascimento *</label>
                                     <InputComponent variavel={dataNascimento} funcaoSetVariavel={setDataNascimento}
-                                        placeholder="DD/MM/AAAA" id="dataNascimento" width="100%" error={erros.dataNascimento}/>
+                                        placeholder="DD/MM/AAAA" id="dataNascimento" width="100%" error={erros.dataNasc}/>
                                 </div>
                             </div>
 

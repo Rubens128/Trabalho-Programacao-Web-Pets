@@ -62,8 +62,8 @@ function FormularioAdicao() {
         
         const retornoUsuario = await verificarUsuarioLogado();
         
-        if (retornoUsuario?.tipo !== "adm"){
-          navigate("/");
+        if (!retornoUsuario){
+          navigate("/login");
         }
 
         setUsuario(retornoUsuario);
@@ -84,7 +84,7 @@ function FormularioAdicao() {
         const dadosPet = {
             nome: nomePet,
             antigoDono: usuario?.id || null,
-            decricao: descricao,
+            descricao: descricao,
             especie: especie,
             local: local,
             dataNasc: dataNascimento,

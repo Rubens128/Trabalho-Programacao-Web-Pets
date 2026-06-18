@@ -26,6 +26,8 @@ async function AdicionarUsuarioService(usuarioDict) {
       petsAdotados: 0
     }
 
+    console.log("Adicionando usuário ao banco de dados:", usuario.uid, usuario);
+
     await db.collection("usuarios").doc(usuarioDict.uid).set(usuario);
 
     return usuario;
