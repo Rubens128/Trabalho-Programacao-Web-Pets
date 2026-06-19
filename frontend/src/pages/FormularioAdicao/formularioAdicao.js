@@ -190,9 +190,10 @@ function FormularioAdicao() {
                         <div className={styles.divComponentesConjuntoInscricaoFormularioCampos}>
                             <div>
                                 <label htmlFor="nomeCientifico">Espécie *</label>
-                                <InputComponent variavel={especie} funcaoSetVariavel={setEspecie}
-                                    placeholder="'mamiferos, repteis...'" id="nomeCientifico" width="100%" error={erroPreenchimento.especie}
-                                    ref={inputRefs} nomeRef="especie"/>
+                                <SelectComponent variavel={especie} funcaoSetVariavel={setEspecie}
+                                        opcoes={["mamiferos", "repteis", "aves", "anfibios", "peixes", "invertebrados"]} 
+                                        width="100%" error={erroPreenchimento.especie} 
+                                        ref={inputRefs} nomeRef="especie"/>
                             </div>
                             <div>
                                 <label htmlFor="telefone">Local Atual *</label>
@@ -227,9 +228,9 @@ function FormularioAdicao() {
                                 </div>
                                 <div>
                                     <label htmlFor="porte">Porte *</label>
-                                    <InputComponent variavel={porte} funcaoSetVariavel={setPorte}
-                                        placeholder="Digite o porte do pet" id="porte" width="100%" error={erroPreenchimento.porte}
-                                        ref={inputRefs} nomeRef="porte"/>
+                                    <SelectComponent variavel={porte} funcaoSetVariavel={setPorte}
+                                            opcoes={["pequeno", "medio", "grande"]} width="100%" error={erroPreenchimento.porte} 
+                                            ref={inputRefs} nomeRef="porte"/>
                                 </div>
                                 <div>
                                     <label htmlFor="altura">Altura *</label>
