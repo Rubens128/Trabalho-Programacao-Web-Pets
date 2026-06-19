@@ -148,7 +148,7 @@ async function AdicionarPet(dadosPet){
 
     Object.keys(dadosPet).forEach((key, index) => {
 
-        if (index > 7) return;
+        if (index > 9) return;
 
         if (!dadosPet[key]) resposta.erros[key] = true;
     })
@@ -160,6 +160,8 @@ async function AdicionarPet(dadosPet){
     const data = new Date(ano, mes, dia);
 
     if(isNaN(data.getTime())) resposta.erros["dataNasc"] = true;
+
+    dadosPet.dataNasc = data;
 
     const altura = dadosPet.altura.replace("," , ".");
 

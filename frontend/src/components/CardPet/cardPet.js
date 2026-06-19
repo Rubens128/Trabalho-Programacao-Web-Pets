@@ -6,7 +6,7 @@ import TextInputComponent from "../TextInput/textInput";
 import PopUpComponent from '../popUp/popUp';
 import { CiHeart } from "react-icons/ci";
 import { FaMapMarkerAlt } from "react-icons/fa";
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 import { editarPet } from '../../services/petsService';
 
@@ -31,6 +31,7 @@ function CardPet({width = "15%", height = "42%", pet, podeEditarDeletar=false,
         status: pet.status,
         descricao: pet.descricao,
     });
+    const refInputs = useRef({})
     
     const navigate = useNavigate();
 

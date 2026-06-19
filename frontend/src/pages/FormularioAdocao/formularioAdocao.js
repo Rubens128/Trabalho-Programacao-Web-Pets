@@ -28,12 +28,11 @@ import { Bs1Circle } from "react-icons/bs";
 import { Bs2Circle } from "react-icons/bs";
 import { Bs3Circle } from "react-icons/bs";
 import { Bs4Circle } from "react-icons/bs";
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import { verificarUsuarioLogado } from '../../services/userService.js';
 import { listarPets } from "../../services/petsService.js";
 import { AdicionarRelatorio } from "../../services/pedidosAdocaoService.js";
-
 
 function FormularioAdocao({ gender = "macho" }) {
 
@@ -80,6 +79,8 @@ function FormularioAdocao({ gender = "macho" }) {
         tevePet: false,
         comentarios:false
     });
+    
+    const inputRefs = useRef({});
 
     const { petId } = useParams();
 
@@ -163,8 +164,14 @@ function FormularioAdocao({ gender = "macho" }) {
             
             setErros(resposta.erros);
 
+            const primeiroErroIndex = Object.keys(resposta.erros).find((key) => resposta.erros[key] === true);
+
+            inputRefs.current[primeiroErroIndex]?.scrollIntoView({ behavior: "smooth", block: "center" });
+
+            inputRefs.current[primeiroErroIndex]?.focus();
+
             return;
-        }else
+        }
 
         if (resposta.erroBackEnd) {
 
@@ -299,31 +306,36 @@ function FormularioAdocao({ gender = "macho" }) {
                             <div>
                                 <label htmlFor="nomeCompleto" >Nome Completo *</label>
                                 <InputComponent variavel={nomeCompleto} funcaoSetVariavel={setNomeCompleto}
-                                    placeholder="Digite seu nome completo" id="nomeCompleto" width="100%" error={erros.nomeCompleto}/>
+                                    placeholder="Digite seu nome completo" id="nomeCompleto" width="100%" error={erros.nomeCompleto}
+                                    ref={inputRefs} nomeRef="nomeCompleto" />
                             </div>
 
                             <div className={styles.divComponentesConjuntoInscricaoFormularioCampos}>
                                 <div>
                                     <label htmlFor="cpf">CPF *</label>
                                     <InputComponent variavel={cpf} funcaoSetVariavel={setCpf}
-                                        placeholder="000.000.000-00" id="cpf" width="100%" error={erros.cpf}/>
+                                        placeholder="000.000.000-00" id="cpf" width="100%" error={erros.cpf}
+                                        ref={inputRefs} nomeRef="cpf" />
                                 </div>
                                 <div>
                                     <label htmlFor="telefone">Telefone / WhatsApp *</label>
                                     <InputComponent variavel={telefone} funcaoSetVariavel={setTelefone}
-                                        placeholder="(00) 00000-0000" id="telefone" width="100%" error={erros.telefone}/>
+                                        placeholder="(00) 00000-0000" id="telefone" width="100%" error={erros.telefone}
+                                        ref={inputRefs} nomeRef="telefone" />
                                 </div>
                             </div>
                             <div className={styles.divComponentesConjuntoInscricaoFormularioCampos}>
                                 <div>
                                     <label htmlFor="email">E-mail *</label>
                                     <InputComponent variavel={email} funcaoSetVariavel={setEmail}
-                                        placeholder="Digite seu email" id="email" width="100%" error={erros.email}/>
+                                        placeholder="Digite seu email" id="email" width="100%" error={erros.email}
+                                        ref={inputRefs} nomeRef="email" />
                                 </div>
                                 <div>
                                     <label htmlFor="dataNascimento">Data Nascimento *</label>
                                     <InputComponent variavel={dataNascimento} funcaoSetVariavel={setDataNascimento}
-                                        placeholder="DD/MM/AAAA" id="dataNascimento" width="100%" error={erros.dataNasc}/>
+                                        placeholder="DD/MM/AAAA" id="dataNascimento" width="100%" error={erros.dataNasc}
+                                        ref={inputRefs} nomeRef="dataNasc" />
                                 </div>
                             </div>
 
@@ -334,12 +346,14 @@ function FormularioAdocao({ gender = "macho" }) {
                                     <div>
                                         <label htmlFor="cep">CEP </label>
                                         <InputComponent variavel={cep} funcaoSetVariavel={setCep}
-                                            placeholder="00.000-000" id="cep" width="100%" error={erros.cep}/>
+                                            placeholder="00.000-000" id="cep" width="100%" error={erros.cep}
+                                            ref={inputRefs} nomeRef="cep"/>
                                     </div>
                                     <div>
                                         <label htmlFor="estado">Estado </label>
                                         <InputComponent variavel={estado} funcaoSetVariavel={setEstado}
-                                            placeholder="Estado" id="estado" width="100%" error={erros.estado}/>
+                                            placeholder="Estado" id="estado" width="100%" error={erros.estado}
+                                            ref={inputRefs} nomeRef="estado"/>
                                     </div>
                                 </div>
 
@@ -347,24 +361,28 @@ function FormularioAdocao({ gender = "macho" }) {
                                     <div>
                                         <label htmlFor="cidade">Cidade </label>
                                         <InputComponent variavel={cidade} funcaoSetVariavel={setCidade}
-                                            placeholder="Cidade" id="cidade" width="100%" error={erros.cidade}/>
+                                            placeholder="Cidade" id="cidade" width="100%" error={erros.cidade}
+                                            ref={inputRefs} nomeRef="cidade"/>
                                     </div>
                                     <div>
                                         <label htmlFor="bairro">Bairro </label>
                                         <InputComponent variavel={bairro} funcaoSetVariavel={setBairro}
-                                            placeholder="Bairro" id="bairro" width="100%" error={erros.bairro}/>
+                                            placeholder="Bairro" id="bairro" width="100%" error={erros.bairro}
+                                            ref={inputRefs} nomeRef="bairro"/>
                                     </div>
                                 </div>
                                 <div className={styles.divComponentesConjuntoInscricaoFormularioCampos}>
                                     <div>
                                         <label htmlFor="numero">Número </label>
                                         <InputComponent variavel={numero} funcaoSetVariavel={setNumero}
-                                            placeholder="Número" id="numero" width="100%" error={erros.numero}/>
+                                            placeholder="Número" id="numero" width="100%" error={erros.numero}
+                                            ref={inputRefs} nomeRef="numero"/>
                                     </div>
                                     <div>
                                         <label htmlFor="complemento">Complemento </label>
                                         <InputComponent variavel={complemento} funcaoSetVariavel={setComplemento}
-                                            placeholder="Complemeto" id="complemento" width="100%" error={erros.complemento}/>
+                                            placeholder="Complemeto" id="complemento" width="100%" error={erros.complemento}
+                                            ref={inputRefs} nomeRef="complemento"/>
                                     </div>
                                 </div>
                             </div>
@@ -374,24 +392,28 @@ function FormularioAdocao({ gender = "macho" }) {
                                     <div>
                                         <label htmlFor="tipoMoradia">Você mora em casa ou apartamento? *</label>
                                         <SelectComponent variavel={tipoMoradia} funcaoSetVariavel={setTipoMoradia}
-                                            opcoes={["Apartamento", "Casa"]} width="100%" id={tipoMoradia} error={erros.tipoMoradia}/>
+                                            opcoes={["Apartamento", "Casa"]} width="100%" id={tipoMoradia} error={erros.tipoMoradia} 
+                                            ref={inputRefs} nomeRef="tipoMoradia"/>
                                     </div>
                                     <div>
                                         <label htmlFor="posseMoradia">O imóvel é próprio ou alugado? *</label>
                                         <SelectComponent variavel={posseMoradia} funcaoSetVariavel={setPosseMoradia}
-                                            opcoes={["Próprio", "Alugado"]} width="100%" id={posseMoradia} error={erros.posseMoradia}/>
+                                            opcoes={["Próprio", "Alugado"]} width="100%" id={posseMoradia} error={erros.posseMoradia}
+                                            ref={inputRefs} nomeRef="posseMoradia"/>
                                     </div>
                                 </div>
                                 <div className={styles.divComponentesAmbienteConjunto}>
                                     <div>
                                         <label htmlFor="areaExternaSegura">Você possui área externa segura? *</label>
                                         <SelectComponent variavel={areaExternaSegura} funcaoSetVariavel={setAreaExternaSegura}
-                                            opcoes={["Sim", "Não"]} width="100%" id={areaExternaSegura} error={erros.areaExternaSegura}/>
+                                            opcoes={["Sim", "Não"]} width="100%" id={areaExternaSegura} error={erros.areaExternaSegura}
+                                            ref={inputRefs} nomeRef="areaExternaSegura"/>
                                     </div>
                                     <div>
                                         <label htmlFor="outrosAnimais">Outros animais no local? *</label>
                                         <SelectComponent variavel={outrosAnimais} funcaoSetVariavel={setOutrosAnimais}
-                                            opcoes={["Sim", "Não"]} width="100%" id={outrosAnimais} error={erros.outrosAnimais}/>
+                                            opcoes={["Sim", "Não"]} width="100%" id={outrosAnimais} error={erros.outrosAnimais}
+                                            ref={inputRefs} nomeRef="outrosAnimais"/>
                                     </div>
                                 </div>
                             </div>
@@ -402,14 +424,16 @@ function FormularioAdocao({ gender = "macho" }) {
                                 <div className={styles.divComponentesExperienciaConjunto}>
                                     <label htmlFor="tevePet">Você já teve pets exóticos antes? *</label>
                                     <SelectComponent variavel={tevePet} funcaoSetVariavel={setTevePet}
-                                        opcoes={["Sim", "Não"]} width="100%" id={tevePet} error={erros.tevePet}/>
+                                        opcoes={["Sim", "Não"]} width="100%" id={tevePet} error={erros.tevePet}
+                                        ref={inputRefs} nomeRef="tevePet"/>
                                 </div>
 
                                 <div className={styles.divComponentesExperienciaConjunto}>
                                     <label htmlFor="experienciaUsuario">Conte sobre a sua experiência, se houver:</label>
                                     <TextInputComponent variavel={experienciaUsuario} funcaoSetVariavel={setExperienciaUsuario}
                                         placeholder="'Tive um cameleão quando morava em uma apartamento...'" 
-                                        id="experienciaUsuario" width="100%" height="20dvh" error={erros.experienciaUsuario}/>
+                                        id="experienciaUsuario" width="100%" height="20dvh" error={erros.experienciaUsuario}
+                                        ref={inputRefs} nomeRef="experienciaUsuario"/>
                                 </div>
                             </div>
 
@@ -417,7 +441,8 @@ function FormularioAdocao({ gender = "macho" }) {
                                 <h1>4.Comentários</h1>
                                 <label htmlFor="comentarios">Conte-nos um pouco mais sobre o seu interesse nesse pet (opcional):</label>
                                 <TextInputComponent variavel={comentarios} funcaoSetVariavel={setComentarios}
-                                    placeholder="..." id="comentarios" width="100%" height="20dvh" error={erros.comentarios}/>
+                                    placeholder="..." id="comentarios" width="100%" height="20dvh" error={erros.comentarios}
+                                    ref={inputRefs} nomeRef="comentarios"/>
                             </div>
                             <ButtonComponent textoBotao="Enviar Formulário" variante={1} funcaoBotao={formularioEnviarHandle}/>
                         </div>

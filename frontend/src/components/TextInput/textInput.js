@@ -1,7 +1,7 @@
 import styles from "./textInput.module.css"
 
 function TextInputComponent({variavel, funcaoSetVariavel, placeholder = "", 
-    width = "50%", height = "5.5dvh", id = null, error = false}) {
+    width = "50%", height = "5.5dvh", id = null, error = false, ref = "", nomeRef = ""}){
 
     return(
 
@@ -9,7 +9,8 @@ function TextInputComponent({variavel, funcaoSetVariavel, placeholder = "",
         value={variavel} id={id} style={{width: width, height: height,
             background: error ? "none" : "", 
             border: error ? "2px solid #ac302c" : ""
-        }} className={styles.textarea}></textarea>
+        }} className={styles.textarea} 
+        ref={(elemento) => ref && ref.current ? ref.current[nomeRef] = elemento : ""}></textarea>
     );
 }
 
