@@ -9,6 +9,13 @@ function Header({ usuario = null }){
 
     const [menuAberto, setMenuAberto] = useState(false);
 
+    function sairHandle() {
+
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
+
+    }
+
     return (
         <div className={styles.header}>
             <a href='/' style={{height: "100%", textDecoration: "none"}}><LogoPets/></a>
@@ -38,7 +45,7 @@ function Header({ usuario = null }){
                         
                         <div className={styles.headerIconsPerfilMenu} style={{display: menuAberto ? "flex" : "none"}}>
                             <a href='/perfil'>Perfil</a>
-                            <a href='/login'>Sair</a>
+                            <a href='/login' onClick={sairHandle}>Sair</a>
                         </div>
 
                         :

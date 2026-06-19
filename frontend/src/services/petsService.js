@@ -176,7 +176,7 @@ async function AdicionarPet(dadosPet){
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                dadosPet
+                dadosPet: dadosPet
             }),
         })
 

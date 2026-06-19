@@ -256,16 +256,16 @@ function AdmGerenciar() {
       <div className={styles.divGeral}>
         <div className={styles.divGeralInfos}>
 
-          <CardInfoAdmComponent nomeDado={"Usuários Cadastrados"} quantidade={1200}
+          <CardInfoAdmComponent nomeDado={"Usuários Cadastrados"} quantidade={usuariosLista.length}
             porcentagem={"↑ 12% esse mês"} icone={HiUsers} sizeIcone={50} porcentagemPositiva={true} />
 
-          <CardInfoAdmComponent nomeDado={"Pets Disponíveis"} quantidade={128}
+          <CardInfoAdmComponent nomeDado={"Pets Disponíveis"} quantidade={petsLista.length}
             porcentagem={"↓ 2% esse mês"} icone={IoPaw} sizeIcone={50} porcentagemPositiva={false} />
 
-          <CardInfoAdmComponent nomeDado={"Pets adotados"} quantidade={15}
+          <CardInfoAdmComponent nomeDado={"Pets adotados"} quantidade={petsLista.filter((pet) => pet.status === "adotado").length}
             porcentagem={"↓ 8% esse mês"} icone={FaHeart} sizeIcone={50} porcentagemPositiva={false} />
 
-          <CardInfoAdmComponent nomeDado={"Solicitações Pendentes"} quantidade={27}
+          <CardInfoAdmComponent nomeDado={"Solicitações Pendentes"} quantidade={relatoriosLista.filter((relatorio) => relatorio.status === "pendente").length}
             porcentagem={"↑ 4% esse mês"} icone={IoDocumentText} sizeIcone={50} porcentagemPositiva={true} />
 
         </div>
