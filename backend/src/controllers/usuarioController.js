@@ -45,7 +45,7 @@ async function ListarUsuarios(req, res) {
 
         const listaUsuariosFormatada = listaUsuarios.map((usuario) => ({
             ...usuario,
-            criadoEm: usuario.criadoEm ? usuario.criadoEm.toDate().toLocaleDateString("pt-BR") : "",
+            criadoEm: usuario.criadoEm && typeof usuario.criadoEm.toDate === "function" ? usuario.criadoEm.toDate().toLocaleDateString("pt-BR") : "",
         }));
 
         return res.status(200).json(listaUsuariosFormatada);

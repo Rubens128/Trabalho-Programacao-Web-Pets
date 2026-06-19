@@ -1,6 +1,6 @@
 const API_URL = "http://localHost:3001";
 
-async function listarPets(filtros){
+async function listarPets(filtros) {
 
     const filtrosPadrao = {
         recentes: false,
@@ -9,7 +9,7 @@ async function listarPets(filtros){
         idadeMax: 1000,
         petId: null,
         pesquisa: "",
-        usuario:{
+        usuario: {
             userId: null,
             verificarAdotados: false,
             verificarAdicionados: false,
@@ -40,41 +40,48 @@ async function listarPets(filtros){
 
     parametros.append("filtros", JSON.stringify(filtrosFinal));
 
-    const response = await fetch(`${API_URL}/pets/listarPets?${parametros}`, {
-        method: "GET",
-        headers:  {
-            "Content-Type": "application/json",
-        },
-    })
+    try {
+        const response = await fetch(`${API_URL}/pets/listarPets?${parametros}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
 
-    const dados = await response.json();
+        const dados = await response.json();
 
-    if(!response.ok){
+        if (!response.ok) {
 
-        console.log("Erro ao listar Pets");
+            console.log("Erro ao listar Pets");
+            return null;
+        }
+
+        return dados;
+    } catch (error) {
+        console.log("Erro ao listar pets:", error);
         return null;
     }
-    
-   return dados;
+
+
 }
 
 async function editarPet(petId, novosDados) {
-    
-    if(novosDados.dataNasc) {
 
-        const [ dia, mes, ano ] = novosDados.dataNasc.split(/[\/\-., ]+/);
+    if (novosDados.dataNasc) {
+
+        const [dia, mes, ano] = novosDados.dataNasc.split(/[\/\-., ]+/);
 
         const data = new Date(`${ano}-${mes}-${dia}`);
 
-        if(isNaN(data.getTime())) return {erro: "Data de nascimento inválida"};
+        if (isNaN(data.getTime())) return { erro: "Data de nascimento inválida" };
 
         novosDados.dataNasc = data;
     }
 
-    try{
+    try {
         const response = await fetch(`${API_URL}/pets/editarPet`, {
             method: "PUT",
-            headers:  {
+            headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -85,7 +92,7 @@ async function editarPet(petId, novosDados) {
 
         const dados = await response.json();
 
-        if(!response.ok){
+        if (!response.ok) {
 
             console.log("Erro ao editar Pet");
 
@@ -94,21 +101,21 @@ async function editarPet(petId, novosDados) {
 
         return dados;
 
-    } catch (error){
+    } catch (error) {
 
         console.log("Erro ao editar pet:", error);
 
         return null;
     }
-    
+
 }
 
 async function deletarPet(petId) {
-    
-    try{
+
+    try {
         const response = await fetch(`${API_URL}/pets/deletarPet`, {
             method: "DELETE",
-            headers:  {
+            headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -118,7 +125,7 @@ async function deletarPet(petId) {
 
         const dados = await response.json();
 
-        if(!response.ok){
+        if (!response.ok) {
 
             console.log("Erro ao deletar Pet");
 
@@ -127,16 +134,16 @@ async function deletarPet(petId) {
 
         return dados;
 
-    } catch (error){
+    } catch (error) {
 
         console.log("Erro ao deletar pet:", error);
 
         return null;
     }
-    
+
 }
 
-async function AdicionarPet(dadosPet){
+async function AdicionarPet(dadosPet) {
 
     const resposta = {
         erros: {},
@@ -153,26 +160,26 @@ async function AdicionarPet(dadosPet){
         if (!dadosPet[key]) resposta.erros[key] = true;
     })
 
-    if(Object.keys(resposta.erros).length > 0) return resposta;
+    if (Object.keys(resposta.erros).length > 0) return resposta;
 
-    const [ dia, mes, ano ] = dadosPet.dataNasc.split(/[\/\-., ]+/);
+    const [dia, mes, ano] = dadosPet.dataNasc.split(/[\/\-., ]+/);
 
     const data = new Date(ano, mes, dia);
 
-    if(isNaN(data.getTime())) resposta.erros["dataNasc"] = true;
+    if (isNaN(data.getTime())) resposta.erros["dataNasc"] = true;
 
     dadosPet.dataNasc = data;
 
-    const altura = dadosPet.altura.replace("," , ".");
+    const altura = dadosPet.altura.replace(",", ".");
 
-    if(isNaN(Number(altura))) resposta.erros["altura"] = true;
+    if (isNaN(Number(altura))) resposta.erros["altura"] = true;
 
-    if(Object.keys(resposta.erros).length > 0) return resposta;
+    if (Object.keys(resposta.erros).length > 0) return resposta;
 
-    try{
+    try {
         const responseBackEnd = await fetch(`${API_URL}/pets/adicionarPet`, {
             method: "POST",
-            headers:  {
+            headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -182,7 +189,7 @@ async function AdicionarPet(dadosPet){
 
         const dados = await responseBackEnd.json();
 
-        if(!responseBackEnd.ok){
+        if (!responseBackEnd.ok) {
 
             console.log("Erro ao adicionar Pet");
 
@@ -196,7 +203,7 @@ async function AdicionarPet(dadosPet){
 
         return resposta;
 
-    } catch (error){
+    } catch (error) {
 
         console.log("Erro ao adicionar pet:", error);
 

@@ -4,37 +4,44 @@ const API_URL = "http://localhost:3001";
 
 async function loginUsuario(email, senha) {
 
-    const response = await fetch(`${API_URL}/auth/login`, {
+    try {
+        const response = await fetch(`${API_URL}/auth/login`, {
 
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
 
-        body: JSON.stringify({
-            email,
-            senha
-        }),
-    });
+            body: JSON.stringify({
+                email,
+                senha
+            }),
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if (!response.ok) {
+        if (!response.ok) {
 
-        console.log()
+            console.log()
+            return null;
+        }
+
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("usuario", JSON.stringify(data.usuario));
+
+        return { sucesso: true, usuario: data.usuario };
+    } catch (error) {
+
+        console.log("Erro ao fazer login:", error);
         return null;
     }
 
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("usuario", JSON.stringify(data.usuario));
-
-    return { sucesso: true, usuario: data.usuario };
 }
 
 async function RegistrarUsuario(email, senha, nome) {
-    
+
     try {
-        
+
         const erros = {
             email: false,
             nome: false,
@@ -54,7 +61,7 @@ async function RegistrarUsuario(email, senha, nome) {
                 senha: senha,
             }),
         });
-        
+
         const usuarioAuth = await responseUsuarioAuth.json();
 
         if (!responseUsuarioAuth.ok) {

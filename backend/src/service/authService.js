@@ -11,35 +11,44 @@ async function login(email, senha){
 
     const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`
 
-    const response = await fetch(
-         url ,
-         {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                email: email,
-                password: senha,
-                returnSecureToken: true, 
-            }),
-         }
-    );
+    try{
+      
+        const response = await fetch(
+          url ,
+          {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                  email: email,
+                  password: senha,
+                  returnSecureToken: true, 
+              }),
+          }
+      );
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (!response.ok){
-        throw new Error(data.error?.message || "Erro ao fazer login");
+      if (!response.ok){
+          throw new Error(data.error?.message || "Erro ao fazer login");
+      }
+
+      return {
+          usuario: {
+              uid: data.localId,
+              email: data.email,
+          },
+          token: data.idToken,
+          refreshToken: data.refreshToken,
+      };
+
+    } catch (error) {
+
+        console.log("Erro ao fazer login:", error);
+        throw new Error(error.message || "Erro ao fazer login");
     }
-
-    return {
-        usuario: {
-            uid: data.localId,
-            email: data.email,
-        },
-        token: data.idToken,
-        refreshToken: data.refreshToken,
-    };
+    
 }
 
 async function registrarUsuarioService(usuario) {
