@@ -166,7 +166,7 @@ function AdmGerenciar() {
     let resposta;
 
     if(usuarioComTipoAntigo?.tipo === editarTipoUsuario?.tipo) resposta = true; 
-    else resposta = await EditarUsuario(editarTipoUsuario.nome, editarTipoUsuario);
+    else resposta = await EditarUsuario(editarTipoUsuario.id, editarTipoUsuario);
 
     if (!resposta) {
 
@@ -379,7 +379,7 @@ function AdmGerenciar() {
               funcaoSetVariavel={(novoTipo) => setEditarTipoUsuario((infoUsuario) => ({
                 ...infoUsuario,
                 tipo: novoTipo
-              }))} opcoes={["Administrador", "Usuário", "Voluntário"]}/>
+              }))} opcoes={["adm", "usuario", "voluntario"]}/>
             <div className={styles.popUpEditarDivBotoes}>
               <ButtonComponent variante={1} textoBotao="Cancelar" funcaoBotao={() => setEditarTipoUsuario(null)}/>
               <ButtonComponent variante={2} textoBotao="Confirmar" funcaoBotao={editarUsuarioHandle}/>

@@ -95,7 +95,9 @@ function CardPet({width = "15%", height = "42%", pet, podeEditarDeletar=false,
 
     return (
         <div style={{ width: width, height: height }} className={styles.cardPet}>
-            <img src={TesteImg} alt='Imagem de Ouriço'></img>
+            <div className={styles.cardPetImageDiv}>
+                <img src={pet.fotoPetUrl} alt='Imagem de Ouriço'></img>
+            </div>
             <div className={styles.cardPetTags}>
                 <p>ADOÇÃO</p>
                 <CiHeart size={35} />
@@ -113,7 +115,7 @@ function CardPet({width = "15%", height = "42%", pet, podeEditarDeletar=false,
                     <div className={styles.cardPetVerMaisInfosDiv}>
                         
                         <div className={styles.cardPetVerMaisInfosDivImage}>
-                            <img src={TesteImg}/>
+                            <img src={pet.fotoPetUrl}/>
                         </div>
 
                         <div className={styles.cardPetVerMaisInfosDivColuna}>

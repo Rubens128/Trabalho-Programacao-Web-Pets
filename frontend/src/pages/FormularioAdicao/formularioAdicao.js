@@ -98,7 +98,7 @@ function FormularioAdicao() {
             temperamento: temperamento,
             origem: origem,
             descricao: descricao,
-            fotoPetUrl: "temporario/fotoPet.jpg"
+            fotoPetUrl: "/images/ourico.png"
         }
 
         const resposta = await AdicionarPet(dadosPet);
@@ -249,7 +249,7 @@ function FormularioAdicao() {
                                     {arquivoPreview ? <img src={arquivoPreview || ""}/> : ""}
                                 </label>
                                 <input style={{display: "none"}} type="file" onChange={handleFile} 
-                                id="inputImage" value={arquivoValue} ref={inputRefs} nomeRef="inputImage"/>
+                                id="inputImage" variavel={arquivoValue} ref={inputRefs} nomeRef="inputImage"/>
                             </div>
                         </div>
 

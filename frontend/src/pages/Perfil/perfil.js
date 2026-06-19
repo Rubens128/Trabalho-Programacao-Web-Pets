@@ -51,8 +51,6 @@ function Perfil(){
             
             if(retornoUsuario === null) navigate("/login");
             
-            console.log("Usuário logado:", retornoUsuario);
-
             setUsuario(retornoUsuario);
 
             setCepValue(retornoUsuario.endereco.cep);
@@ -178,7 +176,7 @@ function Perfil(){
             setMensagemPopUpAviso("");
         }, 3000);
 
-        setUsuario(novosDados);
+        setUsuario({...usuario, endereco: novosDados.endereco});
     }
 
     return(

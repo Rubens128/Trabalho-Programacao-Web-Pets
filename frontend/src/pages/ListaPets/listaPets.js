@@ -73,7 +73,9 @@ function ListaPets(){
                 }
             });
             
-            setAnimaisInfo(petsLista);
+            const petsListaFiltrado = petsLista.filter((pet) => pet.status === "disponivel");
+
+            setAnimaisInfo(petsListaFiltrado);
         }
         
         verificarUsuario();
